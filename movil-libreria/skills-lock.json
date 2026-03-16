@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "skills": {
+    "interface-design": {
+      "source": "dammyjay93/interface-design",
+      "sourceType": "github",
+      "computedHash": "4d5fe1dacfebc0c1b3837b061405150ed2e4971c096543afc46c23161c5a4f7a"
+    },
+    "mobile-app-interface": {
+      "source": "qodex-ai/ai-agent-skills",
+      "sourceType": "github",
+      "computedHash": "05d8bb01cd93db1528ea3da9d9224b84d3aec50df5a005b79c8103b4d51be615"
+    }
+  }
+}

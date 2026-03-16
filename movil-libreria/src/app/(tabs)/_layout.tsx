@@ -43,6 +43,7 @@ export default function TabLayout() {
         name="configuracion"
         options={{
           title: "Configuracion",
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "settings-sharp" : "settings-outline"}

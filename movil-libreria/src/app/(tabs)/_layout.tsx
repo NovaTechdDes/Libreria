@@ -28,6 +28,7 @@ export default function TabLayout() {
         name="caja"
         options={{
           title: "Caja",
+          headerShown: false,
 
           tabBarIcon: ({ color, focused }) => (
             <Ionicons

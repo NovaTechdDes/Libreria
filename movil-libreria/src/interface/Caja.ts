@@ -1,6 +1,7 @@
 export interface Caja {
-  id: string;
+  id?: string;
   efectivo: number;
   debito: number;
   credito: number;
+  total: number;
 }

@@ -1,7 +1,8 @@
 export interface Venta {
   fecha: Date;
   numero: string;
-  importe: number;
+  cliente: string;
+  total: number;
   id: string;
   tipo: TipoVenta;
 }

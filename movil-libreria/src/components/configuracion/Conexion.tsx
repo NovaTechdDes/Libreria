@@ -1,9 +1,54 @@
+import { mensaje } from "@/utils/mensaje";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { QueryClient } from "@tanstack/react-query";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Pressable,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+
+interface URL {
+  url: string;
+}
+
+const initialState: URL = {
+  url: "",
+};
+
+const queryClient = new QueryClient();
 
 export default function Conexion() {
+  const [loading, setLoading] = useState(false);
   const [ip, setIp] = useState("");
+
+  useEffect(() => {
+    const getIp = async () => {
+      const ip = await AsyncStorage.getItem("url");
+      console.log(ip);
+      if (ip) {
+        setIp(ip);
+      }
+    };
+    getIp();
+  }, []);
+
+  const onSubmit = async () => {
+    setLoading(true);
+    try {
+      await AsyncStorage.setItem("url", ip);
+      queryClient.invalidateQueries();
+      mensaje("success", "Guardado exitosamente", "top");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <View className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 mb-6">
       <View className="flex-row items-center gap-3 mb-6">
@@ -28,14 +73,21 @@ export default function Conexion() {
         />
       </View>
 
-      <TouchableOpacity className="bg-blue-600 rounded-2xl py-4 items-center shadow-md shadow-blue-200 mb-4">
-        <Text className="text-white font-black text-lg">Aplicar Cambios</Text>
-      </TouchableOpacity>
+      {loading ? (
+        <ActivityIndicator size="large" color="#2563eb" />
+      ) : (
+        <Pressable
+          onPress={onSubmit}
+          className="bg-blue-600 rounded-2xl py-4 items-center shadow-md shadow-blue-200 mb-4"
+        >
+          <Text className="text-white font-black text-lg">Aplicar Cambios</Text>
+        </Pressable>
+      )}
 
-      <TouchableOpacity className="flex-row items-center justify-center py-2 opacity-60">
+      <Pressable className="flex-row items-center justify-center py-2 opacity-60">
         <Ionicons name="pulse-outline" size={18} color="#4b5563" />
         <Text className="text-gray-600 font-bold ml-2">Test de Conexión</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }

@@ -1,9 +1,15 @@
 import { Producto } from "@/interface";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-const URL = "http://192.168.0.139:3001/productos/";
+const getUrl = async () => {
+  const url = await AsyncStorage.getItem("url");
+  return url;
+};
 
 export const getProductos = async (): Promise<Producto[]> => {
+  const URL = `http://${await getUrl()}/productos/`;
+
   try {
     const { data } = await axios.get(`${URL}`);
     return data.data;
@@ -16,6 +22,7 @@ export const getProductos = async (): Promise<Producto[]> => {
 export const putProducto = async (
   producto: Partial<Producto>,
 ): Promise<boolean> => {
+  const URL = `http://${await getUrl()}/productos/`;
   try {
     const { data } = await axios.put(`${URL}${producto.id}`, producto);
 

@@ -9,12 +9,17 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: true,
+        tabBarStyle: {
+          paddingBottom: 8,
+          height: 65,
+        },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: "Productos",
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "list-sharp" : "list-outline"}

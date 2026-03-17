@@ -1,0 +1,15 @@
+services:
+  api-libreria:
+    build:
+      context: .
+      dockerfile: dockerfile
+
+    container_name: api-libreria
+    ports:
+      - "3001:3001"
+    environment:
+      - DB_HOST=192.168.0.139
+      - DB_USER=pelusa
+      - DB_PASSWORD=Pelusa3345&
+      - DB_NAME=libreria
+    restart: always

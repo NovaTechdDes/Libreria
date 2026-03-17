@@ -1,0 +1,21 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.poolConnect = exports.pool = void 0;
+const mssql_1 = __importDefault(require("mssql"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const config = {
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    server: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    options: {
+        encrypt: false,
+        trustServerCertificate: true,
+    },
+};
+exports.pool = new mssql_1.default.ConnectionPool(config);
+exports.poolConnect = exports.pool.connect();

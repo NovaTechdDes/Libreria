@@ -1,0 +1,25 @@
+# imagen Base
+FROM node:20-alpine
+
+# Instalar PNPM
+RUN npm install -g pnpm
+
+# Carpeta de trabajo
+WORKDIR /
+
+# Copiar archivos
+COPY package.json pnpm-lock.yaml ./
+
+# Instalar Dependencias
+RUN pnpm install
+
+# Copiar el resto del proyecto
+COPY . .
+
+# Exponer puerto 
+EXPOSE 3001
+
+RUN pnpm build
+
+#Ejectura APP
+CMD ["node", "dist/server.js"]

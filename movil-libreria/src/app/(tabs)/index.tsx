@@ -1,13 +1,19 @@
 import ModalProducto from "@/components/ModalProducto";
 import BuscadorProductos from "@/components/productos/BuscadorProductos";
 import ProductItem from "@/components/productos/ProductItem";
-import { productos } from "@/data/productos";
+import { Loading } from "@/components/ui/Loading";
+import { useProductos } from "@/hooks/productos/useProductos";
 import { useProductoStore } from "@/store";
 import React from "react";
 import { FlatList, View } from "react-native";
 
 export default function HomeScreen() {
-  const { modal } = useProductoStore();
+  const { modal, buscador } = useProductoStore();
+  const { data: productos, isLoading } = useProductos();
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <View className="flex-1 bg-gray-100 p-4">
@@ -28,6 +34,9 @@ export default function HomeScreen() {
 
       {/* modal */}
       {modal && <ModalProducto />}
+
+      {/* Pantalla de carga */}
+      {isLoading && <Loading />}
     </View>
   );
 }

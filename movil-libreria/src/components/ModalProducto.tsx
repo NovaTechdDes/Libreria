@@ -1,4 +1,6 @@
+import { useMutateProducto } from "@/hooks/productos/useMutateProducto";
 import { useProductoStore } from "@/store";
+import { mensaje } from "@/utils/mensaje";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
@@ -13,6 +15,7 @@ import {
 
 export default function ModalProducto() {
   const { modal, cerrarModal, productoSeleccionado } = useProductoStore();
+  const { modificarProducto } = useMutateProducto();
   const [precio, setPrecio] = useState("");
   const [stock, setStock] = useState("");
 
@@ -22,6 +25,28 @@ export default function ModalProducto() {
       setStock(productoSeleccionado.stock.toString());
     }
   }, [productoSeleccionado]);
+
+  const handlePut = async () => {
+    const res = await modificarProducto.mutateAsync({
+      id: productoSeleccionado?.id,
+      precio: Number(precio),
+      stock: Number(stock),
+    });
+    if (res) {
+      await mensaje(
+        "success",
+        "Producto actualizado",
+        "Se guardaron los cambios correctamente",
+      );
+    } else {
+      await mensaje(
+        "error",
+        "Error al actualizar",
+        "No se pudieron guardar los cambios",
+      );
+    }
+    cerrarModal();
+  };
 
   if (!productoSeleccionado) return null;
 
@@ -34,7 +59,7 @@ export default function ModalProducto() {
     >
       <View className="flex-1 bg-slate-900/40 justify-end">
         <Pressable className="flex-1" onPress={cerrarModal} />
-        
+
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
@@ -45,7 +70,10 @@ export default function ModalProducto() {
                 <Text className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest mb-1">
                   Editar Inventario
                 </Text>
-                <Text className="text-xl font-bold text-slate-900" numberOfLines={1}>
+                <Text
+                  className="text-xl font-bold text-slate-900"
+                  numberOfLines={1}
+                >
                   {productoSeleccionado.descripcion}
                 </Text>
               </View>
@@ -80,7 +108,12 @@ export default function ModalProducto() {
                   STOCK DISPONIBLE
                 </Text>
                 <View className="flex-row items-center bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3">
-                  <Ionicons name="cube-outline" size={18} color="#94a3b8" style={{ marginRight: 8 }} />
+                  <Ionicons
+                    name="cube-outline"
+                    size={18}
+                    color="#94a3b8"
+                    style={{ marginRight: 8 }}
+                  />
                   <TextInput
                     value={stock}
                     onChangeText={setStock}
@@ -98,16 +131,17 @@ export default function ModalProducto() {
                 onPress={cerrarModal}
                 className="flex-1 bg-slate-100 py-4 rounded-2xl active:bg-slate-200"
               >
-                <Text className="text-slate-600 font-bold text-center">Cancelar</Text>
+                <Text className="text-slate-600 font-bold text-center">
+                  Cancelar
+                </Text>
               </Pressable>
               <Pressable
-                onPress={() => {
-                  /* TODO: Implement save logic */
-                  cerrarModal();
-                }}
+                onPress={handlePut}
                 className="flex-[2] bg-slate-900 py-4 rounded-2xl active:bg-slate-800"
               >
-                <Text className="text-white font-bold text-center">Guardar Cambios</Text>
+                <Text className="text-white font-bold text-center">
+                  Guardar Cambios
+                </Text>
               </Pressable>
             </View>
           </View>

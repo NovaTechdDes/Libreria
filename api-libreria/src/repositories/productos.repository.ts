@@ -37,21 +37,19 @@ export async function searchProductos(texto: string): Promise<Producto[]> {
 
 export async function putProducto(
   producto: Partial<Producto>,
-): Promise<Producto> {
+): Promise<boolean> {
   await poolConnect;
 
   const result = await pool
     .request()
     .input("id", producto.id)
-    .input("descripcion", producto.descripcion)
     .input("precio", producto.precio)
     .input("stock", producto.stock).query(`
       UPDATE api_productos
-      SET descripcion = @descripcion,
-          precio = @precio,
+      SET precio = @precio,
           stock = @stock
       WHERE id = @id
     `);
 
-  return result.recordset[0];
+  return result.rowsAffected[0] > 0;
 }

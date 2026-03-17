@@ -10,7 +10,6 @@ export default function BuscadorProductos() {
     <View className="flex-row relative bg-white items-center gap-2 p-2 rounded-lg">
       <Ionicons name="search" size={24} color="black" />
       <TextInput
-        className=""
         value={buscador}
         onChangeText={setBuscador}
         placeholder="Buscar por nombre, titulo, codigo o marca"

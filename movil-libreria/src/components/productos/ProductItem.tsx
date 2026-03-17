@@ -20,10 +20,10 @@ export default function ProductItem({ item }: Props) {
 
   if (
     buscador !== "" &&
-    !item.descripcion.toLowerCase().includes(buscador.toLowerCase()) &&
-    !item.categoria.toLowerCase().includes(buscador.toLowerCase()) &&
-    !item.marca.toLowerCase().includes(buscador.toLowerCase()) &&
-    !item.id.toLowerCase().includes(buscador.toLowerCase())
+    !item?.descripcion?.toLowerCase().includes(buscador.toLowerCase()) &&
+    !item?.categoria?.toLowerCase().includes(buscador.toLowerCase()) &&
+    !item?.marca?.toLowerCase().includes(buscador.toLowerCase()) &&
+    !item?.id?.toString().toLowerCase().includes(buscador.toLowerCase())
   )
     return null;
 

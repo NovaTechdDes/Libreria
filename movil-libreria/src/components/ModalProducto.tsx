@@ -1,22 +1,15 @@
-import { useAppTheme } from "@/hooks/useAppTheme";
 import { useMutateProducto } from "@/hooks/productos/useMutateProducto";
+import { useAppTheme } from "@/hooks/useAppTheme";
 import { useProductoStore } from "@/store";
 import { mensaje } from "@/utils/mensaje";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  Pressable,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Modal, Pressable, Text, TextInput, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function ModalProducto() {
   const { isDark, colors } = useAppTheme();
- 
+
   const { modal, cerrarModal, productoSeleccionado } = useProductoStore();
   const { modificarProducto } = useMutateProducto();
   const [precio, setPrecio] = useState("");
@@ -60,11 +53,13 @@ export default function ModalProducto() {
       animationType="fade"
       onRequestClose={cerrarModal}
     >
-      <View className="flex-1 bg-slate-900/40 dark:bg-black/60 justify-end">
+      <View className="flex-1 bg-slate-900/40 dark:bg-black/60 justify-end mb-10">
         <Pressable className="flex-1" onPress={cerrarModal} />
- 
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
+
+        <KeyboardAwareScrollView
+          enableOnAndroid
+          extraScrollHeight={20}
+          keyboardShouldPersistTaps="handled"
         >
           <View className="bg-white dark:bg-slate-900 rounded-t-[32px] p-6 shadow-2xl">
             {/* Header */}
@@ -95,7 +90,9 @@ export default function ModalProducto() {
                   PRECIO (CLP)
                 </Text>
                 <View className="flex-row items-center bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl px-4 py-3">
-                  <Text className="text-slate-400 dark:text-slate-500 font-bold mr-2">$</Text>
+                  <Text className="text-slate-400 dark:text-slate-500 font-bold mr-2">
+                    $
+                  </Text>
                   <TextInput
                     value={precio}
                     onChangeText={setPrecio}
@@ -150,7 +147,7 @@ export default function ModalProducto() {
               </Pressable>
             </View>
           </View>
-        </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
       </View>
     </Modal>
   );

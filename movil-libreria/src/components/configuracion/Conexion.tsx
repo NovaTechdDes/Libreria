@@ -39,7 +39,6 @@ export default function Conexion() {
   const testConexion = async () => {
     setTestLoading(true);
     const test = await probarConexion();
-    console.log(test);
     if (test) {
       mensaje("success", "Conexión exitosa", "");
     } else {
@@ -86,7 +85,7 @@ export default function Conexion() {
       </View>
 
       {loading ? (
-        <ActivityIndicator size="large" color="#2563eb" />
+        <ActivityIndicator size="large" color={colors.accent} />
       ) : (
         <Pressable
           onPress={onSubmit}
@@ -102,7 +101,7 @@ export default function Conexion() {
       >
         <Ionicons name="pulse-outline" size={18} color={colors.icon} />
         {testLoading && <ActivityIndicator size="small" color={colors.icon} />}
-        <Text className="text-gray-600 dark:text-slate-400 font-bold ml-2 text-lg active:text-gray-500 rounded-2xl">
+        <Text className="text-gray-600 dark:text-slate-400 font-bold ml-2 text-lg">
           Test de Conexión
         </Text>
       </Pressable>

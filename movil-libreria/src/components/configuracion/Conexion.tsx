@@ -1,3 +1,4 @@
+import { probarConexion } from "@/actions/conexion.actions";
 import { mensaje } from "@/utils/mensaje";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -15,20 +16,16 @@ interface URL {
   url: string;
 }
 
-const initialState: URL = {
-  url: "",
-};
-
 const queryClient = new QueryClient();
 
 export default function Conexion() {
   const [loading, setLoading] = useState(false);
+  const [testLoading, setTestLoading] = useState(false);
   const [ip, setIp] = useState("");
 
   useEffect(() => {
     const getIp = async () => {
       const ip = await AsyncStorage.getItem("url");
-      console.log(ip);
       if (ip) {
         setIp(ip);
       }
@@ -36,12 +33,23 @@ export default function Conexion() {
     getIp();
   }, []);
 
+  const testConexion = async () => {
+    setTestLoading(true);
+    const test = await probarConexion();
+    if (test) {
+      mensaje("success", "Conexión exitosa", "");
+    } else {
+      mensaje("error", "Conexión fallida", "");
+    }
+    setTestLoading(false);
+  };
+
   const onSubmit = async () => {
     setLoading(true);
     try {
       await AsyncStorage.setItem("url", ip);
       queryClient.invalidateQueries();
-      mensaje("success", "Guardado exitosamente", "top");
+      mensaje("success", "Guardado exitosamente", "");
     } catch (error) {
       console.error(error);
     } finally {
@@ -84,9 +92,15 @@ export default function Conexion() {
         </Pressable>
       )}
 
-      <Pressable className="flex-row items-center justify-center py-2 opacity-60">
+      <Pressable
+        onPress={testConexion}
+        className="flex-row items-center justify-center py-2 opacity-60 bg-gray-300 rounded-2xl p-2"
+      >
         <Ionicons name="pulse-outline" size={18} color="#4b5563" />
-        <Text className="text-gray-600 font-bold ml-2">Test de Conexión</Text>
+        {testLoading && <ActivityIndicator size="small" color="#4b5563" />}
+        <Text className="text-gray-600 font-bold ml-2 active:text-gray-500  rounded-2xl p-2">
+          Test de Conexión
+        </Text>
       </Pressable>
     </View>
   );

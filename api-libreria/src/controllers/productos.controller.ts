@@ -7,7 +7,12 @@ export const getProductos = async (
   next: NextFunction,
 ) => {
   try {
-    const productos = await service.obtenerProductos();
+    const { search, limit } = req.query;
+
+    const productos = await service.obtenerProductos(
+      search as string,
+      Number(limit),
+    );
     res.json({ data: productos });
   } catch (error) {
     next(error);

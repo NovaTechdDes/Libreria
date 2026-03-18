@@ -1,17 +1,17 @@
 import { Producto } from "@/interface";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getUrl } from "@/utils/getURL";
 import axios from "axios";
 
-const getUrl = async () => {
-  const url = await AsyncStorage.getItem("url");
-  return url;
-};
-
-export const getProductos = async (): Promise<Producto[]> => {
+export const getProductos = async (search?: string): Promise<Producto[]> => {
   const URL = `http://${await getUrl()}/productos/`;
 
   try {
-    const { data } = await axios.get(`${URL}`);
+    const { data } = await axios.get(`${URL}`, {
+      params: {
+        search: search || undefined,
+        limit: 100,
+      },
+    });
     return data.data;
   } catch (error) {
     console.log(error);

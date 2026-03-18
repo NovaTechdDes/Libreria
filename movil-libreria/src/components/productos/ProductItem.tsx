@@ -87,16 +87,16 @@ export default function ProductItem({ item }: Props) {
                   STOCK: {item.stock.toFixed(0)}
                 </Text>
               </View>
-              <Pressable
-                className="bg-slate-900 px-4 py-1.5 rounded-lg active:bg-slate-700"
-                onPress={handleEdit}
-              >
-                <Text className="text-white text-xs font-bold">Editar</Text>
-              </Pressable>
             </View>
           </View>
         </View>
       </View>
+      <Pressable
+        className="bg-blue-900 px-4 py-2 rounded-lg active:bg-blue-700"
+        onPress={handleEdit}
+      >
+        <Text className="text-white text-center text-xl font-bold">Editar</Text>
+      </Pressable>
     </View>
   );
 }

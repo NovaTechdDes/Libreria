@@ -9,11 +9,7 @@ import { FlatList, View } from "react-native";
 
 export default function HomeScreen() {
   const { modal, buscador } = useProductoStore();
-  const { data: productos, isLoading } = useProductos();
-
-  if (isLoading) {
-    return <Loading />;
-  }
+  const { data: productos, isLoading } = useProductos(buscador);
 
   return (
     <View className="flex-1 bg-gray-100 p-4">
@@ -24,12 +20,16 @@ export default function HomeScreen() {
       {/* tarjetas */}
 
       <View className="flex-1">
-        <FlatList
-          data={productos}
-          className="mt-5"
-          renderItem={({ item }) => <ProductItem key={item.id} item={item} />}
-          ItemSeparatorComponent={() => <View className="h-4" />}
-        />
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <FlatList
+            data={productos}
+            className="mt-5"
+            renderItem={({ item }) => <ProductItem key={item.id} item={item} />}
+            ItemSeparatorComponent={() => <View className="h-4" />}
+          />
+        )}
       </View>
 
       {/* modal */}

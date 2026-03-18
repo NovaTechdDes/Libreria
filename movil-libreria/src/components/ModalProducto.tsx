@@ -137,7 +137,7 @@ export default function ModalProducto() {
               </Pressable>
               <Pressable
                 onPress={handlePut}
-                className="flex-[2] bg-slate-900 py-4 rounded-2xl active:bg-slate-800"
+                className="flex-[2] bg-blue-900 py-4 rounded-2xl active:bg-blue-700"
               >
                 <Text className="text-white font-bold text-center">
                   Guardar Cambios

@@ -1,16 +1,27 @@
 import { pool, poolConnect } from "../config/db";
 import { Producto } from "../types/Producto";
 
-export async function getProductos(): Promise<Producto[]> {
+export async function getProductos(
+  search?: string | undefined,
+  limit?: number,
+): Promise<Producto[]> {
   await poolConnect;
 
-  const result = await pool.request().query(`
-    SELECT TOP 100
+  const safeLimit = Number(limit) || 100;
+  const safeSearch = search ? `%${search}%` : "%";
+
+  const query = search
+    ? `WHERE descripcion LIKE @search OR CAST(id AS VARCHAR) LIKE @search`
+    : "";
+
+  const result = await pool.request().input("search", safeSearch).query(`
+    SELECT TOP (${safeLimit})
     id,
     descripcion,
     precio,
     stock
     FROM api_productos
+    ${query}
     ORDER BY id DESC
     `);
 

@@ -1,3 +1,4 @@
+import { useAppTheme } from "@/hooks/useAppTheme";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React from "react";
@@ -5,14 +6,22 @@ import React from "react";
 const clientes = 2;
 
 export default function TabLayout() {
+  const { isDark, colors } = useAppTheme();
+
   return (
     <Tabs
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
         tabBarStyle: {
-          paddingBottom: 8,
+          backgroundColor: colors.card,
+          borderTopColor: colors.border,
           height: 65,
+          paddingBottom: 8,
+          borderTopWidth: 1,
+          elevation: 0,
         },
+        tabBarActiveTintColor: colors.accent,
+        tabBarInactiveTintColor: colors.textMuted,
       }}
     >
       <Tabs.Screen

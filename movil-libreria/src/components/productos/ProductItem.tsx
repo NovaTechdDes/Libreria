@@ -1,3 +1,4 @@
+import { useAppTheme } from "@/hooks/useAppTheme";
 import { Producto } from "@/interface";
 import { useProductoStore } from "@/store";
 import { Image } from "expo-image";
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default function ProductItem({ item }: Props) {
+  const { isDark, colors } = useAppTheme();
   const hasImage = !!item.imagen;
 
   const { abrirModal, seleccionarProducto, buscador } = useProductoStore();
@@ -28,10 +30,10 @@ export default function ProductItem({ item }: Props) {
     return null;
 
   return (
-    <View className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-4">
+    <View className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-4">
       <View className="flex-row p-3">
         {/* Imagen / Placeholder */}
-        <View className="w-24 h-24 bg-slate-50 rounded-xl overflow-hidden items-center justify-center border border-slate-100">
+        <View className="w-24 h-24 bg-slate-50 dark:bg-slate-800 rounded-xl overflow-hidden items-center justify-center border border-slate-100 dark:border-slate-700">
           {hasImage ? (
             <Image
               source={{ uri: item.imagen }}
@@ -41,49 +43,49 @@ export default function ProductItem({ item }: Props) {
             />
           ) : (
             <View className="items-center justify-center">
-              <Text className="text-slate-300 text-xs font-medium uppercase tracking-wider">
+              <Text className="text-slate-300 dark:text-slate-600 text-xs font-medium uppercase tracking-wider">
                 Sin Imagen
               </Text>
             </View>
           )}
         </View>
-
+ 
         {/* Info */}
         <View className="flex-1 ml-4 justify-between">
           <View>
             <View className="flex-row justify-between items-start">
-              <Text className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full uppercase tracking-widest mb-1">
+              <Text className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-2 py-0.5 rounded-full uppercase tracking-widest mb-1">
                 {item.categoria}
               </Text>
-              <Text className="text-[10px] font-bold text-slate-500 px-2 py-0.5 rounded-full uppercase tracking-widest mb-1">
+              <Text className="text-[10px] font-bold text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full uppercase tracking-widest mb-1">
                 {item.id}
               </Text>
             </View>
             <Text
-              className="text-base font-semibold text-slate-900 leading-tight"
+              className="text-base font-semibold text-slate-900 dark:text-slate-100 leading-tight"
               numberOfLines={2}
             >
               {item.descripcion}
             </Text>
-            <Text className="text-xs text-slate-500 mt-1 font-medium">
+            <Text className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">
               {item.marca}
             </Text>
           </View>
-
+ 
           <View className="flex-row justify-between items-end mt-2">
             <View>
-              <Text className="text-xs text-slate-400 font-medium">Precio</Text>
-              <Text className="text-lg font-bold text-slate-900">
+              <Text className="text-xs text-slate-400 dark:text-slate-500 font-medium">Precio</Text>
+              <Text className="text-lg font-bold text-slate-900 dark:text-blue-400">
                 $
                 {item.precio.toLocaleString("es-CL", {
                   minimumFractionDigits: 2,
                 })}
               </Text>
             </View>
-
+ 
             <View className="items-end">
-              <View className="bg-emerald-50 px-2 py-1 rounded-md mb-1">
-                <Text className="text-[10px] text-emerald-700 font-bold">
+              <View className="bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-md mb-1">
+                <Text className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold">
                   STOCK: {item.stock.toFixed(0)}
                 </Text>
               </View>
@@ -92,7 +94,7 @@ export default function ProductItem({ item }: Props) {
         </View>
       </View>
       <Pressable
-        className="bg-blue-900 px-4 py-2 rounded-lg active:bg-blue-700"
+        className="bg-blue-900 dark:bg-blue-700 px-4 py-2 rounded-lg active:bg-blue-700 dark:active:bg-blue-600"
         onPress={handleEdit}
       >
         <Text className="text-white text-center text-xl font-bold">Editar</Text>

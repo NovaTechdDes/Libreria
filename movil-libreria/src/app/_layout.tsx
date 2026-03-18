@@ -10,7 +10,7 @@ const queryClient = new QueryClient();
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView className="flex-1 bg-gray-50 dark:bg-slate-950">
         <QueryClientProvider client={queryClient}>
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

@@ -10,9 +10,9 @@ import { FlatList, View } from "react-native";
 export default function HomeScreen() {
   const { modal, buscador } = useProductoStore();
   const { data: productos, isLoading } = useProductos(buscador);
-
+ 
   return (
-    <View className="flex-1 bg-gray-100 p-4">
+    <View className="flex-1 bg-gray-100 dark:bg-slate-950 p-4">
       {/* Buscador */}
 
       <BuscadorProductos />

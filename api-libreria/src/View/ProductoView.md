@@ -1,7 +1,10 @@
-CREATE VIEW api_productos AS
+CREATE VIEW api_articulos AS
 SELECT
-id,
+id_articulo
+codigo,
 descripcion,
 precio,
-stock
-FROM productos
+cantidad,
+marca,
+rubro_tempo
+FROM articulos

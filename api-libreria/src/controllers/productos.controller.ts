@@ -19,20 +19,6 @@ export const getProductos = async (
   }
 };
 
-export const searchProductos = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const { texto } = req.params;
-    const productos = await service.buscarProductos(texto as string);
-    res.json({ data: productos });
-  } catch (error) {
-    next(error);
-  }
-};
-
 export const putProducto = async (
   req: Request,
   res: Response,

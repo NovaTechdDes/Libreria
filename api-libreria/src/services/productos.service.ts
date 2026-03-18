@@ -8,10 +8,6 @@ export async function obtenerProductos(
   return await repo.getProductos(search, limit);
 }
 
-export async function buscarProductos(texto: string) {
-  return await repo.searchProductos(texto);
-}
-
 export async function putProducto(producto: Partial<Producto>) {
   return await repo.putProducto(producto);
 }

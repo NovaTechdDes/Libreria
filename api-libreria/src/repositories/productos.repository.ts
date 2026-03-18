@@ -11,36 +11,20 @@ export async function getProductos(
   const safeSearch = search ? `%${search}%` : "%";
 
   const query = search
-    ? `WHERE descripcion LIKE @search OR CAST(id AS VARCHAR) LIKE @search`
+    ? `WHERE descripcion LIKE @search OR CAST(codigo AS VARCHAR) LIKE @search`
     : "";
 
   const result = await pool.request().input("search", safeSearch).query(`
     SELECT TOP (${safeLimit})
-    id,
+    codigo,
     descripcion,
     precio,
-    stock
-    FROM api_productos
+    cantidad,
+    marca,
+    rubro_tempo
+    FROM api_articuloss
     ${query}
-    ORDER BY id DESC
-    `);
-
-  return result.recordset;
-}
-
-export async function searchProductos(texto: string): Promise<Producto[]> {
-  await poolConnect;
-
-  const result = await pool.request().input("texto", `%${texto}%`).query(`
-    SELECT TOP 100
-    id,
-    descripcion,
-    precio,
-    stock
-    FROM api_productos
-    WHERE descripcion LIKE @texto OR
-          id LIKE @texto    
-    ORDER BY descripcion
+    ORDER BY codigo DESC
     `);
 
   return result.recordset;
@@ -53,14 +37,13 @@ export async function putProducto(
 
   const result = await pool
     .request()
-    .input("id", producto.id)
+    .input("codigo", producto.codigo)
     .input("precio", producto.precio)
-    .input("stock", producto.stock).query(`
-      UPDATE api_productos
+    .input("cantidad", producto.cantidad).query(`
+      UPDATE api_articuloss
       SET precio = @precio,
-          stock = @stock
-      WHERE id = @id
+          cantidad = @cantidad
+      WHERE codigo = @codigo
     `);
-
   return result.rowsAffected[0] > 0;
 }

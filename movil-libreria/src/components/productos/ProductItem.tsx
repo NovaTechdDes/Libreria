@@ -7,17 +7,19 @@ import { Pressable, Text, View } from "react-native";
 
 interface Props {
   item: Producto;
+  setIsUserModalVisible: (visible: boolean) => void;
 }
 
-export default function ProductItem({ item }: Props) {
+export default function ProductItem({ item, setIsUserModalVisible }: Props) {
   const { isDark, colors } = useAppTheme();
   const hasImage = !!item.imagen;
 
   const { abrirModal, seleccionarProducto, buscador } = useProductoStore();
 
   const handleEdit = () => {
+    setIsUserModalVisible(true);
     seleccionarProducto(item);
-    abrirModal();
+    //abrirModal();
   };
 
   if (
@@ -49,7 +51,7 @@ export default function ProductItem({ item }: Props) {
             </View>
           )}
         </View>
- 
+
         {/* Info */}
         <View className="flex-1 ml-4 justify-between">
           <View>
@@ -71,10 +73,12 @@ export default function ProductItem({ item }: Props) {
               {item.marca}
             </Text>
           </View>
- 
+
           <View className="flex-row justify-between items-end mt-2">
             <View>
-              <Text className="text-xs text-slate-400 dark:text-slate-500 font-medium">Precio</Text>
+              <Text className="text-xs text-slate-400 dark:text-slate-500 font-medium">
+                Precio
+              </Text>
               <Text className="text-lg font-bold text-slate-900 dark:text-blue-400">
                 $
                 {item.precio.toLocaleString("es-CL", {
@@ -82,7 +86,7 @@ export default function ProductItem({ item }: Props) {
                 })}
               </Text>
             </View>
- 
+
             <View className="items-end">
               <View className="bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-md mb-1">
                 <Text className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold">

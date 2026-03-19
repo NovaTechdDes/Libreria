@@ -4,17 +4,26 @@ import BuscadorProductos from "@/components/productos/BuscadorProductos";
 import CameraScan from "@/components/productos/CameraScan";
 import ProductItem from "@/components/productos/ProductItem";
 import { Loading } from "@/components/ui/Loading";
+import ModalGetUsuario from "@/components/usuarios/ModalGetUsuario";
 import { useProductos } from "@/hooks/productos/useProductos";
-import { useProductoStore } from "@/store";
+import { useUsuarioByClave } from "@/hooks/usuarios/useUsuarioByClave";
+import { useProductoStore, useUsuarioStore } from "@/store";
+import { mensaje } from "@/utils/mensaje";
 import { useCameraPermissions } from "expo-camera";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, RefreshControl, View } from "react-native";
 
 export default function HomeScreen() {
-  const { modal, buscador } = useProductoStore();
+  const { modal, buscador, abrirModal } = useProductoStore();
+  const { clave, setClave } = useUsuarioStore();
+
   const { data: productos, isLoading, refetch } = useProductos(buscador);
+  const { data: usuario, isLoading: isLoadingUsuario } =
+    useUsuarioByClave(clave);
+
   const [refreshing, setRefreshing] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
+  const [isUserModalVisible, setIsUserModalVisible] = useState(true);
 
   const [permission, requestPermission] = useCameraPermissions();
 
@@ -36,13 +45,36 @@ export default function HomeScreen() {
     setRefreshing(false);
   };
 
+  const handleGetUser = (clave: string) => {
+    setClave(clave);
+  };
+
+  useEffect(() => {
+    if (!clave) return;
+    if (!usuario) return;
+
+    if (usuario?.administrador) {
+      abrirModal();
+    } else {
+      mensaje("error", "No tienes permiso para realizar esta accion", "");
+    }
+
+    setIsUserModalVisible(false);
+  }, [usuario, clave]);
+
   return (
     <View className="flex-1 bg-gray-100 dark:bg-slate-950 p-4">
       {/* tarjetas */}
       <FlatList
         data={productos}
         className="mt-5"
-        renderItem={({ item }) => <ProductItem key={item.id} item={item} />}
+        renderItem={({ item }) => (
+          <ProductItem
+            setIsUserModalVisible={setIsUserModalVisible}
+            key={item.id}
+            item={item}
+          />
+        )}
         ListHeaderComponent={<BuscadorProductos handleScan={handleScan} />}
         ItemSeparatorComponent={() => <View className="h-4" />}
         refreshControl={
@@ -53,7 +85,12 @@ export default function HomeScreen() {
 
       {/* modal */}
       {modal && <ModalProducto />}
+      <ModalGetUsuario
+        visible={isUserModalVisible}
+        onClose={() => setIsUserModalVisible(false)}
+        onConfirm={handleGetUser}
+        isLoadingUsuario={isLoadingUsuario}
+      />
     </View>
   );
 }
-

@@ -1,6 +1,6 @@
 import { useMutateProducto } from "@/hooks/productos/useMutateProducto";
 import { useAppTheme } from "@/hooks/useAppTheme";
-import { useProductoStore } from "@/store";
+import { useProductoStore, useUsuarioStore } from "@/store";
 import { mensaje } from "@/utils/mensaje";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
@@ -11,6 +11,7 @@ export default function ModalProducto() {
   const { isDark, colors } = useAppTheme();
 
   const { modal, cerrarModal, productoSeleccionado } = useProductoStore();
+  const { setClave } = useUsuarioStore();
   const { modificarProducto } = useMutateProducto();
   const [precio, setPrecio] = useState("");
   const [stock, setStock] = useState("");
@@ -42,19 +43,25 @@ export default function ModalProducto() {
       );
     }
     cerrarModal();
+    setClave("");
   };
 
   if (!productoSeleccionado) return null;
+
+  const handleClose = () => {
+    cerrarModal();
+    setClave("");
+  };
 
   return (
     <Modal
       visible={modal}
       transparent
       animationType="fade"
-      onRequestClose={cerrarModal}
+      onRequestClose={handleClose}
     >
       <View className="flex-1 bg-slate-900/40 dark:bg-black/60 justify-end mb-10">
-        <Pressable className="flex-1" onPress={cerrarModal} />
+        <Pressable className="flex-1" onPress={handleClose} />
 
         <KeyboardAwareScrollView
           enableOnAndroid
@@ -76,7 +83,7 @@ export default function ModalProducto() {
                 </Text>
               </View>
               <Pressable
-                onPress={cerrarModal}
+                onPress={handleClose}
                 className="bg-slate-100 dark:bg-slate-800 p-2 rounded-full active:bg-slate-200 dark:active:bg-slate-700"
               >
                 <Ionicons name="close" size={20} color={colors.icon} />
@@ -130,7 +137,7 @@ export default function ModalProducto() {
             {/* Footer / Actions */}
             <View className="flex-row gap-3 mt-8 mb-2">
               <Pressable
-                onPress={cerrarModal}
+                onPress={handleClose}
                 className="flex-1 bg-slate-100 dark:bg-slate-800 py-4 rounded-2xl active:bg-slate-200 dark:active:bg-slate-700"
               >
                 <Text className="text-slate-600 dark:text-slate-300 font-bold text-center">

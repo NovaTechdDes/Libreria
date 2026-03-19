@@ -1,3 +1,4 @@
+import { getUsuarioByClave } from "@/actions";
 import ModalProducto from "@/components/ModalProducto";
 
 import BuscadorProductos from "@/components/productos/BuscadorProductos";
@@ -10,7 +11,7 @@ import { useUsuarioByClave } from "@/hooks/usuarios/useUsuarioByClave";
 import { useProductoStore, useUsuarioStore } from "@/store";
 import { mensaje } from "@/utils/mensaje";
 import { useCameraPermissions } from "expo-camera";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FlatList, RefreshControl, View } from "react-native";
 
 export default function HomeScreen() {
@@ -18,12 +19,14 @@ export default function HomeScreen() {
   const { clave, setClave } = useUsuarioStore();
 
   const { data: productos, isLoading, refetch } = useProductos(buscador);
-  const { data: usuario, isLoading: isLoadingUsuario } =
-    useUsuarioByClave(clave);
+  const {
+    data: usuario,
+    isLoading: isLoadingUsuario,
+  } = useUsuarioByClave(clave);
 
   const [refreshing, setRefreshing] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
-  const [isUserModalVisible, setIsUserModalVisible] = useState(true);
+  const [isUserModalVisible, setIsUserModalVisible] = useState(false);
 
   const [permission, requestPermission] = useCameraPermissions();
 
@@ -45,22 +48,25 @@ export default function HomeScreen() {
     setRefreshing(false);
   };
 
-  const handleGetUser = (clave: string) => {
-    setClave(clave);
-  };
+  const handleGetUser = async (nuevaClave: string) => {
+    setClave(nuevaClave);
+    const data = await getUsuarioByClave(nuevaClave);
 
-  useEffect(() => {
-    if (!clave) return;
-    if (!usuario) return;
+    if (!nuevaClave) return;
+    if (!data) {
+      mensaje("error", "Usuario no encontrado", "");
+      return;
+    }
 
-    if (usuario?.administrador) {
+    if (data?.administrador) {
       abrirModal();
+      setIsUserModalVisible(false);
     } else {
-      mensaje("error", "No tienes permiso para realizar esta accion", "");
+      mensaje("error", "No tienes permiso para realizar esta acción", "");
     }
 
     setIsUserModalVisible(false);
-  }, [usuario, clave]);
+  };
 
   return (
     <View className="flex-1 bg-gray-100 dark:bg-slate-950 p-4">

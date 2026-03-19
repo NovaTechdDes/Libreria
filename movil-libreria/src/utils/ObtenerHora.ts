@@ -8,3 +8,7 @@ export const obtenerHora = (fecha: Date): string => {
   const minutos = fecha.getMinutes().toString().padStart(2, "0");
   return `${horas}:${minutos}`;
 };
+
+export const obtenerFecha = (fecha: string): string => {
+  return fecha.slice(0, 10).split("-").reverse().join("/");
+};

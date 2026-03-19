@@ -10,7 +10,7 @@ export const getUsuarioByClave = async (clave: string): Promise<Usuario> => {
         id_usuario: "0",
         denominacion: "",
         clave: "",
-        administrador: 0,
+        administrador: false,
       };
     }
     const URL = `http://${await getUrl()}/usuarios/${clave}`;
@@ -22,7 +22,7 @@ export const getUsuarioByClave = async (clave: string): Promise<Usuario> => {
         id_usuario: "0",
         denominacion: "",
         clave: "",
-        administrador: 0,
+        administrador: false,
       };
     }
 
@@ -33,7 +33,7 @@ export const getUsuarioByClave = async (clave: string): Promise<Usuario> => {
       id_usuario: "0",
       denominacion: "",
       clave: "",
-      administrador: 0,
+      administrador: false,
     };
   }
 };

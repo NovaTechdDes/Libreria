@@ -12,6 +12,6 @@ export const mapUsuario = (usuario: UsuarioBackend): Usuario => {
     id_usuario: usuario.id_usuario,
     denominacion: usuario.denominacion,
     clave: usuario.clave,
-    administrador: usuario.administrador,
+    administrador: Boolean(usuario.administrador),
   };
 };

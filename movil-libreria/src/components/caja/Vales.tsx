@@ -14,10 +14,8 @@ export default function Vales() {
   const [isUserModalVisible, setIsUserModalVisible] = useState(false);
 
   const { clave, setClave } = useUsuarioStore();
-  const {
-    data: usuario,
-    isLoading: isLoadingUsuario,
-  } = useUsuarioByClave(clave);
+  const { data: usuario, isLoading: isLoadingUsuario } =
+    useUsuarioByClave(clave);
 
   const { isDark, colors } = useAppTheme();
 
@@ -119,6 +117,7 @@ export default function Vales() {
           </Text>
         </View>
       </View>
+
       <ModalGetUsuario
         visible={isUserModalVisible}
         onClose={() => setIsUserModalVisible(false)}

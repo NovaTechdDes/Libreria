@@ -1,7 +1,7 @@
 import { useAppTheme } from "@/hooks/useAppTheme";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { Modal, Pressable, Text, TextInput, View } from "react-native";
+import { Modal, Pressable, Text, TextInput, View, Keyboard } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 interface ModalGetUsuarioProps {
@@ -21,6 +21,11 @@ export default function ModalGetUsuario({
   const { isDark, colors } = useAppTheme();
 
   const handleConfirm = () => {
+    if (!clave) return;
+    
+    // Cerramos el teclado manualmente para evitar interferencias
+    Keyboard.dismiss();
+    
     if (onConfirm) {
       onConfirm(clave);
     }
@@ -55,7 +60,7 @@ export default function ModalGetUsuario({
           <KeyboardAwareScrollView
             enableOnAndroid
             extraScrollHeight={20}
-            keyboardShouldPersistTaps="handled"
+            keyboardShouldPersistTaps="always"
             contentContainerStyle={{ paddingBottom: 10 }}
           >
             <View className="gap-6">
@@ -76,6 +81,9 @@ export default function ModalGetUsuario({
                     value={clave}
                     onChangeText={setClave}
                     secureTextEntry
+                    returnKeyType="done"
+                    onSubmitEditing={handleConfirm}
+                    autoFocus={true}
                     className="flex-1 text-slate-900 dark:text-white font-semibold text-lg"
                   />
                 </View>

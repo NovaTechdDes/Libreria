@@ -1,13 +1,26 @@
 import Vales from "@/components/caja/Vales";
 import Ventas from "@/components/caja/Ventas";
-import React, { useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { useVenta } from "@/hooks/venta/useVenta";
+import React, { useState, useCallback } from "react";
+import { ScrollView, Text, View, RefreshControl } from "react-native";
 
-export default function CajaScream() {
-  const [isUserModalVisible, setIsUserModalVisible] = useState(false);
+export default function CajaScreen() {
+  const { refetch } = useVenta();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }, [refetch]);
 
   return (
-    <ScrollView className="flex-1 bg-gray-50 dark:bg-slate-950 px-5 pt-6">
+    <ScrollView
+      className="flex-1 bg-gray-50 dark:bg-slate-950 px-5 pt-6"
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       {/* Header Section */}
       <View className="mb-8">
         <Text className="text-3xl font-bold text-gray-800 dark:text-slate-100">
@@ -26,3 +39,4 @@ export default function CajaScream() {
     </ScrollView>
   );
 }
+

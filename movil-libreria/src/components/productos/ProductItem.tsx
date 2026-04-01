@@ -1,9 +1,9 @@
-import { useAppTheme } from "@/hooks/useAppTheme";
-import { Producto } from "@/interface";
-import { useProductoStore } from "@/store";
-import { Image } from "expo-image";
-import React from "react";
-import { Pressable, Text, View } from "react-native";
+import { useUrl } from '@/hooks/useUrl';
+import { Producto } from '@/interface';
+import { useProductoStore } from '@/store';
+import { Image } from 'expo-image';
+import React from 'react';
+import { Pressable, Text, View } from 'react-native';
 
 interface Props {
   item: Producto;
@@ -11,19 +11,20 @@ interface Props {
 }
 
 export default function ProductItem({ item, setIsUserModalVisible }: Props) {
-  const { isDark, colors } = useAppTheme();
-  const hasImage = !!item.imagen;
+  const baseUrl = useUrl();
+  const imageName = item.imagen || item.id;
+  const imageUrl = baseUrl ? `${imageName}.jpg` : null;
+  const hasImage = !!imageUrl;
 
-  const { abrirModal, seleccionarProducto, buscador } = useProductoStore();
+  const { seleccionarProducto, buscador } = useProductoStore();
 
   const handleEdit = () => {
     setIsUserModalVisible(true);
     seleccionarProducto(item);
-    //abrirModal();
   };
 
   if (
-    buscador !== "" &&
+    buscador !== '' &&
     !item?.descripcion?.toLowerCase().includes(buscador.toLowerCase()) &&
     !item?.categoria?.toLowerCase().includes(buscador.toLowerCase()) &&
     !item?.marca?.toLowerCase().includes(buscador.toLowerCase()) &&
@@ -37,17 +38,10 @@ export default function ProductItem({ item, setIsUserModalVisible }: Props) {
         {/* Imagen / Placeholder */}
         <View className="w-24 h-24 bg-slate-50 dark:bg-slate-800 rounded-xl overflow-hidden items-center justify-center border border-slate-100 dark:border-slate-700">
           {hasImage ? (
-            <Image
-              source={{ uri: item.imagen }}
-              className="w-full h-full"
-              contentFit="cover"
-              transition={200}
-            />
+            <Image source={{ uri: imageUrl }} style={{ width: 100, height: 100 }} contentFit="cover" transition={200} />
           ) : (
             <View className="items-center justify-center">
-              <Text className="text-slate-300 dark:text-slate-600 text-xs font-medium uppercase tracking-wider">
-                Sin Imagen
-              </Text>
+              <Text className="text-slate-300 dark:text-slate-600 text-xs font-medium uppercase tracking-wider">Sin Imagen</Text>
             </View>
           )}
         </View>
@@ -59,29 +53,20 @@ export default function ProductItem({ item, setIsUserModalVisible }: Props) {
               <Text className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-2 py-0.5 rounded-full uppercase tracking-widest mb-1">
                 {item.categoria}
               </Text>
-              <Text className="text-[10px] font-bold text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full uppercase tracking-widest mb-1">
-                {item.id}
-              </Text>
+              <Text className="text-[10px] font-bold text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full uppercase tracking-widest mb-1">{item.id}</Text>
             </View>
-            <Text
-              className="text-base font-semibold text-slate-900 dark:text-slate-100 leading-tight"
-              numberOfLines={2}
-            >
+            <Text className="text-base font-semibold text-slate-900 dark:text-slate-100 leading-tight" numberOfLines={2}>
               {item.descripcion}
             </Text>
-            <Text className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">
-              {item.marca}
-            </Text>
+            <Text className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">{item.marca}</Text>
           </View>
 
           <View className="flex-row justify-between items-end mt-2">
             <View>
-              <Text className="text-xs text-slate-400 dark:text-slate-500 font-medium">
-                Precio
-              </Text>
+              <Text className="text-xs text-slate-400 dark:text-slate-500 font-medium">Precio</Text>
               <Text className="text-lg font-bold text-slate-900 dark:text-blue-400">
                 $
-                {item.precio.toLocaleString("es-CL", {
+                {item.precio.toLocaleString('es-CL', {
                   minimumFractionDigits: 2,
                 })}
               </Text>
@@ -89,18 +74,15 @@ export default function ProductItem({ item, setIsUserModalVisible }: Props) {
 
             <View className="items-end">
               <View className="bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-md mb-1">
-                <Text className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold">
-                  STOCK: {item.stock.toFixed(0)}
-                </Text>
+                <Text className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold">STOCK: {item.stock.toFixed(0)}</Text>
               </View>
             </View>
           </View>
         </View>
       </View>
-      <Pressable
-        className="bg-blue-900 dark:bg-blue-700 px-4 py-2 rounded-lg active:bg-blue-700 dark:active:bg-blue-600"
-        onPress={handleEdit}
-      >
+
+      {/* Boton editar */}
+      <Pressable className="bg-blue-900 dark:bg-blue-700 px-4 py-2 rounded-lg active:bg-blue-700 dark:active:bg-blue-600" onPress={handleEdit}>
         <Text className="text-white text-center text-xl font-bold">Editar</Text>
       </Pressable>
     </View>

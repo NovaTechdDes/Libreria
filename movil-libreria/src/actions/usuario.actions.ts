@@ -1,15 +1,15 @@
-import { Usuario } from "@/interface";
-import { mapUsuario } from "@/mappers/usuario.mappers";
-import { getUrl } from "@/utils/getURL";
-import axios from "axios";
+import { Usuario } from '@/interface';
+import { mapUsuario } from '@/mappers/usuario.mappers';
+import { getUrl } from '@/utils/getURL';
+import axios from 'axios';
 
 export const getUsuarioByClave = async (clave: string): Promise<Usuario> => {
   try {
     if (!clave) {
       return {
-        id_usuario: "0",
-        denominacion: "",
-        clave: "",
+        id_usuario: '0',
+        denominacion: '',
+        clave: '',
         administrador: false,
       };
     }
@@ -19,9 +19,9 @@ export const getUsuarioByClave = async (clave: string): Promise<Usuario> => {
 
     if (!data) {
       return {
-        id_usuario: "0",
-        denominacion: "",
-        clave: "",
+        id_usuario: '0',
+        denominacion: '',
+        clave: '',
         administrador: false,
       };
     }
@@ -30,9 +30,9 @@ export const getUsuarioByClave = async (clave: string): Promise<Usuario> => {
   } catch (error) {
     console.log(error);
     return {
-      id_usuario: "0",
-      denominacion: "",
-      clave: "",
+      id_usuario: '0',
+      denominacion: '',
+      clave: '',
       administrador: false,
     };
   }

@@ -27,7 +27,14 @@ export async function getProductos(
     ORDER BY codigo DESC
     `);
 
-  return result.recordset;
+  console.log(process.env.BASE_URL);
+
+  return result.recordset.map((producto) => ({
+    ...producto,
+    imagen: producto.codigo
+      ? `${process.env.BASE_URL}/uploads/${producto.codigo}`
+      : "",
+  }));
 }
 
 export async function putProducto(

@@ -1,7 +1,7 @@
-import { Producto } from "@/interface";
-import { mapProducto, mapProductoBackend } from "@/mappers/producto.mappers";
-import { getUrl } from "@/utils/getURL";
-import axios from "axios";
+import { Producto } from '@/interface';
+import { mapProducto, mapProductoBackend } from '@/mappers/producto.mappers';
+import { getUrl } from '@/utils/getURL';
+import axios from 'axios';
 
 export const getProductos = async (search?: string): Promise<Producto[]> => {
   const URL = `http://${await getUrl()}/productos/`;
@@ -21,19 +21,17 @@ export const getProductos = async (search?: string): Promise<Producto[]> => {
   }
 };
 
-export const putProducto = async (
-  producto: Partial<Producto>,
-): Promise<boolean> => {
+export const putProducto = async (producto: Partial<Producto>): Promise<Producto | null> => {
   const URL = `http://${await getUrl()}/productos/`;
   try {
-    const { data } = await axios.put(
-      `${URL}${producto.id}`,
-      mapProductoBackend(producto),
-    );
+    const { data } = await axios.put(`${URL}${producto.id}`, mapProductoBackend(producto));
 
-    return data.data;
+    if (data.data) {
+      return mapProducto(data.data);
+    }
+    return null;
   } catch (error) {
     console.log(error);
-    return false;
+    return null;
   }
 };

@@ -1,28 +1,25 @@
-import { getUsuarioByClave } from "@/actions";
-import ModalProducto from "@/components/ModalProducto";
+import { getUsuarioByClave } from '@/actions';
+import ModalProducto from '@/components/ModalProducto';
 
-import BuscadorProductos from "@/components/productos/BuscadorProductos";
-import CameraScan from "@/components/productos/CameraScan";
-import ProductItem from "@/components/productos/ProductItem";
-import { Loading } from "@/components/ui/Loading";
-import ModalGetUsuario from "@/components/usuarios/ModalGetUsuario";
-import { useProductos } from "@/hooks/productos/useProductos";
-import { useUsuarioByClave } from "@/hooks/usuarios/useUsuarioByClave";
-import { useProductoStore, useUsuarioStore } from "@/store";
-import { mensaje } from "@/utils/mensaje";
-import { useCameraPermissions } from "expo-camera";
-import React, { useState } from "react";
-import { FlatList, RefreshControl, View } from "react-native";
+import BuscadorProductos from '@/components/productos/BuscadorProductos';
+import CameraScan from '@/components/productos/CameraScan';
+import ProductItem from '@/components/productos/ProductItem';
+import { Loading } from '@/components/ui/Loading';
+import ModalGetUsuario from '@/components/usuarios/ModalGetUsuario';
+import { useProductos } from '@/hooks/productos/useProductos';
+import { useUsuarioByClave } from '@/hooks/usuarios/useUsuarioByClave';
+import { useProductoStore, useUsuarioStore } from '@/store';
+import { mensaje } from '@/utils/mensaje';
+import { useCameraPermissions } from 'expo-camera';
+import React, { useState } from 'react';
+import { FlatList, RefreshControl, View } from 'react-native';
 
 export default function HomeScreen() {
   const { modal, buscador, abrirModal } = useProductoStore();
   const { clave, setClave } = useUsuarioStore();
 
   const { data: productos, isLoading, refetch } = useProductos(buscador);
-  const {
-    data: usuario,
-    isLoading: isLoadingUsuario,
-  } = useUsuarioByClave(clave);
+  const { data: usuario, isLoading: isLoadingUsuario } = useUsuarioByClave(clave);
 
   const [refreshing, setRefreshing] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
@@ -54,7 +51,7 @@ export default function HomeScreen() {
 
     if (!nuevaClave) return;
     if (!data) {
-      mensaje("error", "Usuario no encontrado", "");
+      mensaje('error', 'Usuario no encontrado', '');
       return;
     }
 
@@ -62,7 +59,7 @@ export default function HomeScreen() {
       abrirModal();
       setIsUserModalVisible(false);
     } else {
-      mensaje("error", "No tienes permiso para realizar esta acción", "");
+      mensaje('error', 'No tienes permiso para realizar esta acción', '');
     }
 
     setIsUserModalVisible(false);
@@ -74,29 +71,16 @@ export default function HomeScreen() {
       <FlatList
         data={productos}
         className="mt-5"
-        renderItem={({ item }) => (
-          <ProductItem
-            setIsUserModalVisible={setIsUserModalVisible}
-            key={item.id}
-            item={item}
-          />
-        )}
+        renderItem={({ item }) => <ProductItem setIsUserModalVisible={setIsUserModalVisible} key={item.id} item={item} />}
         ListHeaderComponent={<BuscadorProductos handleScan={handleScan} />}
         ItemSeparatorComponent={() => <View className="h-4" />}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         ListEmptyComponent={isLoading ? <Loading /> : null}
       />
 
       {/* modal */}
       {modal && <ModalProducto />}
-      <ModalGetUsuario
-        visible={isUserModalVisible}
-        onClose={() => setIsUserModalVisible(false)}
-        onConfirm={handleGetUser}
-        isLoadingUsuario={isLoadingUsuario}
-      />
+      <ModalGetUsuario visible={isUserModalVisible} onClose={() => setIsUserModalVisible(false)} onConfirm={handleGetUser} isLoadingUsuario={isLoadingUsuario} />
     </View>
   );
 }

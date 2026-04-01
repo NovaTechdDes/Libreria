@@ -1,4 +1,4 @@
-import { Producto } from "@/interface";
+import { Producto } from '@/interface';
 
 interface ProductoBackend {
   codigo: string;
@@ -7,6 +7,7 @@ interface ProductoBackend {
   cantidad: number;
   marca: string;
   rubro_tempo: string;
+  imagen?: string;
 }
 
 export const mapProducto = (item: ProductoBackend): Producto => {
@@ -17,12 +18,11 @@ export const mapProducto = (item: ProductoBackend): Producto => {
     stock: item.cantidad,
     marca: item.marca,
     categoria: item.rubro_tempo,
+    imagen: item.imagen,
   };
 };
 
-export const mapProductoBackend = (
-  producto: Partial<Producto>,
-): Partial<ProductoBackend> => {
+export const mapProductoBackend = (producto: Partial<Producto>): Partial<ProductoBackend> => {
   return {
     codigo: producto.id,
     precio: producto.precio,

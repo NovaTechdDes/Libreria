@@ -6,10 +6,15 @@ services:
 
     container_name: api-libreria
     ports:
-      - "3001:3001"
+      - "${PORT_LOCAL}:3000"
     environment:
-      - DB_HOST=192.168.0.139
-      - DB_USER=pelusa
-      - DB_PASSWORD=Pelusa3345&
-      - DB_NAME=libreria
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - BASE_URL=${BASE_URL}
+      - PORT=${PORT}
+    volumes:
+      - ./src/uploads:/src/uploads
+      - .cert:/cert/cert
     restart: always

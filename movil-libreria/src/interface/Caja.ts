@@ -1,7 +1,9 @@
 export interface Caja {
-  id?: string;
-  efectivo: number;
-  debito: number;
-  credito: number;
-  total: number;
+  id_caja?: string;
+  fecha: string;
+  debe: number;
+  haber: number;
+  tipo_mov: 'Ingreso' | 'Egreso';
+  tipo_importe: string;
+  concepto: string;
 }

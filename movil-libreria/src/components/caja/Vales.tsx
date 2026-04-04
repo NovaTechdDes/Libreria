@@ -1,22 +1,34 @@
 import { getUsuarioByClave } from '@/actions';
-import { vales } from '@/data/vales';
+import { useMutateCaja } from '@/hooks/caja/useMutateCaja';
+import { useVales } from '@/hooks/caja/useVales';
 import { useAppTheme } from '@/hooks/useAppTheme';
 import { useUsuarioByClave } from '@/hooks/usuarios/useUsuarioByClave';
+import { Vale } from '@/interface/Vale';
 import { useUsuarioStore } from '@/store';
 import { mensaje } from '@/utils/mensaje';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
+import Toast from 'react-native-toast-message';
+import { Loading } from '../ui/Loading';
+import ToastConfirmacion from '../ui/ToastConfirm';
 import ModalGetUsuario from '../usuarios/ModalGetUsuario';
+import ValedRow from './ValedRow';
 
 export default function Vales() {
-  const [mostrar, setMostrar] = useState<boolean>(false);
-  const [isUserModalVisible, setIsUserModalVisible] = useState(false);
-  const scale = useRef(new Animated.Value(1)).current;
-
   const { clave, setClave } = useUsuarioStore();
   const { data: usuario, isLoading: isLoadingUsuario } = useUsuarioByClave(clave);
+  const { data: vales, isLoading: isLoadingVales } = useVales();
+
   const { isDark, colors } = useAppTheme();
+  const { postCierreCaja } = useMutateCaja();
+
+  const [mostrar, setMostrar] = useState<boolean>(false);
+  const [isUserModalVisible, setIsUserModalVisible] = useState(false);
+  const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
+
+  const scale = useRef(new Animated.Value(1)).current;
+  const scaleCerrar = useRef(new Animated.Value(1)).current;
 
   const handleGetUser = async (nuevaClave: string) => {
     setClave(nuevaClave);
@@ -53,7 +65,38 @@ export default function Vales() {
     }
   };
 
+  const handleCerrarCaja = async () => {
+    Animated.sequence([
+      Animated.timing(scaleCerrar, {
+        toValue: 0.7,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(scaleCerrar, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    await Toast.show({
+      type: 'success',
+      text1: 'Caja cerrada correctamente',
+    });
+
+    const data = await postCierreCaja.mutateAsync();
+    if (data) {
+      mensaje('success', 'Caja cerrada correctamente', '');
+    } else {
+      mensaje('error', 'Error al cerrar caja', '');
+    }
+
+    setIsConfirmModalVisible(false);
+  };
+
   useEffect(() => {}, [usuario, clave]);
+
+  if (isLoadingVales) return <Loading message="Cargando datos" />;
 
   return (
     <View className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-slate-800 mb-8">
@@ -68,44 +111,27 @@ export default function Vales() {
         </Pressable>
       </View>
 
-      <Text className="text-4xl font-black text-gray-900 dark:text-slate-100 mb-6">{mostrar ? `$${vales.total.toFixed(2)}` : '-'}</Text>
+      <Text className="text-4xl font-black text-gray-900 dark:text-slate-100 mb-6">{mostrar ? `$${vales?.reduce((acc: number, vale: Vale) => acc + (vale.saldo || 0), 0)?.toFixed(2)}` : '-'}</Text>
       <View className="space-y-4">
-        {/* Row: Efectivo */}
-        <View className="flex-row justify-between items-center py-3 border-b border-gray-50 dark:border-slate-800">
-          <View className="flex-row items-center gap-3">
-            <View className="bg-emerald-100 dark:bg-emerald-900/40 p-2.5 rounded-2xl">
-              <Ionicons name="cash-outline" size={20} color={isDark ? '#34d399' : '#059669'} />
-            </View>
-            <Text className="text-gray-700 dark:text-slate-300 font-semibold text-base">Efectivo</Text>
-          </View>
+        {vales.map((vale: Vale) => (
+          <ValedRow key={vale.tipo_importe} vale={vale} mostrar={mostrar} />
+        ))}
 
-          <Text className="text-emerald-600 dark:text-emerald-400 font-bold text-lg">{mostrar ? `$${vales.efectivo.toFixed(2)}` : '-'}</Text>
-        </View>
-
-        {/* Row: Debito */}
-        <View className="flex-row justify-between items-center py-3 border-b border-gray-50 dark:border-slate-800">
-          <View className="flex-row items-center gap-3">
-            <View className="bg-blue-100 dark:bg-blue-900/40 p-2.5 rounded-2xl">
-              <Ionicons name="card-outline" size={20} color={isDark ? '#60a5fa' : '#2563eb'} />
-            </View>
-            <Text className="text-gray-700 dark:text-slate-300 font-semibold text-base">T. Débito</Text>
+        {/* Confirmar */}
+        {mostrar && (
+          <View className="mt-2">
+            <Pressable onPress={() => setIsConfirmModalVisible(true)} className="bg-emerald-600 dark:bg-emerald-900/40 p-2.5 rounded-2xl">
+              <Animated.View style={{ transform: [{ scale: scaleCerrar }] }}>
+                <Text className="text-white dark:text-slate-100 font-bold text-lg text-center">Cierre de caja</Text>
+              </Animated.View>
+            </Pressable>
           </View>
-          <Text className="text-blue-600 dark:text-blue-400 font-bold text-lg">{mostrar ? `$${vales.debito.toFixed(2)}` : '-'}</Text>
-        </View>
-
-        {/* Row: Credito */}
-        <View className="flex-row justify-between items-center py-3">
-          <View className="flex-row items-center gap-3">
-            <View className="bg-violet-100 dark:bg-violet-900/40 p-2.5 rounded-2xl">
-              <Ionicons name="card-outline" size={20} color={isDark ? '#a78bfa' : '#7c3aed'} />
-            </View>
-            <Text className="text-gray-700 dark:text-slate-300 font-semibold text-base">T. Crédito</Text>
-          </View>
-          <Text className="text-violet-600 dark:text-violet-400 font-bold text-lg">{mostrar ? `$${vales.credito.toFixed(2)}` : '-'}</Text>
-        </View>
+        )}
       </View>
 
       <ModalGetUsuario visible={isUserModalVisible} onClose={() => setIsUserModalVisible(false)} onConfirm={handleGetUser} isLoadingUsuario={isLoadingUsuario} />
+
+      <ToastConfirmacion visible={isConfirmModalVisible} mensaje="¿Estás seguro de que deseas cerrar la caja?" onConfirm={handleCerrarCaja} onCancel={() => setIsConfirmModalVisible(false)} />
     </View>
   );
 }

@@ -1,6 +1,11 @@
 import express from "express";
 import cors from "cors";
-import { productosRoutes, usuariosRoutes, ventasRoutes } from "./routes";
+import {
+  cajaRoutes,
+  productosRoutes,
+  usuariosRoutes,
+  ventasRoutes,
+} from "./routes";
 
 const app = express();
 
@@ -19,5 +24,6 @@ app.use("/test", (req, res) => {
 app.use("/productos", productosRoutes);
 app.use("/usuarios", usuariosRoutes);
 app.use("/ventas", ventasRoutes);
+app.use("/caja", cajaRoutes);
 
 export default app;

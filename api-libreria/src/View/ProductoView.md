@@ -1,4 +1,4 @@
-CREATE VIEW api_articulos AS
+CREATE VIEW api_articuloss AS
 SELECT
 id_articulo
 codigo,

@@ -24,13 +24,13 @@
 
 1. Bajar la imagen: `docker pull novatechdes/api-lachi:1.0.0`
 2. Parar y borrar el contenedor: `docker stop api-lachi` y `docker rm api-lachi`
-3. Iniciar contenedor: `docker run -p 3001:3001 -e DB_HOST=192.168.0.138 -e DB_USER=pelusa -e DB_PASSWORD="Pelusa3345&" -e DB_NAME=libreria novatechdes/api-lachi:latest`
+3. Iniciar contenedor: `docker run -p 3000:3000 -e DB_HOST=192.168.0.138 -e DB_USER=pelusa -e DB_PASSWORD="Pelusa3345&" -e DB_NAME=libreria -e BASE_URL=http://192.168.0.138:3000 novatechdes/api-lachi:latest`
 
 # Actualizar en Cliente
 
 1. Bajar la imagen: `docker pull novatechdes/api-lachi:latest`
 2. Parar y borrar el contenedor: `docker stop api-lachi` y `docker rm api-lachi`
-3. Iniciar contenedor: `docker run -p 3000:3000 --restart always -e DB_HOST=host.docker.internal -e DB_USER=pelusa -e DB_PASSWORD="Pelusa3345&" -e DB_NAME=libreria novatechdes/api-lachi:latest`
+3. Iniciar contenedor: `docker run -p 3000:3000 -e DB_HOST=192.168.0.138 -e DB_USER=pelusa -e DB_PASSWORD="Pelusa3345&" -e DB_NAME=libreria -e BASE_URL=http://192.168.0.138:3000 novatechdes/api-lachi:latest`
 
 # Ejecutar Docker
 

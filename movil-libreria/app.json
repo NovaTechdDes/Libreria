@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Libreria",
-    "slug": "Libreria",
+    "name": "Libreria Lachi",
+    "slug": "LibreriaLachi",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/Logo.png",
@@ -18,7 +18,7 @@
         "monochromeImage": "./assets/images/Logo.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.pelusaaal.movillibreria"
+      "package": "com.pelusaaal.movillibrerialachi"
     },
     "web": {
       "output": "static",
@@ -57,6 +57,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "7398a946-b497-4ac4-9efb-e77ff1a96ec3"
+      }
     }
   }
 }

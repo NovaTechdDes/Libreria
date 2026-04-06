@@ -27,8 +27,6 @@ export async function getProductos(
     ORDER BY codigo DESC
     `);
 
-  console.log(process.env.BASE_URL);
-
   return result.recordset.map((producto) => ({
     ...producto,
     imagen: producto.codigo
@@ -52,5 +50,6 @@ export async function putProducto(
           cantidad = @cantidad
       WHERE codigo = @codigo
     `);
+
   return result.rowsAffected[0] > 0;
 }

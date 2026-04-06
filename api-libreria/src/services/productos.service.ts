@@ -9,5 +9,6 @@ export async function obtenerProductos(
 }
 
 export async function putProducto(producto: Partial<Producto>) {
-  return await repo.putProducto(producto);
+  const result = await repo.putProducto(producto);
+  return result;
 }

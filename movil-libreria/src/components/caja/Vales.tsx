@@ -99,7 +99,7 @@ export default function Vales() {
   if (isLoadingVales) return <Loading message="Cargando datos" />;
 
   return (
-    <View className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-slate-800 mb-8">
+    <View className="bg-white rounded-lg dark:bg-slate-900 p-6 shadow-sm border border-gray-100 dark:border-slate-800">
       {/* Total */}
       <View className="flex-row justify-between items-center mb-6">
         <Text className="text-gray-400 dark:text-slate-500 font-medium uppercase tracking-wider text-xs">Total del dia</Text>
@@ -113,7 +113,7 @@ export default function Vales() {
 
       <Text className="text-4xl font-black text-gray-900 dark:text-slate-100 mb-6">{mostrar ? `$${vales?.reduce((acc: number, vale: Vale) => acc + (vale.saldo || 0), 0)?.toFixed(2)}` : '-'}</Text>
       <View className="space-y-4">
-        {vales.map((vale: Vale) => (
+        {vales?.map((vale: Vale) => (
           <ValedRow key={vale.tipo_importe} vale={vale} mostrar={mostrar} />
         ))}
 

@@ -9,6 +9,23 @@ export async function getValesDelDia() {
      GROUP BY tipo_importe`;
 
   const result = await pool.request().query(query);
+
+  if (result.recordset.length === 0) {
+    return [
+      {
+        tipo_importe: "Efectivo",
+        saldo: 0,
+      },
+      {
+        tipo_importe: "Credito",
+        saldo: 0,
+      },
+      {
+        tipo_importe: "Debito",
+        saldo: 0,
+      },
+    ];
+  }
   return result.recordset;
 }
 

@@ -10,7 +10,7 @@ const Ventas = () => {
   const { data: cajas, isLoading } = useCaja();
 
   return (
-    <View className="mb-10 bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-slate-800">
+    <View className="mt-5 flex-1 bg-white dark:bg-slate-900 rounded-lg p-6 shadow-sm border border-gray-100 dark:border-slate-800">
       <View className="flex-row justify-between items-center mb-6">
         <View>
           <Text className="text-xl font-black text-gray-800 dark:text-slate-100">Ventas del día</Text>

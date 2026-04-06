@@ -1,9 +1,10 @@
 import { Usuario } from '@/interface';
 import { mapUsuario } from '@/mappers/usuario.mappers';
 import { getUrl } from '@/utils/getURL';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-export const getUsuarioByClave = async (clave: string): Promise<Usuario> => {
+export const getUsuarioByClave = async (clave: string, servidor: boolean): Promise<Usuario> => {
   try {
     if (!clave) {
       return {
@@ -13,9 +14,15 @@ export const getUsuarioByClave = async (clave: string): Promise<Usuario> => {
         administrador: false,
       };
     }
-    const URL = `http://${await getUrl()}/usuarios/${clave}`;
+    let URL = '';
 
-    const { data } = await axios.get(URL);
+    if (servidor) {
+      URL = (await AsyncStorage.getItem('url_remoto')) ?? '';
+    } else {
+      URL = `http://${await getUrl()}`;
+    }
+
+    const { data } = await axios.get(`${URL}/usuarios/${clave}`);
 
     if (!data) {
       return {

@@ -5,6 +5,7 @@ import { useAppTheme } from '@/hooks/useAppTheme';
 import { useUsuarioByClave } from '@/hooks/usuarios/useUsuarioByClave';
 import { Vale } from '@/interface/Vale';
 import { useUsuarioStore } from '@/store';
+import { useGlobalStore } from '@/store/globalStore';
 import { mensaje } from '@/utils/mensaje';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
@@ -16,9 +17,10 @@ import ModalGetUsuario from '../usuarios/ModalGetUsuario';
 import ValedRow from './ValedRow';
 
 export default function Vales() {
+  const { servidor } = useGlobalStore();
   const { clave, setClave } = useUsuarioStore();
   const { data: usuario, isLoading: isLoadingUsuario } = useUsuarioByClave(clave);
-  const { data: vales, isLoading: isLoadingVales } = useVales();
+  const { data: vales, isLoading: isLoadingVales } = useVales(servidor);
 
   const { isDark, colors } = useAppTheme();
   const { postCierreCaja } = useMutateCaja();
@@ -32,7 +34,7 @@ export default function Vales() {
 
   const handleGetUser = async (nuevaClave: string) => {
     setClave(nuevaClave);
-    const data = await getUsuarioByClave(nuevaClave);
+    const data = await getUsuarioByClave(nuevaClave, servidor);
 
     if (data?.administrador) {
       setMostrar(true);
@@ -84,7 +86,7 @@ export default function Vales() {
       text1: 'Caja cerrada correctamente',
     });
 
-    const data = await postCierreCaja.mutateAsync();
+    const data = await postCierreCaja.mutateAsync(servidor);
     if (data) {
       mensaje('success', 'Caja cerrada correctamente', '');
     } else {
@@ -120,9 +122,9 @@ export default function Vales() {
         {/* Confirmar */}
         {mostrar && (
           <View className="mt-2">
-            <Pressable onPress={() => setIsConfirmModalVisible(true)} className="bg-emerald-600 dark:bg-emerald-900/40 p-2.5 rounded-2xl">
+            <Pressable onPress={() => setIsConfirmModalVisible(true)} disabled={postCierreCaja.isPending} className="bg-emerald-600 dark:bg-emerald-900/40 p-2.5 rounded-2xl">
               <Animated.View style={{ transform: [{ scale: scaleCerrar }] }}>
-                <Text className="text-white dark:text-slate-100 font-bold text-lg text-center">Cierre de caja</Text>
+                <Text className="text-white dark:text-slate-100 font-bold text-lg text-center">{postCierreCaja.isPending ? 'Cerrando...' : 'Cierre de caja'}</Text>
               </Animated.View>
             </Pressable>
           </View>

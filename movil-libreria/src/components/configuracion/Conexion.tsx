@@ -3,6 +3,7 @@ import { useProductos } from '@/hooks';
 import { useCaja } from '@/hooks/caja/useCaja';
 import { useVales } from '@/hooks/caja/useVales';
 import { useAppTheme } from '@/hooks/useAppTheme';
+import { useGlobalStore } from '@/store/globalStore';
 import { mensaje } from '@/utils/mensaje';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,17 +11,14 @@ import { useQueryClient } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, TextInput, View } from 'react-native';
 
-interface URL {
-  url: string;
-}
-
 export default function Conexion() {
+  const { servidor } = useGlobalStore();
   const queryClient = useQueryClient();
   const { isDark, colors } = useAppTheme();
 
-  const { refetch: refetchProductos } = useProductos();
-  const { refetch: refetchVales } = useVales();
-  const { refetch: refetchCaja } = useCaja();
+  const { refetch: refetchProductos } = useProductos('', servidor);
+  const { refetch: refetchVales } = useVales(servidor);
+  const { refetch: refetchCaja } = useCaja(servidor);
 
   const [loading, setLoading] = useState(false);
   const [testLoading, setTestLoading] = useState(false);

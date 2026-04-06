@@ -1,11 +1,19 @@
 import { mapCaja } from '@/mappers/caja.mappers';
 import { getUrl } from '@/utils/getURL';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-export const getMovCajas = async () => {
+export const getMovCajas = async (servidor: boolean) => {
   try {
-    const url = `http://${await getUrl()}/caja`;
-    const { data } = await axios.get(url);
+    let URL = '';
+
+    if (servidor) {
+      URL = (await AsyncStorage.getItem('url_remoto')) ?? '';
+    } else {
+      URL = `http://${await getUrl()}`;
+    }
+
+    const { data } = await axios.get(`${URL}/caja`);
 
     if (data.ok) {
       return data.data.map(mapCaja);
@@ -17,10 +25,17 @@ export const getMovCajas = async () => {
   }
 };
 
-export const getVales = async () => {
+export const getVales = async (servidor: boolean) => {
   try {
-    const url = `http://${await getUrl()}/caja/vales`;
-    const { data } = await axios.get(url);
+    let URL = '';
+
+    if (servidor) {
+      URL = (await AsyncStorage.getItem('url_remoto')) ?? '';
+    } else {
+      URL = `http://${await getUrl()}`;
+    }
+
+    const { data } = await axios.get(`${URL}/caja/vales`);
 
     if (data.ok) {
       return data.data;
@@ -32,10 +47,17 @@ export const getVales = async () => {
   }
 };
 
-export const startCierreCaja = async (): Promise<boolean> => {
+export const startCierreCaja = async (servidor: boolean): Promise<boolean> => {
   try {
-    const url = `http://${await getUrl()}/caja/cierre`;
-    const { data } = await axios.post(url);
+    let URL = '';
+
+    if (servidor) {
+      URL = (await AsyncStorage.getItem('url_remoto')) ?? '';
+    } else {
+      URL = `http://${await getUrl()}`;
+    }
+
+    const { data } = await axios.post(`${URL}/caja/cierre`);
     if (data.ok) {
       return true;
     }

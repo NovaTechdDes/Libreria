@@ -1,5 +1,6 @@
 import { useCaja } from '@/hooks/caja/useCaja';
 import { Caja } from '@/interface';
+import { useGlobalStore } from '@/store/globalStore';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { Loading } from '../ui/Loading';
@@ -7,7 +8,8 @@ import VentaItem from './VentaItem';
 import VentasVacia from './VentasVacia';
 
 const Ventas = () => {
-  const { data: cajas, isLoading } = useCaja();
+  const { servidor } = useGlobalStore();
+  const { data: cajas, isLoading } = useCaja(servidor);
 
   return (
     <View className="mt-5 flex-1 bg-white dark:bg-slate-900 rounded-lg p-6 shadow-sm border border-gray-100 dark:border-slate-800">

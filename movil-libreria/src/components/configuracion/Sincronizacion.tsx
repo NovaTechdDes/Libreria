@@ -1,26 +1,41 @@
 import { useAppTheme } from '@/hooks/useAppTheme';
+import { useGlobalStore } from '@/store/globalStore';
+import { mensaje } from '@/utils/mensaje';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, Text, TextInput, View } from 'react-native';
 
 export default function Sincronizacion() {
+  const { servidor, setServidor } = useGlobalStore();
   const { isDark, colors } = useAppTheme();
-  const [servidor, setServidor] = useState<boolean>(false);
+  const [ip, setIp] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleServidor = async () => {
-    await AsyncStorage.setItem('servidor', `${!servidor}`);
     setServidor(!servidor);
   };
 
+  const onSubmit = async () => {
+    setLoading(true);
+    try {
+      await AsyncStorage.setItem('url_remoto', ip);
+      mensaje('success', 'Guardado exitosamente de conexion remota', '');
+    } catch (error) {
+      mensaje('error', 'Error al guardar', '');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const getLocal = async () => {
-      const servidor = await AsyncStorage.getItem('servidor');
-      if (servidor) {
-        setServidor(servidor === 'true');
+    const getIp = async () => {
+      const ip = await AsyncStorage.getItem('url_remoto');
+      if (ip) {
+        setIp(ip);
       }
     };
-    getLocal();
+    getIp();
   }, []);
 
   return (
@@ -30,6 +45,27 @@ export default function Sincronizacion() {
           <Ionicons name="sync-outline" size={20} color={isDark ? '#fb923c' : '#f97316'} />
         </View>
         <Text className="text-xl font-bold text-gray-800 dark:text-slate-100">Sincronización</Text>
+      </View>
+
+      <View>
+        <View className="mb-6">
+          <Text className="text-gray-400 dark:text-slate-500 font-bold uppercase tracking-wider text-[10px] mb-2 px-1">Dirección IP del servidor remoto</Text>
+          <TextInput
+            placeholder="192.168.0.168:3000"
+            value={ip}
+            onChangeText={setIp}
+            placeholderTextColor={colors.placeholder}
+            className="bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl px-4 py-3 text-lg text-gray-800 dark:text-slate-100"
+          />
+        </View>
+
+        {loading ? (
+          <ActivityIndicator size="large" color={colors.accent} />
+        ) : (
+          <Pressable onPress={onSubmit} className="bg-blue-600 rounded-2xl py-4 items-center shadow-md shadow-blue-200 mb-4">
+            <Text className="text-white font-black text-lg">Aplicar Cambios Remotos</Text>
+          </Pressable>
+        )}
       </View>
 
       <Pressable onPress={handleServidor} className="flex-row items-center justify-between bg-orange-50 dark:bg-orange-900/10 border border-orange-100 dark:border-orange-900/20 rounded-2xl p-4">

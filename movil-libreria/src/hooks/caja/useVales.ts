@@ -1,9 +1,9 @@
 import { getVales } from '@/actions/caja.actions';
 import { useQuery } from '@tanstack/react-query';
 
-export const useVales = () => {
+export const useVales = (servidor: boolean) => {
   return useQuery({
-    queryKey: ['vales'],
-    queryFn: () => getVales(),
+    queryKey: ['vales', servidor],
+    queryFn: () => getVales(servidor),
   });
 };

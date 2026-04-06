@@ -5,7 +5,7 @@ export const useMutateCaja = () => {
   const queryClient = useQueryClient();
 
   const postCierreCaja = useMutation({
-    mutationFn: () => startCierreCaja(),
+    mutationFn: (servidor: boolean) => startCierreCaja(servidor),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['caja'] });
       queryClient.invalidateQueries({ queryKey: ['vales'] });

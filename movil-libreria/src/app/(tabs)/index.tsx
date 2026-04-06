@@ -9,17 +9,19 @@ import ModalGetUsuario from '@/components/usuarios/ModalGetUsuario';
 import { useProductos } from '@/hooks/productos/useProductos';
 import { useUsuarioByClave } from '@/hooks/usuarios/useUsuarioByClave';
 import { useProductoStore, useUsuarioStore } from '@/store';
+import { useGlobalStore } from '@/store/globalStore';
 import { mensaje } from '@/utils/mensaje';
 import { useCameraPermissions } from 'expo-camera';
 import React, { useState } from 'react';
-import { FlatList, RefreshControl, View } from 'react-native';
+import { FlatList, RefreshControl, Text, View } from 'react-native';
 
 export default function HomeScreen() {
+  const { servidor } = useGlobalStore();
   const { modal, buscador, abrirModal } = useProductoStore();
   const { clave, setClave } = useUsuarioStore();
 
-  const { data: productos, isLoading, refetch } = useProductos(buscador);
-  const { data: usuario, isLoading: isLoadingUsuario } = useUsuarioByClave(clave);
+  const { data: productos, isLoading, refetch } = useProductos(buscador, servidor);
+  const { data: usuario, isLoading: isLoadingUsuario } = useUsuarioByClave(clave, servidor);
 
   const [refreshing, setRefreshing] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
@@ -47,7 +49,7 @@ export default function HomeScreen() {
 
   const handleGetUser = async (nuevaClave: string) => {
     setClave(nuevaClave);
-    const data = await getUsuarioByClave(nuevaClave);
+    const data = await getUsuarioByClave(nuevaClave, servidor);
 
     if (!nuevaClave) return;
     if (!data) {
@@ -67,6 +69,12 @@ export default function HomeScreen() {
 
   return (
     <View className="flex-1 bg-gray-100 dark:bg-slate-950 p-4">
+      <View className="flex-row justify-between items-center">
+        <Text className="text-2xl font-bold dark:text-white text-black">Productos</Text>
+
+        <Text className={`text-2xl font-bold ${servidor ? 'text-red-500' : 'text-green-500'}`}>{servidor ? 'Remoto' : 'Local'}</Text>
+      </View>
+
       {/* tarjetas */}
       <FlatList
         data={productos}
@@ -79,7 +87,7 @@ export default function HomeScreen() {
       />
 
       {/* modal */}
-      {modal && <ModalProducto />}
+      {modal && <ModalProducto servidor={servidor} />}
       <ModalGetUsuario visible={isUserModalVisible} onClose={() => setIsUserModalVisible(false)} onConfirm={handleGetUser} isLoadingUsuario={isLoadingUsuario} />
     </View>
   );

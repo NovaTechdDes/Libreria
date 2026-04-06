@@ -2,24 +2,23 @@ import Vales from '@/components/caja/Vales';
 import Ventas from '@/components/caja/Ventas';
 import { useCaja } from '@/hooks/caja/useCaja';
 import { useVales } from '@/hooks/caja/useVales';
-import { useVenta } from '@/hooks/venta/useVenta';
+import { useGlobalStore } from '@/store/globalStore';
 import React, { useCallback, useState } from 'react';
 import { RefreshControl, ScrollView, Text, View } from 'react-native';
 
 export default function CajaScreen() {
-  const { refetch } = useVenta();
-  const { refetch: refetchCaja } = useCaja();
-  const { refetch: refetchVales } = useVales();
+  const { servidor } = useGlobalStore();
+  const { refetch: refetchCaja } = useCaja(servidor);
+  const { refetch: refetchVales } = useVales(servidor);
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
 
-    await refetch();
     await refetchCaja();
     await refetchVales();
     setRefreshing(false);
-  }, [refetch, refetchCaja, refetchVales]);
+  }, [refetchCaja, refetchVales]);
 
   return (
     <ScrollView className="flex-1 bg-gray-50 dark:bg-slate-950 px-5 pt-6" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>

@@ -1,13 +1,20 @@
 import { Producto } from '@/interface';
 import { mapProducto, mapProductoBackend } from '@/mappers/producto.mappers';
 import { getUrl } from '@/utils/getURL';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-export const getProductos = async (search?: string): Promise<Producto[]> => {
-  const URL = `http://${await getUrl()}/productos/`;
+export const getProductos = async (search: string, servidor: boolean): Promise<Producto[]> => {
+  let URL = '';
+
+  if (servidor) {
+    URL = (await AsyncStorage.getItem('url_remoto')) ?? '';
+  } else {
+    URL = `http://${await getUrl()}`;
+  }
 
   try {
-    const { data } = await axios.get(`${URL}`, {
+    const { data } = await axios.get(`${URL}/productos/`, {
       params: {
         search: search || undefined,
         limit: 100,
@@ -21,10 +28,18 @@ export const getProductos = async (search?: string): Promise<Producto[]> => {
   }
 };
 
-export const putProducto = async (producto: Partial<Producto>): Promise<Producto | null> => {
-  const URL = `http://${await getUrl()}/productos/`;
+export const putProducto = async (producto: Partial<Producto>, servidor: boolean): Promise<Producto | null> => {
+  let URL = '';
+
+  if (servidor) {
+    URL = (await AsyncStorage.getItem('url_remoto')) ?? '';
+  } else {
+    URL = `http://${await getUrl()}`;
+  }
   try {
-    const { data } = await axios.put(`${URL}${producto.id}`, mapProductoBackend(producto));
+    const { data } = await axios.put(`${URL}/productos/${producto.id}`, mapProductoBackend(producto), {
+      timeout: 2000,
+    });
 
     if (data.data) {
       return mapProducto(data.data);

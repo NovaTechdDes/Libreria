@@ -64,17 +64,12 @@ export default function ProductItem({ item, setIsUserModalVisible }: Props) {
           <View className="flex-row justify-between items-end mt-2">
             <View>
               <Text className="text-xs text-slate-400 dark:text-slate-500 font-medium">Precio</Text>
-              <Text className="text-lg font-bold text-slate-900 dark:text-blue-400">
-                $
-                {item.precio.toLocaleString('es-CL', {
-                  minimumFractionDigits: 2,
-                })}
-              </Text>
+              <Text className="text-lg font-bold text-slate-900 dark:text-blue-400">${item.precio}</Text>
             </View>
 
             <View className="items-end">
               <View className="bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-md mb-1">
-                <Text className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold">STOCK: {item.stock.toFixed(0)}</Text>
+                <Text className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold">STOCK: {item.stock?.toFixed(0) ?? 0}</Text>
               </View>
             </View>
           </View>

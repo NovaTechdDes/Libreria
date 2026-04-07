@@ -15,6 +15,5 @@ services:
       - BASE_URL=${BASE_URL}
       - PORT=${PORT}
     volumes:
-      - ./src/uploads:/src/uploads
       - .cert:/cert/cert
     restart: always

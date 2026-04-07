@@ -2,8 +2,8 @@
 
 # Hacer una instalacion fisica como prebuild
 
-1. npx expo prebuild
-2. Para correr en android `npx expo run:android `
+1. `npx expo prebuild`
+2. Para correr en android `npx expo run:android`
 
 # Iniciar desarrollo
 

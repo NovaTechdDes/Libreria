@@ -31,14 +31,13 @@ export default function ModalProducto({ servidor }: Props) {
   const handlePut = async () => {
     const res = await modificarProducto.mutateAsync({
       producto: {
+        codigo: productoSeleccionado?.codigo,
         id: productoSeleccionado?.id,
         precio: Number(precio),
         stock: Number(stock),
       },
       servidor,
     });
-
-    console.log(res);
     if (res) {
       await mensaje('success', 'Producto actualizado', 'Se guardaron los cambios correctamente');
     } else {

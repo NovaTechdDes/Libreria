@@ -1,6 +1,7 @@
 import { Producto } from '@/interface';
 
 interface ProductoBackend {
+  id: string;
   codigo: string;
   descripcion: string;
   precio: number;
@@ -12,7 +13,8 @@ interface ProductoBackend {
 
 export const mapProducto = (item: ProductoBackend): Producto => {
   return {
-    id: item.codigo,
+    id: item.id,
+    codigo: item.codigo,
     descripcion: item.descripcion,
     precio: item.precio,
     stock: item.cantidad,
@@ -24,7 +26,7 @@ export const mapProducto = (item: ProductoBackend): Producto => {
 
 export const mapProductoBackend = (producto: Partial<Producto>): Partial<ProductoBackend> => {
   return {
-    codigo: producto.id,
+    codigo: producto.codigo,
     precio: producto.precio,
     cantidad: producto.stock,
   };

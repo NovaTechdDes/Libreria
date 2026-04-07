@@ -19,7 +19,7 @@ import ValedRow from './ValedRow';
 export default function Vales() {
   const { servidor } = useGlobalStore();
   const { clave, setClave } = useUsuarioStore();
-  const { data: usuario, isLoading: isLoadingUsuario } = useUsuarioByClave(clave);
+  const { data: usuario, isLoading: isLoadingUsuario } = useUsuarioByClave(clave, servidor);
   const { data: vales, isLoading: isLoadingVales } = useVales(servidor);
 
   const { isDark, colors } = useAppTheme();

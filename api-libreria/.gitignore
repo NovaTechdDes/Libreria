@@ -7,3 +7,17 @@ dist
 cert
 
 api-libreria.exe
+
+backend/
+
+# Inno Setup
+output/
+
+# Node.js installer
+node-v24.14.1-x64.msi
+
+# NSSM
+nssm.exe
+
+# Distribución
+MiServidorBackup.exe

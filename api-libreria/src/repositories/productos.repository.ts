@@ -30,7 +30,7 @@ export async function getProductos(
   return result.recordset.map((producto) => ({
     ...producto,
     imagen: producto.codigo
-      ? `${process.env.BASE_URL}/uploads/${producto.codigo}`
+      ? `http://${process.env.DB_HOST}:${process.env.PORT_LOCAL}/uploads/${producto.codigo}`
       : "",
   }));
 }

@@ -9,3 +9,7 @@
 
 1. Instalar dependencias `npm run i`
 2. Ejecutar `npx expo start` Para iniciar el servidor de desarrollo
+
+# Construir la app
+
+1. Ejecutar `eas build -p android --profile preview`

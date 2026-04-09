@@ -17,15 +17,48 @@ export async function getValesDelDia() {
         saldo: 0,
       },
       {
-        tipo_importe: "Credito",
+        tipo_importe: "Crédito",
         saldo: 0,
       },
       {
-        tipo_importe: "Debito",
+        tipo_importe: "Débito",
         saldo: 0,
       },
     ];
   }
+
+  const tieneEfectivo = result.recordset.some(
+    (elem) => elem.tipo_importe === "Efectivo",
+  );
+
+  const tieneCredito = result.recordset.some(
+    (elem) => elem.tipo_importe === "Credito",
+  );
+
+  const tieneDebito = result.recordset.some(
+    (elem) => elem.tipo_importe === "Debito",
+  );
+
+  if (!tieneEfectivo) {
+    result.recordset.push({
+      tipo_importe: "Efectivo",
+      saldo: 0,
+    });
+  }
+
+  if (!tieneCredito) {
+    result.recordset.push({
+      tipo_importe: "Crédito",
+      saldo: 0,
+    });
+  }
+  if (!tieneDebito) {
+    result.recordset.push({
+      tipo_importe: "Débito",
+      saldo: 0,
+    });
+  }
+
   return result.recordset;
 }
 

@@ -1,7 +1,7 @@
 import { Producto } from '@/interface';
 
 interface ProductoBackend {
-  id: string;
+  id_articulo: string;
   codigo: string;
   descripcion: string;
   precio: number;
@@ -13,14 +13,14 @@ interface ProductoBackend {
 
 export const mapProducto = (item: ProductoBackend): Producto => {
   return {
-    id: item.id,
-    codigo: item.codigo,
-    descripcion: item.descripcion,
-    precio: item.precio,
-    stock: item.cantidad,
-    marca: item.marca,
-    categoria: item.rubro_tempo,
-    imagen: item.imagen,
+    id: item.id_articulo,
+    codigo: item.codigo ?? '',
+    descripcion: item.descripcion ?? '',
+    precio: item.precio ?? 0,
+    stock: item.cantidad ?? 0,
+    marca: item.marca ?? 'Sin Marca',
+    categoria: item.rubro_tempo ?? 'Sin Categoria',
+    imagen: item.imagen ?? '',
   };
 };
 

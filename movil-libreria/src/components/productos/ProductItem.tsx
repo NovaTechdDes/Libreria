@@ -28,7 +28,7 @@ export default function ProductItem({ item, setIsUserModalVisible }: Props) {
     !item?.descripcion?.toLowerCase().includes(buscador.toLowerCase()) &&
     !item?.categoria?.toLowerCase().includes(buscador.toLowerCase()) &&
     !item?.marca?.toLowerCase().includes(buscador.toLowerCase()) &&
-    !item?.id?.toString().toLowerCase().includes(buscador.toLowerCase())
+    !item?.codigo?.toString().toLowerCase().includes(buscador.toLowerCase())
   )
     return null;
 
@@ -53,7 +53,7 @@ export default function ProductItem({ item, setIsUserModalVisible }: Props) {
               <Text className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-2 py-0.5 rounded-full uppercase tracking-widest mb-1">
                 {item.categoria}
               </Text>
-              <Text className="text-[10px] font-bold text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full uppercase tracking-widest mb-1">{item.id}</Text>
+              <Text className="text-[10px] font-bold text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full uppercase tracking-widest mb-1">{item.codigo}</Text>
             </View>
             <Text className="text-base font-semibold text-slate-900 dark:text-slate-100 leading-tight" numberOfLines={2}>
               {item.descripcion}
@@ -64,7 +64,7 @@ export default function ProductItem({ item, setIsUserModalVisible }: Props) {
           <View className="flex-row justify-between items-end mt-2">
             <View>
               <Text className="text-xs text-slate-400 dark:text-slate-500 font-medium">Precio</Text>
-              <Text className="text-lg font-bold text-slate-900 dark:text-blue-400">${item.precio}</Text>
+              <Text className="text-lg font-bold text-slate-900 dark:text-blue-400">${item.precio.toFixed(2)}</Text>
             </View>
 
             <View className="items-end">

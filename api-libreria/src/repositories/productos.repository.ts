@@ -16,6 +16,7 @@ export async function getProductos(
 
   const result = await pool.request().input("search", safeSearch).query(`
     SELECT TOP (${safeLimit})
+    id_articulo,
     codigo,
     descripcion,
     precio,

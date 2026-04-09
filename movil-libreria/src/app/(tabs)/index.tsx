@@ -13,7 +13,7 @@ import { useGlobalStore } from '@/store/globalStore';
 import { mensaje } from '@/utils/mensaje';
 import { useCameraPermissions } from 'expo-camera';
 import React, { useState } from 'react';
-import { FlatList, RefreshControl, Text, View } from 'react-native';
+import { FlatList, KeyboardAvoidingView, Platform, RefreshControl, Text, View } from 'react-native';
 
 export default function HomeScreen() {
   const { servidor } = useGlobalStore();
@@ -68,7 +68,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <View className="flex-1 bg-gray-100 dark:bg-slate-950 p-4">
+    <KeyboardAvoidingView keyboardVerticalOffset={100} style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 bg-gray-100 dark:bg-slate-950 p-4">
       <View className="flex-row justify-between items-center">
         <Text className="text-2xl font-bold dark:text-white text-black">Productos</Text>
 
@@ -79,16 +79,19 @@ export default function HomeScreen() {
       <FlatList
         data={productos}
         className="mt-5"
-        renderItem={({ item }) => <ProductItem setIsUserModalVisible={setIsUserModalVisible} key={item.id} item={item} />}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <ProductItem setIsUserModalVisible={setIsUserModalVisible} item={item} />}
         ListHeaderComponent={<BuscadorProductos handleScan={handleScan} />}
         ItemSeparatorComponent={() => <View className="h-4" />}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         ListEmptyComponent={isLoading ? <Loading /> : null}
+        contentContainerStyle={{ paddingBottom: 250 }}
+        keyboardShouldPersistTaps="handled"
       />
 
       {/* modal */}
       {modal && <ModalProducto servidor={servidor} />}
       <ModalGetUsuario visible={isUserModalVisible} onClose={() => setIsUserModalVisible(false)} onConfirm={handleGetUser} isLoadingUsuario={isLoadingUsuario} />
-    </View>
+    </KeyboardAvoidingView>
   );
 }

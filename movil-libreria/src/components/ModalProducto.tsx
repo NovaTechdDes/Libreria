@@ -12,7 +12,6 @@ interface Props {
 }
 
 export default function ModalProducto({ servidor }: Props) {
-  console.log(servidor);
   const { isDark, colors } = useAppTheme();
 
   const { modal, cerrarModal, productoSeleccionado } = useProductoStore();

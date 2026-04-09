@@ -13,7 +13,7 @@ interface Props {
 export default function ProductItem({ item, setIsUserModalVisible }: Props) {
   const baseUrl = useUrl();
   const imageName = item.imagen || item.id;
-  const imageUrl = baseUrl ? `${imageName}.jpg` : null;
+  const imageUrl = baseUrl ? `${imageName}.png` : null;
   const hasImage = !!imageUrl;
 
   const { seleccionarProducto, buscador } = useProductoStore();

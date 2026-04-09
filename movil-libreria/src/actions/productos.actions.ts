@@ -37,7 +37,6 @@ export const putProducto = async (producto: Partial<Producto>, servidor: boolean
     URL = `http://${await getUrl()}`;
   }
   try {
-    console.log(producto);
     const { data } = await axios.put(`${URL}/productos/${producto.id}`, mapProductoBackend(producto), {
       timeout: 2000,
     });

@@ -3,12 +3,12 @@
 ; ==============================
 
 [Setup]
-AppName=MiServidorBackup
-AppVersion=1.0.0
-DefaultDirName={commonappdata}\MiServidorBackup
-DefaultGroupName=MiServidorBackup
+AppName=ServidorLibreria
+AppVersion=2.0.0
+DefaultDirName={commonappdata}\ServidorLibreria
+DefaultGroupName=ServidorLibreria
 OutputDir=output
-OutputBaseFilename=Instalador_MiServidorBackup
+OutputBaseFilename=Instalador_ServidorLibreria
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=admin
@@ -92,11 +92,8 @@ Flags: runhidden waituntilterminated
 [Code]
 
 Var DBPage: TInputQueryWizardPage;
+var ConfigPage: TInputQueryWizardPage;
 
-var USERPage: TInputQueryWizardPage;
-var PASSWORDPage: TInputQueryWizardPage;
-var HOSTPage: TInputQueryWizardPage;
-var PORTPage: TInputQueryWizardPage;
 
 procedure InitializeWizard;
 begin
@@ -109,47 +106,23 @@ DBPage := CreateInputQueryPage(
 
   DBPage.Add('DB_NAME:', False);
 
-   USERPage := CreateInputQueryPage(
+   ConfigPage := CreateInputQueryPage(
     wpWelcome,
     'Configuración de Base de Datos',
-    'Ingrese el usuario de la base de datos',
-    'Este valor se guardará en el archivo .env del sistema.'
+    'Ingrese los datos de conexion',
+    'Estos valor se guardará en el archivo .env del sistema.'
   );
 
-  USERPage.Add('DB_USER:', False);
-
-  PASSWORDPage := CreateInputQueryPage(
-    wpWelcome,
-    'Configuración de Base de Datos',
-    'Ingrese la contraseña de la base de datos',
-    'Este valor se guardará en el archivo .env del sistema.'
-  );
-
-  PASSWORDPage.Add('DB_PASSWORD:', False);
-
-  HOSTPage := CreateInputQueryPage(
-    wpWelcome,
-    'Configuración de Base de Datos',
-    'Ingrese el host de la base de datos',
-    'Este valor se guardará en el archivo .env del sistema.'
-  );
-
-  HOSTPage.Add('DB_HOST:', False);
-
-  PORTPage := CreateInputQueryPage(
-    wpWelcome,
-    'Configuración de Base de Datos',
-    'Ingrese el puerto de la base de datos',
-    'Este valor se guardará en el archivo .env del sistema.'
-  );
-
-  PORTPage.Add('DB_PORT:', False);
+  ConfigPage.Add('DB_USER:', False);
+  ConfigPage.Add('DB_PASSWORD:', False);
+  ConfigPage.Add('DB_HOST:', False);
+  ConfigPage.Add('DB_PORT:', False);
 
   //Valor Por defecto
-  USERPage.Values[0] := 'sa';
-  PASSWORDPage.Values[0] := '1234';
-  HOSTPage.Values[0] := 'localhost';
-  PORTPage.Values[0] := '3000'; 
+  ConfigPage.Values[0] := 'sa';
+  ConfigPage.Values[1] := '1234';
+  ConfigPage.Values[2] := 'localhost';
+  ConfigPage.Values[3] := '3000'; 
 end;
 
 procedure CrearEnv;
@@ -162,9 +135,9 @@ begin
   EnvContent :=
     'DB_NAME=' + DBPage.Values[0] + #13#10 +
     'DB_USER=' + USERPage.Values[0] + #13#10 +
-    'DB_PASSWORD=' + PASSWORDPage.Values[0] + #13#10 +
-    'DB_HOST=' + HOSTPage.Values[0] + #13#10 +
-    'DB_PORT=' + PORTPage.Values[0] + #13#10;
+    'DB_PASSWORD=' + PASSWORDPage.Values[1] + #13#10 +
+    'DB_HOST=' + HOSTPage.Values[2] + #13#10 +
+    'DB_PORT=' + PORTPage.Values[3] + #13#10;
 
   SaveStringToFile(EnvFile, EnvContent, False);
 end;

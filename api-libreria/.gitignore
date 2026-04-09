@@ -9,6 +9,7 @@ cert
 api-libreria.exe
 
 backend/
+uploads/
 
 # Inno Setup
 output/

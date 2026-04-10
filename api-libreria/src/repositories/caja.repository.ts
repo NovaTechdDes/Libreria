@@ -4,7 +4,7 @@ export async function getValesDelDia() {
   const fecha = new Date().toISOString().split("T")[0];
 
   const query = `
-    SELECT tipo_importe, SUM(ISNULL(debe, 0)) - SUM(ISNULL(haber, 0)) as saldo
+    SELECT tipo_importe, SUM(ISNULL(haber, 0)) - SUM(ISNULL(debe, 0)) as saldo
      FROM caja WHERE fecha = '${fecha}'
      GROUP BY tipo_importe`;
 

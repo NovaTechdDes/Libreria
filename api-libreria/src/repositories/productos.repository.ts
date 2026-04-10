@@ -1,5 +1,6 @@
 import { pool, poolConnect } from "../config/db";
 import { Producto } from "../types/Producto";
+import { obtenerImagenSegura } from "../utils/obtenerImagenSegura";
 
 export async function getProductos(
   search?: string | undefined,
@@ -28,12 +29,14 @@ export async function getProductos(
     ORDER BY codigo DESC
     `);
 
-  return result.recordset.map((producto) => ({
-    ...producto,
-    imagen: producto.codigo
-      ? `http://${process.env.SERVIDOR_HOST}:${process.env.DB_PORT}/uploads/${producto.codigo}`
-      : "",
-  }));
+  const productosConImagen = await Promise.all(
+    result.recordset.map(async (producto) => ({
+      ...producto,
+      imagen: await obtenerImagenSegura(producto.codigo),
+    })),
+  );
+
+  return productosConImagen;
 }
 
 export async function putProducto(

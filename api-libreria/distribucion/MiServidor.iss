@@ -3,7 +3,7 @@
 ; ==============================
 [Setup]
 AppName=ServidorLibreria
-AppVersion=3.0.0
+AppVersion=3.0.1
 DefaultDirName={commonappdata}\ServidorLibreria
 DefaultGroupName=ServidorLibreria
 OutputDir=output
@@ -19,6 +19,7 @@ ArchitecturesInstallIn64BitMode=x64
 [Files]
 Source: "nssm.exe"; DestDir: "{app}"
 Source: "node-v24.14.1-x64.msi"; DestDir: "{tmp}"
+Source: "..\package.json"; DestDir: "{app}"
 Source: "uploads\*"; DestDir: "{app}\uploads"; Flags: recursesubdirs createallsubdirs
 Source: "backend\*"; DestDir: "{app}"; Flags: recursesubdirs; AfterInstall: CrearEnv
 

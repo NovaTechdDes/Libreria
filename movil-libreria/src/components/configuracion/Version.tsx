@@ -5,29 +5,40 @@ import Constants from 'expo-constants';
 import * as Updates from 'expo-updates';
 import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import ToastConfirmacion from '../ui/ToastConfirm';
 
 export default function Version() {
   const { isDark, colors } = useAppTheme();
   const [checking, setChecking] = useState(false);
+  const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
   const version = Constants.expoConfig?.version;
 
-  const handleActualizar = async () => {
+  const handlePreguntarActualizacion = async () => {
     setChecking(true);
 
-    const update = await Updates.checkForUpdateAsync();
-
     try {
+      const update = await Updates.checkForUpdateAsync();
+
       if (update.isAvailable) {
-        await Updates.fetchUpdateAsync();
-        await Updates.reloadAsync();
-        mensaje('Actualización', 'Actualización exitosa', 'success');
+        setIsConfirmModalVisible(true);
       } else {
-        mensaje('No hay actualizaciones', 'Ya tienes la última versión', 'info');
+        mensaje('info', 'Ya tienes la última versión', 'No hay actualizaciones');
       }
     } catch (error) {
-      mensaje('Error', 'Error al buscar actualizaciones', 'error');
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      mensaje('error', 'Error al buscar actualizaciones', errorMessage);
     } finally {
       setChecking(false);
+    }
+  };
+
+  const handleActualizar = async () => {
+    try {
+      await Updates.fetchUpdateAsync();
+      await Updates.reloadAsync();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      mensaje('error', 'Error al actualizar', errorMessage);
     }
   };
 
@@ -51,7 +62,7 @@ export default function Version() {
       </View>
 
       <Pressable
-        onPress={handleActualizar}
+        onPress={handlePreguntarActualizacion}
         disabled={checking}
         className="flex-row items-center justify-center bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl py-4"
       >
@@ -64,6 +75,13 @@ export default function Version() {
           </>
         )}
       </Pressable>
+
+      <ToastConfirmacion
+        visible={isConfirmModalVisible}
+        mensaje="¿Estás seguro de que deseas actualizar la aplicación?"
+        onConfirm={handleActualizar}
+        onCancel={() => setIsConfirmModalVisible(false)}
+      />
     </View>
   );
 }

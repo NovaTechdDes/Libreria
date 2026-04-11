@@ -8,7 +8,7 @@ export async function getProductos(
 ): Promise<Producto[]> {
   await poolConnect;
 
-  const safeLimit = Number(limit) || 100;
+  const safeLimit = Number(limit) || 50;
   const safeSearch = search ? `%${search}%` : "%";
 
   const query = search

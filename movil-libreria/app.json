@@ -4,16 +4,23 @@
     "slug": "LibreriaLachi",
     "version": "2.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/Logo.png",
+    "icon": "./assets/icons/adaptive-icon.png",
     "scheme": "movillibreria",
     "userInterfaceStyle": "automatic",
+    "runtimeVersion": "2",
+    "updates": {
+      "url": "https://u.expo.dev/7398a946-b497-4ac4-9efb-e77ff1a96ec3",
+      "fallbackToCacheTimeout": 0,
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD"
+    },
     "ios": {
       "icon": "./assets/images/Logo.png"
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/adaptive-icon.png"
+        "foregroundImage": "./assets/icons/adaptive-icon.png"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.pelusaaal.movillibrerialachi"
@@ -27,11 +34,13 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#FFFFFF",
+          "imageWidth": 200,
+          "imageHeight": 200,
           "android": {
-            "image": "./assets/images/splash.png",
+            "image": "./assets/icons/splash-icon.png",
             "resizeMode": "contain",
-            "backgroundColor": "#208AEF"
+            "backgroundColor": "#FFFFFF"
           }
         }
       ],

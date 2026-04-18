@@ -32,6 +32,8 @@ export default function ProductItem({ item, setIsUserModalVisible }: Props) {
   )
     return null;
 
+  console.log(imageUrl);
+
   return (
     <View className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-4">
       <View className="flex-row p-3">

@@ -22,3 +22,7 @@ nssm.exe
 
 # Distribución
 MiServidorBackup.exe
+
+instaladores/
+cloudflared.exe
+node.msi

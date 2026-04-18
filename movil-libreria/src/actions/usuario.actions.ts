@@ -17,7 +17,7 @@ export const getUsuarioByClave = async (clave: string, servidor: boolean): Promi
     let URL = '';
 
     if (servidor) {
-      URL = (await AsyncStorage.getItem('url_remoto')) ?? '';
+      URL = `https://${(await AsyncStorage.getItem('url_remoto')) ?? ''}`;
     } else {
       URL = `http://${await getUrl()}`;
     }

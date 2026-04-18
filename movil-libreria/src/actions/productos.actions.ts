@@ -8,7 +8,7 @@ export const getProductos = async (search: string, servidor: boolean): Promise<P
   let URL = '';
 
   if (servidor) {
-    URL = (await AsyncStorage.getItem('url_remoto')) ?? '';
+    URL = `https://${(await AsyncStorage.getItem('url_remoto')) ?? ''}`;
   } else {
     URL = `http://${await getUrl()}`;
   }
@@ -18,6 +18,7 @@ export const getProductos = async (search: string, servidor: boolean): Promise<P
       params: {
         search: search || undefined,
         limit: 100,
+        servidor,
       },
     });
 
@@ -32,7 +33,7 @@ export const putProducto = async (producto: Partial<Producto>, servidor: boolean
   let URL = '';
 
   if (servidor) {
-    URL = (await AsyncStorage.getItem('url_remoto')) ?? '';
+    URL = `https://${(await AsyncStorage.getItem('url_remoto')) ?? ''}`;
   } else {
     URL = `http://${await getUrl()}`;
   }

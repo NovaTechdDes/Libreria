@@ -5,6 +5,7 @@ import { obtenerImagenSegura } from "../utils/obtenerImagenSegura";
 export async function getProductos(
   search?: string | undefined,
   limit?: number,
+  servidor?: boolean,
 ): Promise<Producto[]> {
   await poolConnect;
 
@@ -32,7 +33,7 @@ export async function getProductos(
   const productosConImagen = await Promise.all(
     result.recordset.map(async (producto) => ({
       ...producto,
-      imagen: await obtenerImagenSegura(producto.codigo),
+      imagen: await obtenerImagenSegura(producto.codigo, servidor),
     })),
   );
 

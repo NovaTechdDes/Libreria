@@ -1,15 +1,14 @@
-# Bienvenidos a la app movil de la libreria
-
-# Hacer una instalacion fisica como prebuild
+# Ejecutar build para probar en tablet android
 
 1. `npx expo prebuild`
-2. Para correr en android `npx expo run:android`
+2. Ejecutar `npx expo run:android`
 
-# Iniciar desarrollo
+# Verificar que no hay errores
 
-1. Instalar dependencias `npm run i`
-2. Ejecutar `npx expo start` Para iniciar el servidor de desarrollo
+1. `npx expo-doctor`
+2. `npx expo install --check`
 
-# Construir la app
+# Subir a produccion
 
-1. Ejecutar `eas build -p android --profile preview`
+1. ejecutar `eas build:configure`
+2. ejecutar `eas build --platform android --profile preview`

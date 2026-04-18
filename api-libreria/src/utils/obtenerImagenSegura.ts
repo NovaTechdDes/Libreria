@@ -1,7 +1,10 @@
 import path from "path";
 import fs from "fs/promises";
 
-export const obtenerImagenSegura = async (codigo: string) => {
+export const obtenerImagenSegura = async (
+  codigo: string,
+  servidor?: boolean,
+) => {
   const extensiones = ["png", "jpg", "jpeg", "gif", "webp"];
 
   if (!codigo) return "";
@@ -12,7 +15,11 @@ export const obtenerImagenSegura = async (codigo: string) => {
     try {
       await fs.access(rutaFisica);
 
-      return `http://${process.env.SERVIDOR_HOST}:${process.env.DB_PORT}/uploads/${codigo}.${ext}`;
+      if (servidor) {
+        return `${process.env.BASE_URL}/uploads/${codigo}.${ext}`;
+      } else {
+        return `http://${process.env.SERVIDOR_HOST}:${process.env.DB_PORT}/uploads/${codigo}.${ext}`;
+      }
     } catch (error) {
       continue;
     }

@@ -8,7 +8,7 @@ export const getMovCajas = async (servidor: boolean) => {
     let URL = '';
 
     if (servidor) {
-      URL = (await AsyncStorage.getItem('url_remoto')) ?? '';
+      URL = `https://${(await AsyncStorage.getItem('url_remoto')) ?? ''}`;
     } else {
       URL = `http://${await getUrl()}`;
     }
@@ -30,7 +30,7 @@ export const getVales = async (servidor: boolean) => {
     let URL = '';
 
     if (servidor) {
-      URL = (await AsyncStorage.getItem('url_remoto')) ?? '';
+      URL = `https://${(await AsyncStorage.getItem('url_remoto')) ?? ''}`;
     } else {
       URL = `http://${await getUrl()}`;
     }
@@ -52,7 +52,7 @@ export const startCierreCaja = async (servidor: boolean): Promise<boolean> => {
     let URL = '';
 
     if (servidor) {
-      URL = (await AsyncStorage.getItem('url_remoto')) ?? '';
+      URL = `https://${(await AsyncStorage.getItem('url_remoto')) ?? ''}`;
     } else {
       URL = `http://${await getUrl()}`;
     }

@@ -4,7 +4,7 @@ import { getUrl } from '@/utils/getURL';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-export const getProductos = async (search: string, servidor: boolean): Promise<Producto[]> => {
+export const getProductos = async (search: string, servidor: boolean, id_rubro: number | null): Promise<Producto[]> => {
   let URL = '';
 
   if (servidor) {
@@ -19,9 +19,9 @@ export const getProductos = async (search: string, servidor: boolean): Promise<P
         search: search || undefined,
         limit: 100,
         servidor,
+        id_rubro: id_rubro || 0,
       },
     });
-
     return data.data.map(mapProducto);
   } catch (error) {
     console.log(error);

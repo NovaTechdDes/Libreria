@@ -1,5 +1,5 @@
-import { Producto } from "@/interface";
-import { create } from "zustand";
+import { Producto } from '@/interface';
+import { create } from 'zustand';
 
 export interface ProductoState {
   modal: boolean;
@@ -13,6 +13,9 @@ export interface ProductoState {
   seleccionarProducto: (producto: Producto) => void;
 
   limpiarProducto: () => void;
+
+  rubroSeleccionado: number | null;
+  seleccionarRubro: (rubro: number | null) => void;
 }
 
 export const useProductoStore = create<ProductoState>((set) => ({
@@ -20,12 +23,14 @@ export const useProductoStore = create<ProductoState>((set) => ({
   abrirModal: () => set({ modal: true }),
   cerrarModal: () => set({ modal: false }),
 
-  buscador: "",
+  buscador: '',
   setBuscador: (buscador: string) => set({ buscador }),
 
   productoSeleccionado: null,
-  seleccionarProducto: (producto: Producto) =>
-    set({ productoSeleccionado: producto }),
+  seleccionarProducto: (producto: Producto) => set({ productoSeleccionado: producto }),
 
   limpiarProducto: () => set({ productoSeleccionado: null }),
+
+  rubroSeleccionado: null,
+  seleccionarRubro: (rubro: number | null) => set({ rubroSeleccionado: rubro }),
 }));

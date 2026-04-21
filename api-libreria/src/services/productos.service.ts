@@ -5,8 +5,9 @@ export async function obtenerProductos(
   search?: string | undefined,
   limit?: number,
   servidor?: boolean,
+  id_rubro?: number,
 ) {
-  return await repo.getProductos(search, limit, servidor);
+  return await repo.getProductos(search, limit, servidor, id_rubro);
 }
 
 export async function putProducto(producto: Partial<Producto>) {

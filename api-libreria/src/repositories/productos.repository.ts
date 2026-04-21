@@ -6,17 +6,27 @@ export async function getProductos(
   search?: string | undefined,
   limit?: number,
   servidor?: boolean,
+  id_rubro?: number,
 ): Promise<Producto[]> {
   await poolConnect;
+
+  console.log(id_rubro);
 
   const safeLimit = Number(limit) || 50;
   const safeSearch = search ? `%${search}%` : "%";
 
-  const query = search
-    ? `WHERE descripcion LIKE @search OR CAST(codigo AS VARCHAR) LIKE @search AND activo = 1`
-    : `WHERE activo = 1`;
+  let query = `WHERE activo = 1`;
+  if (id_rubro) {
+    query += ` AND id_rubro = @id_rubro`;
+  }
+  if (search) {
+    query += ` AND (descripcion LIKE @search OR CAST(codigo AS VARCHAR) LIKE @search)`;
+  }
 
-  const result = await pool.request().input("search", safeSearch).query(`
+  const result = await pool
+    .request()
+    .input("search", safeSearch)
+    .input("id_rubro", id_rubro).query(`
     SELECT TOP (${safeLimit})
     id_articulo,
     codigo,
@@ -24,7 +34,9 @@ export async function getProductos(
     precio,
     cantidad,
     marca,
-    rubro_tempo
+    rubro_tempo,
+    id_rubro,
+    rubro
     FROM api_articuloss
     ${query}
     ORDER BY codigo DESC

@@ -7,4 +7,5 @@ export interface Producto {
   categoria: string;
   imagen?: string;
   descripcion: string;
+  id_rubro: number;
 }

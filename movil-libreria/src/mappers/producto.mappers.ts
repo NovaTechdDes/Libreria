@@ -8,6 +8,8 @@ interface ProductoBackend {
   cantidad: number;
   marca: string;
   rubro_tempo: string;
+  id_rubro: number;
+  rubro: string;
   imagen?: string;
 }
 
@@ -19,7 +21,8 @@ export const mapProducto = (item: ProductoBackend): Producto => {
     precio: item.precio ?? 0,
     stock: item.cantidad ?? 0,
     marca: item.marca ?? 'Sin Marca',
-    categoria: item.rubro_tempo ?? 'Sin Categoria',
+    id_rubro: item.id_rubro ?? 0,
+    categoria: JSON.parse(item.rubro)?.nom_rubro_g ?? 'Sin Categoria',
     imagen: item.imagen ?? '',
   };
 };

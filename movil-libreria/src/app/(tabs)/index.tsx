@@ -4,8 +4,10 @@ import ModalProducto from '@/components/ModalProducto';
 import BuscadorProductos from '@/components/productos/BuscadorProductos';
 import CameraScan from '@/components/productos/CameraScan';
 import ProductItem from '@/components/productos/ProductItem';
+import RubroItem from '@/components/rubros/RubroItem';
 import { Loading } from '@/components/ui/Loading';
 import ModalGetUsuario from '@/components/usuarios/ModalGetUsuario';
+import { useRubros } from '@/hooks';
 import { useProductos } from '@/hooks/productos/useProductos';
 import { useUsuarioByClave } from '@/hooks/usuarios/useUsuarioByClave';
 import { useProductoStore, useUsuarioStore } from '@/store';
@@ -13,14 +15,15 @@ import { useGlobalStore } from '@/store/globalStore';
 import { mensaje } from '@/utils/mensaje';
 import { useCameraPermissions } from 'expo-camera';
 import React, { useState } from 'react';
-import { FlatList, KeyboardAvoidingView, Platform, RefreshControl, Text, View } from 'react-native';
+import { FlatList, KeyboardAvoidingView, Platform, RefreshControl, Text, TouchableOpacity, View } from 'react-native';
 
 export default function HomeScreen() {
-  const { servidor } = useGlobalStore();
-  const { modal, buscador, abrirModal } = useProductoStore();
+  const { servidor, setServidor } = useGlobalStore();
+  const { modal, buscador, abrirModal, rubroSeleccionado, seleccionarRubro } = useProductoStore();
   const { clave, setClave } = useUsuarioStore();
 
-  const { data: productos, isLoading, refetch } = useProductos(buscador, servidor);
+  const { data: productos, isLoading, refetch } = useProductos(buscador, servidor, rubroSeleccionado);
+  const { data: rubros, isLoading: isLoadingRubros, refetch: refetchRubros } = useRubros(servidor);
   const { data: usuario, isLoading: isLoadingUsuario } = useUsuarioByClave(clave, servidor);
 
   const [refreshing, setRefreshing] = useState(false);
@@ -67,18 +70,47 @@ export default function HomeScreen() {
     setIsUserModalVisible(false);
   };
 
+  const handleServidor = () => {
+    setServidor(!servidor);
+  };
+
+  const rubrosConTodos = rubros?.length > 0 ? [{ id_rubro: null, nombre_rubro: 'Todos' }, ...rubros] : [];
+  const showRubros = isLoadingRubros || rubrosConTodos.length > 0;
+
   return (
     <KeyboardAvoidingView keyboardVerticalOffset={100} style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 bg-gray-100 dark:bg-slate-950 p-4">
-      <View className="flex-row justify-between items-center">
+      <View className="flex-row justify-between items-center mb-4">
         <Text className="text-2xl font-bold dark:text-white text-black">Productos</Text>
 
-        <Text className={`text-2xl font-bold ${servidor ? 'text-red-500' : 'text-green-500'}`}>{servidor ? 'Remoto' : 'Local'}</Text>
+        <TouchableOpacity onPress={handleServidor}>
+          <Text className={`text-lg font-bold ${servidor ? 'text-red-500' : 'text-green-500'}`}>{servidor ? 'Remoto' : 'Local'}</Text>
+        </TouchableOpacity>
       </View>
+
+      {showRubros && (
+        <FlatList
+          data={rubrosConTodos}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => (item.id_rubro ? item.id_rubro.toString() : 'todos')}
+          renderItem={({ item }) => (
+            <RubroItem 
+              item={item} 
+              isSelected={rubroSeleccionado === item.id_rubro} 
+              onPress={() => seleccionarRubro(item.id_rubro)} 
+            />
+          )}
+          ItemSeparatorComponent={() => <View className="w-3" />}
+          ListEmptyComponent={isLoadingRubros ? <Loading /> : null}
+          contentContainerStyle={{ paddingRight: 20 }}
+          keyboardShouldPersistTaps="handled"
+        />
+      )}
 
       {/* tarjetas */}
       <FlatList
         data={productos}
-        className="mt-5"
+        className={showRubros ? "mt-5" : "mt-0"}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <ProductItem setIsUserModalVisible={setIsUserModalVisible} item={item} />}
         ListHeaderComponent={<BuscadorProductos handleScan={handleScan} />}

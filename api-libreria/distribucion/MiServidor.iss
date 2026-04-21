@@ -21,7 +21,6 @@ Source: "nssm.exe"; DestDir: "{app}"
 Source: "instaladores\node.msi"; DestDir: "{tmp}\instaladores"
 Source: "instaladores\cloudflared.exe"; DestDir: "{tmp}\instaladores"
 Source: "..\package.json"; DestDir: "{app}"
-Source: "uploads\*"; DestDir: "{app}\uploads"; Flags: recursesubdirs createallsubdirs
 Source: "backend\*"; DestDir: "{app}"; Flags: recursesubdirs; AfterInstall: CrearEnv
 
 ; ==============================
@@ -77,6 +76,8 @@ Filename: "{app}\nssm.exe"; Parameters: "start MiServidorBackup"; Flags: runhidd
 [UninstallRun]
 Filename: "{app}\nssm.exe"; Parameters: "stop MiServidorBackup"; Flags: runhidden waituntilterminated
 Filename: "{app}\nssm.exe"; Parameters: "remove MiServidorBackup confirm"; Flags: runhidden waituntilterminated
+Filename: "sc.exe"; Parameters: "stop cloudflared"; Flags: runhidden waituntilterminated
+Filename: "sc.exe"; Parameters: "delete cloudflared"; Flags: runhidden waituntilterminated
 
 [Code]
 var
@@ -86,9 +87,9 @@ var
 procedure InitializeWizard;
 begin
   DBPage := CreateInputQueryPage(wpWelcome, 'Configuración de Base de Datos', 'Ingrese el nombre de la base de datos', 'Este valor se guardará en el archivo .env del sistema.');
-  DBPage.Add('DB_NAME:', False);
-  DBPage.Add('SERVIDOR_HOST:', False);
-  DBPage.Add('BASE_URL:', False);
+  DBPage.Add('Nombre de la base de datos:', False);
+  DBPage.Add('Ip del servidor para servir imagenes:', False);
+  DBPage.Add('BASE_URL: (Ej: https://tu-dominio.com)', False);
 
   ConfigPage := CreateInputQueryPage(wpWelcome, 'Configuración de Base de Datos', 'Ingrese los datos de conexion', 'Estos valor se guardará en el archivo .env del sistema.');
   ConfigPage.Add('DB_USER:', False);

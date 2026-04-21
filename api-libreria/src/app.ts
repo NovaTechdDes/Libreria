@@ -3,6 +3,7 @@ import cors from "cors";
 import {
   cajaRoutes,
   productosRoutes,
+  rubroRoutes,
   usuariosRoutes,
   ventasRoutes,
 } from "./routes";
@@ -25,5 +26,6 @@ app.use("/productos", productosRoutes);
 app.use("/usuarios", usuariosRoutes);
 app.use("/ventas", ventasRoutes);
 app.use("/caja", cajaRoutes);
+app.use("/rubro", rubroRoutes);
 
 export default app;

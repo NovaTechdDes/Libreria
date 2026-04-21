@@ -13,8 +13,8 @@ export async function getProductos(
   const safeSearch = search ? `%${search}%` : "%";
 
   const query = search
-    ? `WHERE descripcion LIKE @search OR CAST(codigo AS VARCHAR) LIKE @search`
-    : "";
+    ? `WHERE descripcion LIKE @search OR CAST(codigo AS VARCHAR) LIKE @search AND activo = 1`
+    : `WHERE activo = 1`;
 
   const result = await pool.request().input("search", safeSearch).query(`
     SELECT TOP (${safeLimit})

@@ -22,7 +22,7 @@ export const mapProducto = (item: ProductoBackend): Producto => {
     stock: item.cantidad ?? 0,
     marca: item.marca ?? 'Sin Marca',
     id_rubro: item.id_rubro ?? 0,
-    categoria: JSON.parse(item.rubro)?.nom_rubro_g ?? 'Sin Categoria',
+    categoria: typeof item.rubro === 'string' ? JSON.parse(item.rubro)?.nom_rubro_g : ((item as any).rubro?.nom_rubro_g ?? 'Sin Categoria'),
     imagen: item.imagen ?? '',
   };
 };

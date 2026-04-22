@@ -28,9 +28,17 @@ export const putProducto = async (
 ) => {
   try {
     const producto = req.body;
+
     const productoActualizado = await service.putProducto(producto);
-    res.json({ data: productoActualizado });
+    res.status(200).json({
+      ok: true,
+      message: "Producto actualizado",
+      data: productoActualizado,
+    });
   } catch (error) {
+    res
+      .status(500)
+      .json({ ok: false, message: "Error al actualizar el producto" });
     next(error);
   }
 };

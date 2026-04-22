@@ -25,7 +25,7 @@ export const getMovCajas = async (servidor: boolean) => {
   }
 };
 
-export const getVales = async (servidor: boolean) => {
+export const getVales = async (servidor: boolean, usuario: string) => {
   try {
     let URL = '';
 
@@ -47,7 +47,7 @@ export const getVales = async (servidor: boolean) => {
   }
 };
 
-export const startCierreCaja = async (servidor: boolean): Promise<boolean> => {
+export const startCierreCaja = async (servidor: boolean, usuario: string): Promise<boolean> => {
   try {
     let URL = '';
 
@@ -57,7 +57,15 @@ export const startCierreCaja = async (servidor: boolean): Promise<boolean> => {
       URL = `http://${await getUrl()}`;
     }
 
-    const { data } = await axios.post(`${URL}/caja/cierre`);
+    const { data } = await axios.post(
+      `${URL}/caja/cierre`,
+      {},
+      {
+        headers: {
+          'x-api-key': usuario,
+        },
+      }
+    );
     if (data.ok) {
       return true;
     }

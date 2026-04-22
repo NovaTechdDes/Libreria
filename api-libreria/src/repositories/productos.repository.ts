@@ -10,8 +10,6 @@ export async function getProductos(
 ): Promise<Producto[]> {
   await poolConnect;
 
-  console.log(id_rubro);
-
   const safeLimit = Number(limit) || 50;
   const safeSearch = search ? `%${search}%` : "%";
 

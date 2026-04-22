@@ -1,6 +1,7 @@
 import { useAppTheme } from '@/hooks/useAppTheme';
+import { useGlobalStore } from '@/store/globalStore';
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import React, { useState } from 'react';
 import { Keyboard, Modal, Pressable, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -12,7 +13,8 @@ interface ModalGetUsuarioProps {
 }
 
 export default function ModalGetUsuario({ visible, onClose, onConfirm, isLoadingUsuario }: ModalGetUsuarioProps) {
-  const [clave, setClave] = React.useState('');
+  const { usuario, setUsuario } = useGlobalStore();
+  const [clave, setClave] = useState('');
   const { isDark, colors } = useAppTheme();
 
   const handleConfirm = () => {
@@ -24,7 +26,6 @@ export default function ModalGetUsuario({ visible, onClose, onConfirm, isLoading
     if (onConfirm) {
       onConfirm(clave);
     }
-    setClave('');
   };
 
   return (

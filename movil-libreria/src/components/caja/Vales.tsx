@@ -2,9 +2,7 @@ import { getUsuarioByClave } from '@/actions';
 import { useMutateCaja } from '@/hooks/caja/useMutateCaja';
 import { useVales } from '@/hooks/caja/useVales';
 import { useAppTheme } from '@/hooks/useAppTheme';
-import { useUsuarioByClave } from '@/hooks/usuarios/useUsuarioByClave';
 import { Vale } from '@/interface/Vale';
-import { useUsuarioStore } from '@/store';
 import { useGlobalStore } from '@/store/globalStore';
 import { mensaje } from '@/utils/mensaje';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,10 +15,8 @@ import ModalGetUsuario from '../usuarios/ModalGetUsuario';
 import ValedRow from './ValedRow';
 
 export default function Vales() {
-  const { servidor } = useGlobalStore();
-  const { clave, setClave } = useUsuarioStore();
-  const { data: usuario, isLoading: isLoadingUsuario } = useUsuarioByClave(clave, servidor);
-  const { data: vales, isLoading: isLoadingVales } = useVales(servidor);
+  const { servidor, setUsuario, usuario } = useGlobalStore();
+  const { data: vales, isLoading: isLoadingVales, refetch } = useVales(servidor, usuario);
 
   const { isDark, colors } = useAppTheme();
   const { postCierreCaja } = useMutateCaja();
@@ -33,7 +29,7 @@ export default function Vales() {
   const scaleCerrar = useRef(new Animated.Value(1)).current;
 
   const handleGetUser = async (nuevaClave: string) => {
-    setClave(nuevaClave);
+    setUsuario(nuevaClave);
     const data = await getUsuarioByClave(nuevaClave, servidor);
 
     if (data?.administrador) {
@@ -86,7 +82,7 @@ export default function Vales() {
       text1: 'Caja cerrada correctamente',
     });
 
-    const data = await postCierreCaja.mutateAsync(servidor);
+    const data = await postCierreCaja.mutateAsync({ servidor, usuario });
     if (data) {
       mensaje('success', 'Caja cerrada correctamente', '');
     } else {
@@ -96,7 +92,7 @@ export default function Vales() {
     setIsConfirmModalVisible(false);
   };
 
-  useEffect(() => {}, [usuario, clave]);
+  useEffect(() => {}, [usuario]);
 
   if (isLoadingVales) return <Loading message="Cargando datos" />;
 
@@ -131,7 +127,13 @@ export default function Vales() {
         )}
       </View>
 
-      <ModalGetUsuario visible={isUserModalVisible} onClose={() => setIsUserModalVisible(false)} onConfirm={handleGetUser} isLoadingUsuario={isLoadingUsuario} />
+      <ModalGetUsuario
+        visible={isUserModalVisible}
+        onClose={() => {
+          (setIsUserModalVisible(false), setUsuario(''));
+        }}
+        onConfirm={handleGetUser}
+      />
 
       <ToastConfirmacion visible={isConfirmModalVisible} mensaje="¿Estás seguro de que deseas cerrar la caja?" onConfirm={handleCerrarCaja} onCancel={() => setIsConfirmModalVisible(false)} />
     </View>

@@ -1,6 +1,7 @@
 import { useMutateProducto } from '@/hooks/productos/useMutateProducto';
 import { useAppTheme } from '@/hooks/useAppTheme';
-import { useProductoStore, useUsuarioStore } from '@/store';
+import { useProductoStore } from '@/store';
+import { useGlobalStore } from '@/store/globalStore';
 import { mensaje } from '@/utils/mensaje';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
@@ -15,7 +16,7 @@ export default function ModalProducto({ servidor }: Props) {
   const { isDark, colors } = useAppTheme();
 
   const { modal, cerrarModal, productoSeleccionado } = useProductoStore();
-  const { setClave } = useUsuarioStore();
+  const { usuario, setUsuario } = useGlobalStore();
   const { modificarProducto } = useMutateProducto();
   const [precio, setPrecio] = useState('');
   const [stock, setStock] = useState('');
@@ -36,21 +37,22 @@ export default function ModalProducto({ servidor }: Props) {
         stock: Number(stock),
       },
       servidor,
+      usuario,
     });
     if (res) {
       await mensaje('success', 'Producto actualizado', 'Se guardaron los cambios correctamente');
     } else {
       await mensaje('error', 'Error al actualizar', 'No se pudieron guardar los cambios');
     }
+    setUsuario('');
     cerrarModal();
-    setClave('');
   };
 
   if (!productoSeleccionado) return null;
 
   const handleClose = () => {
     cerrarModal();
-    setClave('');
+    setUsuario('');
   };
 
   return (

@@ -29,7 +29,7 @@ export const getProductos = async (search: string, servidor: boolean, id_rubro: 
   }
 };
 
-export const putProducto = async (producto: Partial<Producto>, servidor: boolean): Promise<Producto | null> => {
+export const putProducto = async (producto: Partial<Producto>, servidor: boolean, usuario: string): Promise<Producto | null> => {
   let URL = '';
 
   if (servidor) {
@@ -40,9 +40,12 @@ export const putProducto = async (producto: Partial<Producto>, servidor: boolean
   try {
     const { data } = await axios.put(`${URL}/productos/${producto.id}`, mapProductoBackend(producto), {
       timeout: 2000,
+      headers: {
+        'x-api-key': usuario,
+      },
     });
 
-    if (data.data) {
+    if (data.ok) {
       return mapProducto(data.data);
     }
     return null;

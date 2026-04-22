@@ -9,8 +9,7 @@ import { Loading } from '@/components/ui/Loading';
 import ModalGetUsuario from '@/components/usuarios/ModalGetUsuario';
 import { useRubros } from '@/hooks';
 import { useProductos } from '@/hooks/productos/useProductos';
-import { useUsuarioByClave } from '@/hooks/usuarios/useUsuarioByClave';
-import { useProductoStore, useUsuarioStore } from '@/store';
+import { useProductoStore } from '@/store';
 import { useGlobalStore } from '@/store/globalStore';
 import { mensaje } from '@/utils/mensaje';
 import { useCameraPermissions } from 'expo-camera';
@@ -18,13 +17,11 @@ import React, { useState } from 'react';
 import { FlatList, KeyboardAvoidingView, Platform, RefreshControl, Text, TouchableOpacity, View } from 'react-native';
 
 export default function HomeScreen() {
-  const { servidor, setServidor } = useGlobalStore();
+  const { servidor, setServidor, setUsuario } = useGlobalStore();
   const { modal, buscador, abrirModal, rubroSeleccionado, seleccionarRubro } = useProductoStore();
-  const { clave, setClave } = useUsuarioStore();
 
   const { data: productos, isLoading, refetch } = useProductos(buscador, servidor, rubroSeleccionado);
   const { data: rubros, isLoading: isLoadingRubros, refetch: refetchRubros } = useRubros(servidor);
-  const { data: usuario, isLoading: isLoadingUsuario } = useUsuarioByClave(clave, servidor);
 
   const [refreshing, setRefreshing] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
@@ -51,12 +48,15 @@ export default function HomeScreen() {
   };
 
   const handleGetUser = async (nuevaClave: string) => {
-    setClave(nuevaClave);
+    if (!nuevaClave) return;
+
+    setUsuario(nuevaClave);
+
     const data = await getUsuarioByClave(nuevaClave, servidor);
 
-    if (!nuevaClave) return;
     if (!data) {
       mensaje('error', 'Usuario no encontrado', '');
+      setUsuario('');
       return;
     }
 
@@ -93,13 +93,7 @@ export default function HomeScreen() {
           horizontal
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => (item.id_rubro ? item.id_rubro.toString() : 'todos')}
-          renderItem={({ item }) => (
-            <RubroItem 
-              item={item} 
-              isSelected={rubroSeleccionado === item.id_rubro} 
-              onPress={() => seleccionarRubro(item.id_rubro)} 
-            />
-          )}
+          renderItem={({ item }) => <RubroItem item={item} isSelected={rubroSeleccionado === item.id_rubro} onPress={() => seleccionarRubro(item.id_rubro)} />}
           ItemSeparatorComponent={() => <View className="w-3" />}
           ListEmptyComponent={isLoadingRubros ? <Loading /> : null}
           contentContainerStyle={{ paddingRight: 20 }}
@@ -110,7 +104,7 @@ export default function HomeScreen() {
       {/* tarjetas */}
       <FlatList
         data={productos}
-        className={showRubros ? "mt-5" : "mt-0"}
+        className={showRubros ? 'mt-5' : 'mt-0'}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <ProductItem setIsUserModalVisible={setIsUserModalVisible} item={item} />}
         ListHeaderComponent={<BuscadorProductos handleScan={handleScan} />}
@@ -123,7 +117,14 @@ export default function HomeScreen() {
 
       {/* modal */}
       {modal && <ModalProducto servidor={servidor} />}
-      <ModalGetUsuario visible={isUserModalVisible} onClose={() => setIsUserModalVisible(false)} onConfirm={handleGetUser} isLoadingUsuario={isLoadingUsuario} />
+      <ModalGetUsuario
+        visible={isUserModalVisible}
+        onClose={() => {
+          setIsUserModalVisible(false);
+          setUsuario('');
+        }}
+        onConfirm={handleGetUser}
+      />
     </KeyboardAvoidingView>
   );
 }

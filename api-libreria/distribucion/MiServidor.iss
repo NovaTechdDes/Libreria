@@ -3,7 +3,7 @@
 ; ==============================
 [Setup]
 AppName=ServidorLibreria
-AppVersion=3.1.0
+AppVersion=3.1.1
 DefaultDirName={commonappdata}\ServidorLibreria
 DefaultGroupName=ServidorLibreria
 OutputDir=output
@@ -44,6 +44,11 @@ Filename: "{tmp}\instaladores\cloudflared.exe"; \
 Parameters: "service install eyJhIjoiN2RjOGMzN2YzN2UyMDQ3MjE4ZGIxYWJmNmNhMDA1N2UiLCJ0IjoiYWZiZmMzZjItMmQ2ZC00ZDIwLWJlMzEtYWE4YzA5NjNlNzcxIiwicyI6Ik1XWmpOREZqT0RNdFpETm1NQzAwT1dJNExUZzFOV1l0TkRNek5qWm1ZVE0zTVdNMSJ9"; \
 StatusMsg: "Instalando cloudflared..."; \
 Flags: waituntilterminated
+
+; Configurar inicio automático
+Filename: "sc.exe"; \
+Parameters: "config cloudflared start= delayed-auto"; \
+Flags: runhidden waituntilterminated
 
 ;Instalar servicio con NSSM
 Filename: "{app}\nssm.exe"; \

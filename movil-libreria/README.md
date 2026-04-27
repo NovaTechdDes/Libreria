@@ -8,10 +8,14 @@
 1. `npx expo-doctor`
 2. `npx expo install --check`
 
-# Subir a produccion
+# Subir a produccion Android
 
 1. ejecutar `eas build:configure`
 2. ejecutar `eas build --platform android --profile preview`
+
+# Subir a produccion iOS
+
+1. ejecutar `eas build --platform ios --profile preview`
 
 # Subir Actualizacion
 

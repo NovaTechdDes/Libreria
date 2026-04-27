@@ -15,7 +15,11 @@
       "checkAutomatically": "ON_LOAD"
     },
     "ios": {
-      "icon": "./assets/images/Logo.png"
+      "icon": "./assets/images/Logo.png",
+      "bundleIdentifier": "com.pelusaaal.movillibrerialachi",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {

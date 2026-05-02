@@ -41,9 +41,9 @@ Filename: "cmd.exe"; Parameters: "/C ""{pf}\nodejs\npm.cmd"" install --omit=dev"
 
 ;Instalar cloudflared
 Filename: "{tmp}\instaladores\cloudflared.exe"; \
-Parameters: "service install eyJhIjoiN2RjOGMzN2YzN2UyMDQ3MjE4ZGIxYWJmNmNhMDA1N2UiLCJ0IjoiYWZiZmMzZjItMmQ2ZC00ZDIwLWJlMzEtYWE4YzA5NjNlNzcxIiwicyI6Ik1XWmpOREZqT0RNdFpETm1NQzAwT1dJNExUZzFOV1l0TkRNek5qWm1ZVE0zTVdNMSJ9"; \
+Parameters: "service install --token eyJhIjoiN2RjOGMzN2YzN2UyMDQ3MjE4ZGIxYWJmNmNhMDA1N2UiLCJ0IjoiYWZiZmMzZjItMmQ2ZC00ZDIwLWJlMzEtYWE4YzA5NjNlNzcxIiwicyI6Ik1XWmpOREZqT0RNdFpETm1NQzAwT1dJNExUZzFOV1l0TkRNek5qWm1ZVE0zTVdNMSJ9"; \
 StatusMsg: "Instalando cloudflared..."; \
-Flags: waituntilterminated
+Flags: runhidden waituntilterminated 
 
 ; Configurar inicio automático
 Filename: "sc.exe"; \

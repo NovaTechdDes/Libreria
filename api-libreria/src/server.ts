@@ -8,7 +8,7 @@ dotenv.config({
   path: path.join(__dirname, "../.env"),
 });
 
-const PORTLOCAL = process.env.PORT_LOCAL || 3000;
+const PORTLOCAL = process.env.DB_PORT || 3000;
 const PORT = process.env.PORT || 3001;
 
 // const options = {

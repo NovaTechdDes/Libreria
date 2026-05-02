@@ -3,7 +3,7 @@
 ; ==============================
 [Setup]
 AppName=ServidorLibreria
-AppVersion=3.1.1
+AppVersion=3.2.0
 DefaultDirName={commonappdata}\ServidorLibreria
 DefaultGroupName=ServidorLibreria
 OutputDir=output
@@ -41,7 +41,7 @@ Filename: "cmd.exe"; Parameters: "/C ""{pf}\nodejs\npm.cmd"" install --omit=dev"
 
 ;Instalar cloudflared
 Filename: "{tmp}\instaladores\cloudflared.exe"; \
-Parameters: "service install --token eyJhIjoiN2RjOGMzN2YzN2UyMDQ3MjE4ZGIxYWJmNmNhMDA1N2UiLCJ0IjoiYWZiZmMzZjItMmQ2ZC00ZDIwLWJlMzEtYWE4YzA5NjNlNzcxIiwicyI6Ik1XWmpOREZqT0RNdFpETm1NQzAwT1dJNExUZzFOV1l0TkRNek5qWm1ZVE0zTVdNMSJ9"; \
+Parameters: "service install eyJhIjoiN2RjOGMzN2YzN2UyMDQ3MjE4ZGIxYWJmNmNhMDA1N2UiLCJ0IjoiYWZiZmMzZjItMmQ2ZC00ZDIwLWJlMzEtYWE4YzA5NjNlNzcxIiwicyI6Ik1XWmpOREZqT0RNdFpETm1NQzAwT1dJNExUZzFOV1l0TkRNek5qWm1ZVE0zTVdNMSJ9"; \
 StatusMsg: "Instalando cloudflared..."; \
 Flags: runhidden waituntilterminated 
 
@@ -81,8 +81,26 @@ Filename: "{app}\nssm.exe"; Parameters: "start MiServidorBackup"; Flags: runhidd
 [UninstallRun]
 Filename: "{app}\nssm.exe"; Parameters: "stop MiServidorBackup"; Flags: runhidden waituntilterminated
 Filename: "{app}\nssm.exe"; Parameters: "remove MiServidorBackup confirm"; Flags: runhidden waituntilterminated
-Filename: "sc.exe"; Parameters: "stop cloudflared"; Flags: runhidden waituntilterminated
-Filename: "sc.exe"; Parameters: "delete cloudflared"; Flags: runhidden waituntilterminated
+
+; Detener servicio si existe
+Filename: "sc.exe"; \
+Parameters: "stop Cloudflared"; \
+Flags: runhidden waituntilterminated
+
+; Eliminar servicio
+Filename: "sc.exe"; \
+Parameters: "delete Cloudflared"; \
+Flags: runhidden waituntilterminated
+
+; Eliminar claves de registro residuales
+Filename: "cmd.exe"; \
+Parameters: "/C reg delete ""HKLM\SYSTEM\CurrentControlSet\Services\EventLog\Application\Cloudflared"" /f >nul 2>&1"; \
+Flags: runhidden waituntilterminated
+
+Filename: "cmd.exe"; \
+Parameters: "/C reg delete ""HKLM\SYSTEM\CurrentControlSet\Services\Cloudflared"" /f >nul 2>&1"; \
+Flags: runhidden waituntilterminated
+
 
 [Code]
 var

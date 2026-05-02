@@ -3,8 +3,9 @@ import { ProductoCard } from "./ProductoCard";
 
 async function getProductos(): Promise<Producto[] | null> {
   const url = process.env.NEXT_PUBLIC_URL_API;
-
-  const res = await fetch(`${url}productos`);
+  const res = await fetch(`${url}productos`, {
+    cache: "no-store",
+  });
 
   const data = await res.json();
 

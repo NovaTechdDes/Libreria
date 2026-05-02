@@ -27,7 +27,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
   };
 
   return (
-    <article className="group flex flex-col bg-white rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.06),0_4px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.08),0_12px_32px_rgba(0,0,0,0.10)] hover:-translate-y-1 transition-all duration-[180ms] ease-in-out cursor-pointer">
+    <article className="group flex flex-col bg-white rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.06),0_4px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.08),0_12px_32px_rgba(0,0,0,0.10)] hover:-translate-y-1 transition-all duration-180 ease-in-out cursor-pointer">
       {/* Área de imagen con botón overlay — solo en desktop al hacer hover */}
       <div className="relative w-full h-[200px] bg-[#f4f4f2] shrink-0 overflow-hidden">
         {producto.imagen ? (
@@ -62,7 +62,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
 
         {/* Overlay — SOLO visible en desktop al hacer hover */}
         <div className="hidden md:block absolute inset-x-0 bottom-0 md:translate-y-full md:group-hover:translate-y-0 transition-transform duration-300 ease-out">
-          <div className="absolute inset-x-0 bottom-full h-12 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-full h-12 bg-linear-to-t from-black/30 to-transparent pointer-events-none" />
           <div className="bg-white/90 backdrop-blur-sm px-4 py-3">
             <BtnCarrito onClick={addCarrito} />
           </div>

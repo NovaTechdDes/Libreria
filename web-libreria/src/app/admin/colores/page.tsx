@@ -26,7 +26,7 @@ const ColoresPage = () => {
         </div>
         </header>
 
-        <main>
+        <main className='flex gap-4'>
             <FormularioColor/>
 
             <ListaColores/>

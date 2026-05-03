@@ -2,11 +2,13 @@
 
 import React, { useState } from 'react'
 import { IoEyeOutline } from 'react-icons/io5'
-import { useColorStore } from '@/src/store'
+import { postColor } from '@/src/helper/postColor'
 
 export const FormularioColor = () => {
 
-    const {colorSeleccionado} = useColorStore()
+
+    const [error, setError] = useState<boolean>(false);
+    
 
   const [nombre, setNombre] = useState('')
   const [codigo, setCodigo] = useState('006A6A')
@@ -18,6 +20,27 @@ export const FormularioColor = () => {
     }
   }
 
+
+  const handleAddColor = async(e:React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if(!nombre || !codigo){
+      setError(true);
+      setTimeout(() => {
+        setError(false)
+      }, 2500)
+      return;
+    };
+
+   const res = await postColor(nombre, `#${codigo}`);
+
+   
+   if(res){
+    setNombre('');
+    setCodigo('006A6A');
+   }
+    
+  }
+
   return (
     <div className="bg-white p-8 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-slate-100 max-w-md w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex items-center justify-between mb-8">
@@ -25,7 +48,7 @@ export const FormularioColor = () => {
         <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
       </div>
       
-      <form className="space-y-7">
+      <form className="space-y-7" onSubmit={handleAddColor}>
         {/* Nombre del Color */}
         <div className="flex flex-col gap-2.5">
           <label htmlFor="nombre" className="text-slate-500 text-[12px] font-bold uppercase tracking-widest ml-1">
@@ -40,6 +63,11 @@ export const FormularioColor = () => {
             placeholder="Ej: Turquesa Lachi"
             className="w-full px-6 py-4 bg-slate-50/50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-400 transition-all placeholder:text-slate-400 text-slate-700 font-semibold"
           />
+          {error && !nombre && (
+            <p className="text-red-500 text-xs animate-in fade-in slide-in-from-top-2 duration-300">
+              El nombre es requerido
+            </p>
+          )}
         </div>
 
         {/* Codigo Hexadecimal */}
@@ -60,6 +88,11 @@ export const FormularioColor = () => {
                 maxLength={6}
                 className="w-full pl-11 pr-6 py-4 bg-slate-50/50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-400 transition-all placeholder:text-slate-400 text-slate-700 font-bold uppercase tracking-widest"
               />
+              {error && !codigo && (
+                <p className="text-red-500 text-xs animate-in fade-in slide-in-from-top-2 duration-300">
+                  El codigo es requerido
+                </p>
+              )}
             </div>
             <div className="relative group overflow-hidden rounded-2xl shadow-sm border border-slate-200">
               <input 
@@ -77,27 +110,6 @@ export const FormularioColor = () => {
           </div>
         </div>
 
-        {/* Categoría */}
-        <div className="flex flex-col gap-2.5">
-          <label htmlFor="categoria" className="text-slate-500 text-[12px] font-bold uppercase tracking-widest ml-1">
-            Categoría
-          </label>
-          <div className="relative group">
-            <select 
-              id="categoria"
-              name="categoria"
-              className="w-full px-6 py-4 bg-slate-50/50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-400 transition-all text-slate-700 font-semibold appearance-none cursor-pointer"
-            >
-              <option value="general">General</option>
-              <option value="libreria">Librería</option>
-              <option value="arte">Arte</option>
-              <option value="escolar">Art. Escolares</option>
-            </select>
-            <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-blue-500 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-            </div>
-          </div>
-        </div>
 
         {/* Vista Previa Section */}
         <div className="pt-2">
@@ -131,7 +143,7 @@ export const FormularioColor = () => {
           </div>
         </div>
 
-        <button className="w-full bg-[#BFD7FF] hover:bg-[#A8C6FF] text-[#4A72B2] font-black py-5 rounded-2xl transition-all mt-4 shadow-[0_10px_20px_rgba(191,215,255,0.4)] active:scale-[0.98] text-base group">
+        <button type='submit'  className="w-full bg-[#BFD7FF] hover:bg-[#A8C6FF] text-[#4A72B2] font-black py-5 rounded-2xl transition-all mt-4 shadow-[0_10px_20px_rgba(191,215,255,0.4)] active:scale-[0.98] text-base group">
           <span className="group-hover:tracking-widest transition-all duration-300">GUARDAR CAMBIOS</span>
         </button>
       </form>

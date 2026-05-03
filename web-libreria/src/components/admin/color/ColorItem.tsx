@@ -1,3 +1,4 @@
+'use client'
 import { Color } from '@/src/interface/Color';
 import { useColorStore } from '@/src/store';
 import React from 'react'

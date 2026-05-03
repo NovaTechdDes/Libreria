@@ -15,7 +15,7 @@ export const AsideBar = () => {
     {
       label: "Inventario",
       icon: FiBox,
-      href: "/admin/productos",
+      href: "/admin/inventario",
     },
     {
       label: "Gestión de Colores",
@@ -32,7 +32,7 @@ export const AsideBar = () => {
   };
 
   return (
-    <aside className="w-[280px] h-screen bg-white border-r border-slate-400 flex flex-col py-8 shadow-[1px_0_10px_rgba(0,0,0,0.02)]">
+    <aside className="w-[240px] h-screen bg-white border-r border-slate-400 flex flex-col py-8 shadow-[1px_0_10px_rgba(0,0,0,0.02)]">
       {/* Navegación Principal */}
       <div className="flex flex-col items-center gap-2 px-4">
         <Image

@@ -1,62 +1,34 @@
-"use client";
-
-import React from 'react'
-import { IoGrid, IoList, IoChevronBack, IoChevronForward } from 'react-icons/io5'
+import {  IoChevronBack, IoChevronForward } from 'react-icons/io5'
 import { ColorItem } from './ColorItem';
-import { Color } from '@/src/interface/Color';
+import { getColores } from '@/src/helper/getColores';
 
-const coloresHardcoded: Color[] = [
-  {
-    id: "1",
-    color: 'Cian Corporativo',
-    codigo: '#006A6A',
-    
-  },
-  {
-    id: "2",
-    color: 'Rosa Pastel',
-    codigo: '#FFB4AB',
-  },
-  {
-    id: "3",
-    color: 'Azul Medianoche',
-    codigo: '#455F87',
-  },
-  {
-    id: "4",
-    color: 'Amarillo Sol',
-    codigo: '#FFD700',
-  },
-  {
-    id: "5",
-    color: 'Gris Técnico',
-    codigo: '#E0E3E5',
-    
-  },
-]
 
-export const ListaColores = () => {
+export const ListaColores = async() => {
+  const colores = await getColores(1, '')
 
     
   return (
-    <div className="mt-12 bg-white rounded-[2rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] overflow-hidden">
+    <div className="mt-12 bg-white flex-1 rounded-[2rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] overflow-hidden">
       
       {/* Header de la Lista */}
       <div className="p-6 border-b border-slate-50 flex items-center justify-between bg-slate-50/30">
-        <h2 className="text-slate-500 font-semibold text-sm">24 Colores registrados</h2>
-        <div className="flex gap-2">
-          <button className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-800 shadow-sm">
-            <IoGrid size={18} />
-          </button>
-          <button className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-slate-600 transition-colors">
-            <IoList size={18} />
-          </button>
+        <h2 className="text-slate-500 font-semibold text-sm">{colores?.length || 0} Colores registrados</h2>
+        
+        <div className='gap-2 flex items-center'>
+          <label htmlFor="buscador" className='text-slate-500 font-semibold text-sm'>Buscador</label>
+          <input 
+          type="text" 
+          name="buscador" 
+          id="buscador"
+          placeholder='Buscar color por nombre...'
+          className='border-2 border-slate-200 rounded-2xl px-4 py-2 text-black placeholder:text-slate-400'
+          />
         </div>
       </div>
 
       {/* Grid de Colores */}
       <div className="p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {coloresHardcoded.map((color) => (
+        {colores?.map((color) => (
           <ColorItem key={color.id} color={color} />
         ))}
 

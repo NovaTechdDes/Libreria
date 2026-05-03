@@ -1,23 +1,11 @@
 import { Producto } from "@/src/interface/Producto";
 import { ProductoCard } from "./ProductoCard";
+import { getProductos } from "@/src/helper/getProductos";
 
-async function getProductos(): Promise<Producto[] | null> {
-  const url = process.env.NEXT_PUBLIC_URL_API;
-  const res = await fetch(`${url}productos`, {
-    cache: "no-store",
-  });
-
-  const data = await res.json();
-
-  if (data.data.length > 0) {
-    return data.data;
-  } else {
-    return null;
-  }
-}
 
 export const Productos = async () => {
   const productos = await getProductos();
+
 
   if (!productos) return null;
 
@@ -30,7 +18,7 @@ export const Productos = async () => {
       {/* mapeo de productos */}
       <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-5">
         {productos?.map((producto: Producto) => (
-          <ProductoCard key={producto.id_articulo} producto={producto} />
+          <ProductoCard key={producto.id} producto={producto} />
         ))}
       </div>
     </section>

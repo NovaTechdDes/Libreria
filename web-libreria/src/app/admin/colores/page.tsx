@@ -1,9 +1,27 @@
 import { FormularioColor } from '@/src/components/admin/color/FormularioColor'
 import { ListaColores } from '@/src/components/admin/color/ListaColores'
-import React from 'react'
+import { getColores } from '@/src/helper/getColores';
 import { IoAddOutline } from 'react-icons/io5'
 
-const ColoresPage = () => {
+interface Props {
+  searchParams: {
+    page: string
+    search: string
+  };
+}
+
+const ColoresPage = async({searchParams}: Props) => {
+  const { page, search } = await searchParams;
+
+  const currentPage = Number(page) || 1;
+  const limit = 9;
+
+
+  const result = await getColores(currentPage, limit, search || '');
+
+  const data = result?.data || [];
+  const totalPages = result?.totalPages || 0;
+
   return (
     <div className="p-8 max-w-7xl mx-auto">
       
@@ -29,7 +47,7 @@ const ColoresPage = () => {
         <main className='flex gap-4'>
             <FormularioColor/>
 
-            <ListaColores/>
+            <ListaColores searchParams={{search}} colores={data || []} totalPages={totalPages} currentPage={currentPage}/>
 
         </main>
     

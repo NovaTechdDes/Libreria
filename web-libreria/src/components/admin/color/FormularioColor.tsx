@@ -3,23 +3,31 @@
 import React, { useState } from 'react'
 import { IoEyeOutline } from 'react-icons/io5'
 import { postColor } from '@/src/helper/postColor'
+import { mensaje } from '@/src/helper/mensaje';
+import { useColorStore } from '@/src/store';
 
 export const FormularioColor = () => {
-
-
-    const [error, setError] = useState<boolean>(false);
+  const {colorSeleccionado} = useColorStore();
+  const [error, setError] = useState<boolean>(false);
     
 
   const [nombre, setNombre] = useState('')
   const [codigo, setCodigo] = useState('006A6A')
+  const [prevId, setPrevId] = useState<string | undefined>(undefined);
+
+  // Ajustar el estado durante el renderizado para evitar renderizados en cascada (useEffect)
+  if (colorSeleccionado && colorSeleccionado.id !== prevId) {
+    setNombre(colorSeleccionado.color);
+    setCodigo(colorSeleccionado.codigo.replace('#', ''));
+    setPrevId(colorSeleccionado.id);
+  }
 
   const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace('#', '')
     if (val.length <= 6) {
       setCodigo(val.toUpperCase())
     }
-  }
-
+  };
 
   const handleAddColor = async(e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,11 +43,12 @@ export const FormularioColor = () => {
 
    
    if(res){
+    mensaje('Color Agregado Correctamente', 'success');
     setNombre('');
     setCodigo('006A6A');
    }
     
-  }
+  };
 
   return (
     <div className="bg-white p-8 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-slate-100 max-w-md w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -143,9 +152,14 @@ export const FormularioColor = () => {
           </div>
         </div>
 
-        <button type='submit'  className="w-full bg-[#BFD7FF] hover:bg-[#A8C6FF] text-[#4A72B2] font-black py-5 rounded-2xl transition-all mt-4 shadow-[0_10px_20px_rgba(191,215,255,0.4)] active:scale-[0.98] text-base group">
-          <span className="group-hover:tracking-widest transition-all duration-300">GUARDAR CAMBIOS</span>
-        </button>
+        {colorSeleccionado 
+        ? <button type='submit'  className="w-full bg-[#BFD7FF] hover:bg-[#A8C6FF] text-[#4A72B2] font-black py-5 rounded-2xl transition-all mt-4 shadow-[0_10px_20px_rgba(191,215,255,0.4)] active:scale-[0.98] text-base group">
+            <span className="group-hover:tracking-widest transition-all duration-300">ACTUALIZAR COLOR</span>
+          </button> 
+        
+        : <button type='submit'  className="w-full bg-[#BFD7FF] hover:bg-[#A8C6FF] text-[#4A72B2] font-black py-5 rounded-2xl transition-all mt-4 shadow-[0_10px_20px_rgba(191,215,255,0.4)] active:scale-[0.98] text-base group">
+            <span className="group-hover:tracking-widest transition-all duration-300">GUARDAR CAMBIOS</span>
+        </button>}
       </form>
     </div>
   )

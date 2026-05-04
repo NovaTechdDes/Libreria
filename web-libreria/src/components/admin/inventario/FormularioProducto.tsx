@@ -6,10 +6,24 @@ import { useEffect, useState } from 'react';
 import { ModalColores } from './ModalColores';
 import { ColorFormularioItem } from './ColorFormularioItem';
 import { postrelacionColorProducto } from '@/src/helper/relacionColorProducto';
+import { useRef } from 'react';
+import Image from 'next/image';
 
 export const FormularioProducto = () => {
   const { productoSeleccionado, coloresSeleccionados, removeColor, addColores } = useProductoStore();
   const [showColores, setShowColores] = useState(false);
+
+  //Primer Imagen
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  //Segundo Imagen
+  const [previewImage2, setPreviewImage2] = useState<string | null>(null);
+  const inputRef2 = useRef<HTMLInputElement>(null);
+
+  //Tercer Imagen
+  const [previewImage3, setPreviewImage3] = useState<string | null>(null);
+  const inputRef3 = useRef<HTMLInputElement>(null);
 
   const handleModal = () => setShowColores(!showColores);
 
@@ -24,6 +38,30 @@ export const FormularioProducto = () => {
   const handleUpdate = () => {
     if (!productoSeleccionado.id) return;
     postrelacionColorProducto(productoSeleccionado.id, coloresSeleccionados);
+  };
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const render = URL.createObjectURL(file);
+    setPreviewImage(render);
+  };
+
+  const handleUpload2 = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const render = URL.createObjectURL(file);
+    setPreviewImage2(render);
+  };
+
+  const handleUpload3 = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const render = URL.createObjectURL(file);
+    setPreviewImage3(render);
   };
 
   return (
@@ -51,17 +89,50 @@ export const FormularioProducto = () => {
           <label className="block text-[14px] font-bold text-slate-700 mb-3">Imágenes</label>
           <div className="flex gap-3">
             {/* Principal */}
-            <div className="w-[85px] h-[85px] border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center bg-slate-50 group cursor-pointer hover:border-teal-500/50 hover:bg-teal-50/30 transition-all">
-              <FiCamera className="w-6 h-6 text-slate-400 group-hover:text-teal-500 mb-1" />
-              <span className="text-[10px] font-black text-slate-400 group-hover:text-teal-500 uppercase tracking-tighter">Principal</span>
+            <div
+              onClick={() => inputRef.current?.click()}
+              className="w-[85px] h-[85px] border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center bg-slate-50 group cursor-pointer hover:border-teal-500/50 hover:bg-teal-50/30 transition-all"
+            >
+              {previewImage ? (
+                <Image src={previewImage} alt="Principal" width={85} height={85} className="w-full h-full object-cover rounded-2xl" />
+              ) : (
+                <>
+                  <FiCamera className="w-6 h-6 text-slate-400 group-hover:text-teal-500 mb-1" />
+                  <span className="text-[10px] font-black text-slate-400 group-hover:text-teal-500 uppercase tracking-tighter">Principal</span>
+                  <input ref={inputRef} type="file" accept="image/*" name="imagenPrincipal" id="imagenPrincipal" hidden onChange={handleUpload} />
+                </>
+              )}
             </div>
+
             {/* Secondary 1 */}
-            <div className="w-[85px] h-[85px] border border-slate-100 rounded-2xl flex items-center justify-center bg-white cursor-pointer hover:border-teal-500/50 transition-all">
-              <FiImage className="w-6 h-6 text-slate-200" />
+            <div
+              onClick={() => inputRef2.current?.click()}
+              className="w-[85px] h-[85px] border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center bg-slate-50 group cursor-pointer hover:border-teal-500/50 hover:bg-teal-50/30 transition-all"
+            >
+              {previewImage2 ? (
+                <Image src={previewImage2} alt="Principal" width={85} height={85} className="w-full h-full object-cover rounded-2xl" />
+              ) : (
+                <>
+                  <FiImage className="w-6 h-6 text-slate-400 group-hover:text-teal-500 mb-1" />
+                  <span className="text-[10px] font-black text-slate-400 group-hover:text-teal-500 uppercase tracking-tighter">Segunda</span>
+                  <input ref={inputRef2} type="file" accept="image/*" name="imagenPrincipal" id="imagenPrincipal" hidden onChange={handleUpload2} />
+                </>
+              )}
             </div>
             {/* Secondary 2 */}
-            <div className="w-[85px] h-[85px] border border-slate-100 rounded-2xl flex items-center justify-center bg-white cursor-pointer hover:border-teal-500/50 transition-all">
-              <FiImage className="w-6 h-6 text-slate-200" />
+            <div
+              onClick={() => inputRef3.current?.click()}
+              className="w-[85px] h-[85px] border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center bg-slate-50 group cursor-pointer hover:border-teal-500/50 hover:bg-teal-50/30 transition-all"
+            >
+              {previewImage3 ? (
+                <Image src={previewImage3} alt="Principal" width={85} height={85} className="w-full h-full object-cover rounded-2xl" />
+              ) : (
+                <>
+                  <FiImage className="w-6 h-6 text-slate-400 group-hover:text-teal-500 mb-1" />
+                  <span className="text-[10px] font-black text-slate-400 group-hover:text-teal-500 uppercase tracking-tighter">Tercera</span>
+                  <input ref={inputRef3} type="file" accept="image/*" name="imagenPrincipal" id="imagenPrincipal" hidden onChange={handleUpload3} />
+                </>
+              )}
             </div>
           </div>
         </div>

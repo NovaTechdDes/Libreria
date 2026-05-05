@@ -51,9 +51,9 @@ export default function ProductItem({ item, setIsUserModalVisible }: Props) {
           <View>
             <View className="flex-row justify-between items-start">
               <Text className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-2 py-0.5 rounded-full uppercase tracking-widest mb-1">
-                {item.categoria}
+                {item.categoria.slice(0,15).trim()}
               </Text>
-              <Text className="text-[10px] font-bold text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full uppercase tracking-widest mb-1">{item.codigo}</Text>
+              <Text className="text-[10px] font-bold text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full uppercase tracking-widest mb-1">{item.codigo.trim()}</Text>
             </View>
             <Text className="text-base font-semibold text-slate-900 dark:text-slate-100 leading-tight" numberOfLines={2}>
               {item.descripcion}

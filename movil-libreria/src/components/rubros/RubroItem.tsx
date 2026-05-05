@@ -23,7 +23,7 @@ export default function RubroItem({ item, isSelected, onPress }: Props) {
             ${isSelected ? 'text-white' : 'text-slate-600 dark:text-slate-400'}
           `}
         >
-          {item.nombre_rubro}
+          {item.nombre_rubro.trim()}
         </Text>
       </Pressable>
     </View>

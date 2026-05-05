@@ -39,9 +39,9 @@ export const putProducto = async (producto: Partial<Producto>, servidor: boolean
   }
   try {
     const { data } = await axios.put(`${URL}/productos/${producto.id}`, mapProductoBackend(producto), {
-      timeout: 2000,
+      timeout: 4000,
       headers: {
-        'x-api-key': usuario,
+        Authorization: `Bearer ${usuario}`,
       },
     });
 

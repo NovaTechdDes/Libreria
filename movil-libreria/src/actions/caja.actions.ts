@@ -62,7 +62,7 @@ export const startCierreCaja = async (servidor: boolean, usuario: string): Promi
       {},
       {
         headers: {
-          'x-api-key': usuario,
+          Authorization: `Bearer ${usuario}`,
         },
       }
     );

@@ -10,7 +10,8 @@ export const getRubros = async (
     const rubros = await service.obtenerRubros();
     res.status(200).json({
       ok: true,
-      data: rubros,
+      data: rubros.rubros,
+      subrubros: rubros.subrubros,
     });
   } catch (error) {
     next(error);

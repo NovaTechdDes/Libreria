@@ -34,11 +34,14 @@ export async function getProductos(
     marca,
     rubro_tempo,
     id_rubro,
+    
     rubro
     FROM api_articuloss
     ${query}
     ORDER BY codigo DESC
     `);
+
+  console.log(result);
 
   const productosConImagen = await Promise.all(
     result.recordset.map(async (producto) => ({

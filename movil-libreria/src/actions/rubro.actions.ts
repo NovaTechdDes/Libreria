@@ -1,9 +1,10 @@
-import { mapRubro } from '@/mappers/rubro.mappers';
+import { Rubro, SubRubro } from '@/interface';
+import { mapRubro, mapSubRubro } from '@/mappers/rubro.mappers';
 import { getUrl } from '@/utils/getURL';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-export const getRubros = async (servidor: boolean) => {
+export const getRubros = async (servidor: boolean): Promise<{ rubros: Rubro[]; subRubros: SubRubro[] }> => {
   let URL = '';
 
   if (servidor) {
@@ -19,9 +20,16 @@ export const getRubros = async (servidor: boolean) => {
       },
     });
 
-    return data.data.map(mapRubro);
+    const rubros = data?.data?.map(mapRubro);
+    const subRubros = data?.subrubros?.map(mapSubRubro);
+
+    return { rubros, subRubros };
   } catch (error) {
+    console.log('El error es');
     console.log(error);
-    return [];
+    return {
+      rubros: [],
+      subRubros: [],
+    };
   }
 };

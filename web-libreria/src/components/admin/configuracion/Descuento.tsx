@@ -1,10 +1,29 @@
 'use client';
+import { putDescuentoConfig } from '@/src/helper/configuracion';
+import { mensaje } from '@/src/helper/mensaje';
+import { Configuracion } from '@/src/interface/Configuracion';
 import { useState } from 'react';
 import { FiPercent, FiType, FiSave, FiTag } from 'react-icons/fi';
 
-export const Descuento = () => {
-  const [frase, setFrase] = useState<string>('');
-  const [porcentaje, setPorcentaje] = useState<number>(0);
+interface Props {
+  dataConfiguracion: Configuracion;
+}
+
+export const Descuento = ({ dataConfiguracion }: Props) => {
+  const [frase, setFrase] = useState<string>(dataConfiguracion.frase_descuento);
+  const [porcentaje, setPorcentaje] = useState<number>(dataConfiguracion.porcentaje_descuento);
+
+  const handleConfiguracionData = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const res = await putDescuentoConfig({ mensaje: frase, porcentaje });
+
+    if (res) {
+      mensaje('Descuento actualizado', 'success');
+    } else {
+      mensaje('Error al actualizar el descuento', 'error');
+    }
+  };
 
   return (
     <section className="bg-white rounded-[24px] border border-slate-200 shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -21,7 +40,7 @@ export const Descuento = () => {
         </div>
       </div>
 
-      <form className="p-8 space-y-6">
+      <form className="p-8 space-y-6" onSubmit={handleConfiguracionData}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Campo: Frase */}
           <div className="space-y-2">

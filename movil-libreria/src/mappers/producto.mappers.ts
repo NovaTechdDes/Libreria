@@ -9,11 +9,13 @@ interface ProductoBackend {
   marca: string;
   rubro_tempo: string;
   id_rubro: number;
-  rubro: string;
+  rubro: any;
   imagen?: string;
 }
 
 export const mapProducto = (item: ProductoBackend): Producto => {
+  const rubroParsed = typeof item.rubro === 'string' ? JSON.parse(item.rubro) : item.rubro;
+
   return {
     id: item.id_articulo,
     codigo: item.codigo ?? '',
@@ -22,7 +24,7 @@ export const mapProducto = (item: ProductoBackend): Producto => {
     stock: item.cantidad ?? 0,
     marca: item.marca ?? 'Sin Marca',
     id_rubro: item.id_rubro ?? 0,
-    categoria: typeof item.rubro === 'string' ? JSON.parse(item.rubro)?.nom_rubro_g : ((item as any).rubro?.nom_rubro_g ?? 'Sin Categoria'),
+    categoria: rubroParsed?.sub_rubro?.nom_rubro ?? rubroParsed?.rubro_g?.nom_rubro_g ?? 'Sin Categoria',
     imagen: item.imagen ?? '',
   };
 };

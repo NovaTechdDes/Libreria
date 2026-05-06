@@ -5,6 +5,7 @@ import BuscadorProductos from '@/components/productos/BuscadorProductos';
 import CameraScan from '@/components/productos/CameraScan';
 import ProductItem from '@/components/productos/ProductItem';
 import RubroItem from '@/components/rubros/RubroItem';
+import SubRubroItem from '@/components/rubros/SubRubroItem';
 import { Loading } from '@/components/ui/Loading';
 import ModalGetUsuario from '@/components/usuarios/ModalGetUsuario';
 import { useRubros } from '@/hooks';
@@ -18,10 +19,10 @@ import { FlatList, KeyboardAvoidingView, Platform, RefreshControl, Text, Touchab
 
 export default function HomeScreen() {
   const { servidor, setServidor, setUsuario } = useGlobalStore();
-  const { modal, buscador, abrirModal, rubroSeleccionado, seleccionarRubro } = useProductoStore();
+  const { modal, buscador, abrirModal, rubroSeleccionado, seleccionarRubro, subRubroSeleccionado, seleccionarSubRubro } = useProductoStore();
 
-  const { data: productos, isLoading, refetch } = useProductos(buscador, servidor, rubroSeleccionado);
-  const { data: rubros, isLoading: isLoadingRubros, refetch: refetchRubros } = useRubros(servidor);
+  const { data: productos, isLoading, refetch } = useProductos(buscador, servidor, rubroSeleccionado, subRubroSeleccionado);
+  const { data, isLoading: isLoadingRubros, refetch: refetchRubros } = useRubros(servidor);
 
   const [refreshing, setRefreshing] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
@@ -44,6 +45,7 @@ export default function HomeScreen() {
   const onRefresh = async () => {
     setRefreshing(true);
     await refetch();
+    await refetchRubros();
     setRefreshing(false);
   };
 
@@ -74,8 +76,15 @@ export default function HomeScreen() {
     setServidor(!servidor);
   };
 
-  const rubrosConTodos = rubros?.length > 0 ? [{ id_rubro: null, nombre_rubro: 'Todos' }, ...rubros] : [];
+  if (!data && isLoadingRubros) {
+    return <Loading />;
+  }
+
+  const rubrosConTodos = (data?.rubros?.length ?? 0) > 0 ? [{ id_rubro: null, nombre_rubro: 'Todos' }, ...(data?.rubros ?? [])] : [];
+  const subRubrosConTodos =
+    (data?.subRubros?.length ?? 0) > 0 ? [{ id_rubro: null, nombre_rubro: 'Todos' }, ...(data?.subRubros.filter((subRubro) => subRubro.id_rubro === rubroSeleccionado) ?? [])] : [];
   const showRubros = isLoadingRubros || rubrosConTodos.length > 0;
+  const showSubRubros = isLoadingRubros || subRubrosConTodos.length > 0;
 
   return (
     <KeyboardAvoidingView keyboardVerticalOffset={100} style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 bg-gray-100 dark:bg-slate-950 p-4">
@@ -87,24 +96,41 @@ export default function HomeScreen() {
         </TouchableOpacity>
       </View>
 
-      {showRubros && (
-        <FlatList
-          data={rubrosConTodos}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => (item.id_rubro ? item.id_rubro.toString() : 'todos')}
-          renderItem={({ item }) => <RubroItem item={item} isSelected={rubroSeleccionado === item.id_rubro} onPress={() => seleccionarRubro(item.id_rubro)} />}
-          ItemSeparatorComponent={() => <View className="w-3" />}
-          ListEmptyComponent={isLoadingRubros ? <Loading /> : null}
-          contentContainerStyle={{ paddingRight: 20 }}
-          keyboardShouldPersistTaps="handled"
-        />
-      )}
+      <View className="gap-5">
+        {showRubros && (
+          <FlatList
+            data={rubrosConTodos}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item) => (item.id_rubro ? item.id_rubro.toString() : 'todos')}
+            renderItem={({ item }) => <RubroItem item={item} isSelected={rubroSeleccionado === item.id_rubro} onPress={() => seleccionarRubro(item.id_rubro)} />}
+            ItemSeparatorComponent={() => <View className="w-3" />}
+            ListEmptyComponent={isLoadingRubros ? <Loading /> : null}
+            contentContainerStyle={{ paddingRight: 20 }}
+            keyboardShouldPersistTaps="handled"
+            className="mb-1"
+          />
+        )}
+        {showSubRubros && rubroSeleccionado !== null && (
+          <FlatList
+            data={subRubrosConTodos}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item) => (item.id_rubro ? item.id_rubro.toString() : 'todos')}
+            renderItem={({ item }) => <SubRubroItem item={item} isSelected={subRubroSeleccionado === item.id_rubro} onPress={() => seleccionarSubRubro(item.id_rubro)} />}
+            ItemSeparatorComponent={() => <View className="w-3" />}
+            ListEmptyComponent={isLoadingRubros ? <Loading /> : null}
+            contentContainerStyle={{ paddingRight: 20 }}
+            keyboardShouldPersistTaps="handled"
+            className="mb-1"
+          />
+        )}
+      </View>
 
       {/* tarjetas */}
       <FlatList
         data={productos}
-        className={showRubros ? 'mt-5' : 'mt-0'}
+        className={showRubros ? 'mt-2' : 'mt-0'}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <ProductItem setIsUserModalVisible={setIsUserModalVisible} item={item} />}
         ListHeaderComponent={<BuscadorProductos handleScan={handleScan} />}

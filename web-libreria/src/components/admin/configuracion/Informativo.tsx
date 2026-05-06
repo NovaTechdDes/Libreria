@@ -1,11 +1,30 @@
 'use client';
+import { putBannerConfig } from '@/src/helper/configuracion';
+import { Configuracion } from '@/src/interface/Configuracion';
 import { useState } from 'react';
 import { FiInfo, FiEye, FiSave, FiAlertCircle, FiEyeOff } from 'react-icons/fi';
+import { mensaje as mensajeSwal } from '@/src/helper/mensaje';
 
-export const Informativo = () => {
-  const [mensaje, setMensaje] = useState<string>('');
+interface Props {
+  dataConfiguracion: Configuracion;
+}
 
-  const [activo, setActivo] = useState<boolean>(true);
+export const Informativo = ({ dataConfiguracion }: Props) => {
+  const [mensaje, setMensaje] = useState<string>(dataConfiguracion.mensaje_informativo);
+
+  const [activo, setActivo] = useState<boolean>(dataConfiguracion.carrito_habilitado);
+
+  const handleConfiguracionData = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const res = await putBannerConfig({ mensaje, habilitado: activo });
+
+    if (res) {
+      mensajeSwal('Banner actualizado', 'success');
+    } else {
+      mensajeSwal('Error al actualizar el banner', 'error');
+    }
+  };
 
   return (
     <section className="bg-white rounded-[24px] border border-slate-200 shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 delay-150 mt-8">
@@ -41,7 +60,7 @@ export const Informativo = () => {
         </button>
       </div>
 
-      <form className="p-8 space-y-6">
+      <form className="p-8 space-y-6" onSubmit={handleConfiguracionData}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Mensaje del Banner */}
           <div className="space-y-2 md:col-span-2">

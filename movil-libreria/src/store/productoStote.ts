@@ -16,6 +16,9 @@ export interface ProductoState {
 
   rubroSeleccionado: number | null;
   seleccionarRubro: (rubro: number | null) => void;
+
+  subRubroSeleccionado: number | null;
+  seleccionarSubRubro: (subRubro: number | null) => void;
 }
 
 export const useProductoStore = create<ProductoState>((set) => ({
@@ -33,4 +36,7 @@ export const useProductoStore = create<ProductoState>((set) => ({
 
   rubroSeleccionado: null,
   seleccionarRubro: (rubro: number | null) => set({ rubroSeleccionado: rubro }),
+
+  subRubroSeleccionado: null,
+  seleccionarSubRubro: (subRubro: number | null) => set({ subRubroSeleccionado: subRubro }),
 }));

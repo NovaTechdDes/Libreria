@@ -1,7 +1,33 @@
-node_modules
-.git
-.expo
-.expo-shared
-android
-ios
+# Node
+node_modules/
+**/node_modules/
+
+# Expo / Build
+.expo/
+dist/
+web-build/
+
+# Carpetas nativas (generadas por prebuild)
+android/
+ios/
+
+# Git e IDEs
+.git/
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
 *.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# Archivos Sensibles e Identidades
+.env*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem

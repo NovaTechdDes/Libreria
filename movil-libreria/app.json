@@ -2,7 +2,7 @@
   "expo": {
     "name": "Libreria Lachi",
     "slug": "LibreriaLachi",
-    "version": "2.3.1",
+    "version": "2.3.3",
     "orientation": "portrait",
     "icon": "./assets/icons/adaptive-icon.png",
     "scheme": "movillibreria",

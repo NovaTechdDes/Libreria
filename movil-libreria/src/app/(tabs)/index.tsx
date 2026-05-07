@@ -4,13 +4,10 @@ import ModalProducto from '@/components/ModalProducto';
 import BuscadorProductos from '@/components/productos/BuscadorProductos';
 import CameraScan from '@/components/productos/CameraScan';
 import ProductItem from '@/components/productos/ProductItem';
-import RubroItem from '@/components/rubros/RubroItem';
-import SubRubroItem from '@/components/rubros/SubRubroItem';
 import { Loading } from '@/components/ui/Loading';
 import ModalGetUsuario from '@/components/usuarios/ModalGetUsuario';
 import { useRubros } from '@/hooks';
 import { useProductos } from '@/hooks/productos/useProductos';
-import { Rubro } from '@/interface';
 import { useProductoStore } from '@/store';
 import { useGlobalStore } from '@/store/globalStore';
 import { mensaje } from '@/utils/mensaje';
@@ -86,7 +83,7 @@ export default function HomeScreen() {
 
   const rubrosConTodos = (data?.rubros?.length ?? 0) > 0 ? [{ id_rubro: null, nombre_rubro: 'Todos' }, ...(data?.rubros ?? [])] : [];
   const subRubrosConTodos =
-    (data?.subRubros?.length ?? 0) > 0 ? [{ id_rubro: null, nombre_rubro: 'Todos' }, ...(data?.subRubros.filter((subRubro) => subRubro.id_rubro === rubroSeleccionado) ?? [])] : [];
+    (data?.subRubros?.length ?? 0) > 0 ? [{ id_rubro: null, nombre_rubro: 'Todos' }, ...(data?.subRubros.filter((subRubro) => subRubro.id_rubro_g === rubroSeleccionado) ?? [])] : [];
   const showRubros = isLoadingRubros || rubrosConTodos.length > 0;
   const showSubRubros = isLoadingRubros || subRubrosConTodos.length > 0;
 
@@ -127,9 +124,7 @@ export default function HomeScreen() {
             onChange={(item) => seleccionarRubro(item.id_rubro)}
             renderItem={(item) => (
               <View className="flex-row justify-between items-center p-4 border-b border-slate-100 dark:border-slate-800">
-                <Text className={`text-base ${item.id_rubro === rubroSeleccionado ? 'text-blue-500 font-bold' : 'text-slate-700 dark:text-slate-200'}`}>
-                  {item.nombre_rubro}
-                </Text>
+                <Text className={`text-base ${item.id_rubro === rubroSeleccionado ? 'text-blue-500 font-bold' : 'text-slate-700 dark:text-slate-200'}`}>{item.nombre_rubro}</Text>
                 {item.id_rubro === rubroSeleccionado && <View className="w-2 h-2 rounded-full bg-blue-500" />}
               </View>
             )}
@@ -160,9 +155,7 @@ export default function HomeScreen() {
             onChange={(item) => seleccionarSubRubro(item.id_rubro)}
             renderItem={(item) => (
               <View className="flex-row justify-between items-center p-4 border-b border-slate-100 dark:border-slate-800">
-                <Text className={`text-base ${item.id_rubro === subRubroSeleccionado ? 'text-indigo-500 font-bold' : 'text-slate-700 dark:text-slate-200'}`}>
-                  {item.nombre_rubro}
-                </Text>
+                <Text className={`text-base ${item.id_rubro === subRubroSeleccionado ? 'text-indigo-500 font-bold' : 'text-slate-700 dark:text-slate-200'}`}>{item.nombre_rubro}</Text>
                 {item.id_rubro === subRubroSeleccionado && <View className="w-2 h-2 rounded-full bg-indigo-500" />}
               </View>
             )}

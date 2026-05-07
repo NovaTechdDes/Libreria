@@ -1,29 +1,35 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useCarritoStore } from "@/src/store/carrito.store";
-import { useState } from "react";
-import { FiLock, FiSend } from "react-icons/fi";
+import { getConfiguracion } from '@/src/helper/configuracion';
+import { useCarritoStore } from '@/src/store/carrito.store';
+import { useEffect, useState } from 'react';
+import { FiSend } from 'react-icons/fi';
 
 export const ResumenCarrito = () => {
-  const { total, productos } = useCarritoStore();
+  const { total, subtotal, productos, setHabilitado, setDescuento, setFrase, descuento, frase } = useCarritoStore();
 
-  const [nombre, setNombre] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
-  const [notas, setNotas] = useState("");
+  const [nombre, setNombre] = useState('');
+  const [whatsapp, setWhatsapp] = useState('');
+  const [notas, setNotas] = useState('');
+  const [envio, setEnvio] = useState<boolean>(false);
+
+  const cargarConfiguracion = async () => {
+    const configuracion = await getConfiguracion();
+    setHabilitado(configuracion.carrito_habilitado);
+    setFrase(configuracion.frase_descuento);
+    setDescuento(configuracion.porcentaje_descuento);
+  };
+
+  useEffect(() => {
+    cargarConfiguracion();
+  }, []);
 
   const handleSendWhatsApp = () => {
     // Lógica básica para abrir WhatsApp con el pedido
-    const message = productos
-      .map((p) => `- ${p.cantidad}x ${p.producto.descripcion}`)
-      .join("\n");
-    const totalMsg = `\n\nTotal: $${total.toLocaleString("es-AR")}`;
-    const url = `https://wa.me/?text=${encodeURIComponent(
-      "Hola, me gustaría realizar el siguiente pedido:\n\n" +
-        message +
-        totalMsg,
-    )}`;
-    window.open(url, "_blank");
+    const message = productos.map((p) => `- ${p.cantidad}x ${p.producto.descripcion}`).join('\n');
+    const totalMsg = `\n\nTotal: $${total.toLocaleString('es-AR')}`;
+    const url = `https://wa.me/?text=${encodeURIComponent('Hola, me gustaría realizar el siguiente pedido:\n\n' + message + totalMsg)}`;
+    window.open(url, '_blank');
   };
 
   return (
@@ -36,25 +42,26 @@ export const ResumenCarrito = () => {
       <div className="space-y-4">
         <div className="flex justify-between items-center">
           <span className="text-slate-500 font-medium">Subtotal</span>
-          <span className="text-slate-900 font-bold">
-            ${total.toLocaleString("es-AR")}
-          </span>
+          <span className="text-slate-900 font-bold">${subtotal.toLocaleString('es-AR')}</span>
         </div>
+
+        {frase && descuento && (
+          <div className="flex justify-between items-center">
+            <span className="text-slate-500 font-medium">{frase}</span>
+            <span className="text-slate-900 font-bold">{descuento}%</span>
+          </div>
+        )}
 
         <div className="flex justify-between items-center py-2">
           <span className="text-slate-900 text-xl font-bold">Total</span>
-          <span className="text-teal-600 text-2xl font-extrabold tracking-tight">
-            ${total.toLocaleString("es-AR")}
-          </span>
+          <span className="text-teal-600 text-2xl font-extrabold tracking-tight">${total.toLocaleString('es-AR')}</span>
         </div>
       </div>
 
       {/* Formulario */}
-      <div className="space-y-4 pt-2">
+      <form className="space-y-4 pt-2">
         <div className="space-y-1.5">
-          <label className="text-slate-900 text-sm font-bold block">
-            Nombre Completo
-          </label>
+          <label className="text-slate-900 text-sm font-bold block">Nombre Completo</label>
           <input
             type="text"
             name="nombre"
@@ -66,9 +73,7 @@ export const ResumenCarrito = () => {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-slate-900 text-sm font-bold block">
-            WhatsApp del Cliente
-          </label>
+          <label className="text-slate-900 text-sm font-bold block">WhatsApp del Cliente</label>
           <input
             type="text"
             name="whatsapp"
@@ -80,9 +85,7 @@ export const ResumenCarrito = () => {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-slate-900 text-sm font-bold block">
-            Notas adicionales
-          </label>
+          <label className="text-slate-900 text-sm font-bold block">Notas adicionales</label>
           <textarea
             name="notas"
             value={notas}
@@ -92,16 +95,32 @@ export const ResumenCarrito = () => {
             className="w-full bg-white border border-slate-500 rounded-xl px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all shadow-sm resize-none"
           />
         </div>
-      </div>
 
-      {/* Botón de Acción */}
-      <button
-        onClick={handleSendWhatsApp}
-        className="w-full bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5"
-      >
-        <FiSend className="w-5 h-5 fill-current" />
-        Enviar Pedido por WhatsApp
-      </button>
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="envio" className="text-slate-900 text-sm font-bold block">
+            Modalidad de envío
+          </label>
+          <select
+            name="envio"
+            id="envio"
+            value={envio.toString()}
+            onChange={(e) => setEnvio(e.target.value === 'true')}
+            className="w-full bg-white border border-slate-500 rounded-xl px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all shadow-sm"
+          >
+            <option value="false">Retiro en tienda</option>
+            <option value="true">Envío a domicilio</option>
+          </select>
+        </div>
+
+        {/* Botón de Acción */}
+        <button
+          onClick={handleSendWhatsApp}
+          className="w-full bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5"
+        >
+          <FiSend className="w-5 h-5 fill-current" />
+          Enviar Pedido por WhatsApp
+        </button>
+      </form>
     </div>
   );
 };

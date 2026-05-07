@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useCarritoStore } from "@/src/store/carrito.store";
-import { CarritoItem } from "./CarritoItem";
+import { useCarritoStore } from '@/src/store/carrito.store';
+import { CarritoItem } from './CarritoItem';
 
 export const ListCarritoItems = () => {
   const { productos } = useCarritoStore();
@@ -14,14 +14,15 @@ export const ListCarritoItems = () => {
     );
   }
 
+  console.log(productos);
+
   return (
     <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
       <div className="divide-y divide-slate-100">
         {productos.map((producto) => (
-          <CarritoItem key={producto.producto.id_articulo} producto={producto} />
+          <CarritoItem key={producto.producto.id} producto={producto} />
         ))}
       </div>
     </div>
   );
 };
-

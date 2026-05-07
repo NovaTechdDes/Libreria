@@ -79,7 +79,7 @@ export const Informativo = ({ dataConfiguracion }: Props) => {
         </div>
 
         {/* Preview del Banner */}
-        {activo && mensaje && (
+        {mensaje && (
           <div className="pt-4">
             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-3 ml-1">Vista Previa en Web</span>
             <div className="w-full bg-slate-900 text-white py-3 px-6 rounded-2xl flex items-center justify-center text-center text-sm font-medium animate-pulse">

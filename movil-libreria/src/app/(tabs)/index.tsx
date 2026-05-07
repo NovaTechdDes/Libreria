@@ -10,14 +10,18 @@ import { Loading } from '@/components/ui/Loading';
 import ModalGetUsuario from '@/components/usuarios/ModalGetUsuario';
 import { useRubros } from '@/hooks';
 import { useProductos } from '@/hooks/productos/useProductos';
+import { Rubro } from '@/interface';
 import { useProductoStore } from '@/store';
 import { useGlobalStore } from '@/store/globalStore';
 import { mensaje } from '@/utils/mensaje';
 import { useCameraPermissions } from 'expo-camera';
 import React, { useState } from 'react';
-import { FlatList, KeyboardAvoidingView, Platform, RefreshControl, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, KeyboardAvoidingView, Platform, RefreshControl, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
+import { Dropdown } from 'react-native-element-dropdown';
 
 export default function HomeScreen() {
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
   const { servidor, setServidor, setUsuario } = useGlobalStore();
   const { modal, buscador, abrirModal, rubroSeleccionado, seleccionarRubro, subRubroSeleccionado, seleccionarSubRubro } = useProductoStore();
 
@@ -98,31 +102,70 @@ export default function HomeScreen() {
 
       <View className="gap-5">
         {showRubros && (
-          <FlatList
+          <Dropdown
+            style={[
+              styles.dropdown,
+              {
+                backgroundColor: isDarkMode ? '#0f172a' : 'white',
+                borderColor: isDarkMode ? '#1e293b' : '#e2e8f0',
+              },
+              servidor && { backgroundColor: isDarkMode ? '#450a0a' : '#fef2f2' }, // Tinte rojo si es remoto
+            ]}
+            placeholderStyle={[styles.placeholderStyle, isDarkMode && { color: '#64748b' }]}
+            selectedTextStyle={[styles.selectedTextStyle, isDarkMode && { color: '#f1f5f9' }]}
+            inputSearchStyle={[styles.inputSearchStyle, isDarkMode && { backgroundColor: '#1e293b', color: '#f1f5f9' }]}
+            containerStyle={[styles.containerStyle, isDarkMode && { backgroundColor: '#0f172a', borderColor: '#1e293b' }]}
+            activeColor={isDarkMode ? '#1e293b' : '#eff6ff'}
             data={rubrosConTodos}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => (item.id_rubro ? item.id_rubro.toString() : 'todos')}
-            renderItem={({ item }) => <RubroItem item={item} isSelected={rubroSeleccionado === item.id_rubro} onPress={() => seleccionarRubro(item.id_rubro)} />}
-            ItemSeparatorComponent={() => <View className="w-3" />}
-            ListEmptyComponent={isLoadingRubros ? <Loading /> : null}
-            contentContainerStyle={{ paddingRight: 20 }}
-            keyboardShouldPersistTaps="handled"
-            className="mb-1"
+            search
+            maxHeight={300}
+            labelField="nombre_rubro"
+            valueField="id_rubro"
+            placeholder="Seleccionar rubro"
+            searchPlaceholder="Buscar rubro..."
+            value={rubroSeleccionado}
+            onChange={(item) => seleccionarRubro(item.id_rubro)}
+            renderItem={(item) => (
+              <View className="flex-row justify-between items-center p-4 border-b border-slate-100 dark:border-slate-800">
+                <Text className={`text-base ${item.id_rubro === rubroSeleccionado ? 'text-blue-500 font-bold' : 'text-slate-700 dark:text-slate-200'}`}>
+                  {item.nombre_rubro}
+                </Text>
+                {item.id_rubro === rubroSeleccionado && <View className="w-2 h-2 rounded-full bg-blue-500" />}
+              </View>
+            )}
           />
         )}
         {showSubRubros && rubroSeleccionado !== null && (
-          <FlatList
+          <Dropdown
+            style={[
+              styles.dropdown,
+              {
+                backgroundColor: isDarkMode ? '#0f172a' : 'white',
+                borderColor: isDarkMode ? '#1e293b' : '#e2e8f0',
+              },
+            ]}
+            placeholderStyle={[styles.placeholderStyle, isDarkMode && { color: '#64748b' }]}
+            selectedTextStyle={[styles.selectedTextStyle, isDarkMode && { color: '#f1f5f9' }]}
+            inputSearchStyle={[styles.inputSearchStyle, isDarkMode && { backgroundColor: '#1e293b', color: '#f1f5f9' }]}
+            containerStyle={[styles.containerStyle, isDarkMode && { backgroundColor: '#0f172a', borderColor: '#1e293b' }]}
+            activeColor={isDarkMode ? '#1e293b' : '#eff6ff'}
             data={subRubrosConTodos}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => (item.id_rubro ? item.id_rubro.toString() : 'todos')}
-            renderItem={({ item }) => <SubRubroItem item={item} isSelected={subRubroSeleccionado === item.id_rubro} onPress={() => seleccionarSubRubro(item.id_rubro)} />}
-            ItemSeparatorComponent={() => <View className="w-3" />}
-            ListEmptyComponent={isLoadingRubros ? <Loading /> : null}
-            contentContainerStyle={{ paddingRight: 20 }}
-            keyboardShouldPersistTaps="handled"
-            className="mb-1"
+            search
+            maxHeight={300}
+            labelField="nombre_rubro"
+            valueField="id_rubro"
+            placeholder="Seleccionar subrubro"
+            searchPlaceholder="Buscar subrubro..."
+            value={subRubroSeleccionado}
+            onChange={(item) => seleccionarSubRubro(item.id_rubro)}
+            renderItem={(item) => (
+              <View className="flex-row justify-between items-center p-4 border-b border-slate-100 dark:border-slate-800">
+                <Text className={`text-base ${item.id_rubro === subRubroSeleccionado ? 'text-indigo-500 font-bold' : 'text-slate-700 dark:text-slate-200'}`}>
+                  {item.nombre_rubro}
+                </Text>
+                {item.id_rubro === subRubroSeleccionado && <View className="w-2 h-2 rounded-full bg-indigo-500" />}
+              </View>
+            )}
           />
         )}
       </View>
@@ -154,3 +197,37 @@ export default function HomeScreen() {
     </KeyboardAvoidingView>
   );
 }
+
+const styles = StyleSheet.create({
+  dropdown: {
+    height: 50,
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+    color: '#94a3b8',
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#1e293b',
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+    borderRadius: 8,
+  },
+  containerStyle: {
+    borderRadius: 12,
+    marginTop: 8,
+    borderWidth: 1,
+    overflow: 'hidden',
+  },
+});

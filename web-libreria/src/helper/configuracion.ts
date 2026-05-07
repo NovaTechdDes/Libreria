@@ -1,7 +1,8 @@
 'use server';
+import { Configuracion } from '../interface/Configuracion';
 import pool from '../lib/db';
 
-export async function getConfiguracion() {
+export async function getConfiguracion(): Promise<Configuracion> {
   try {
     const { rows } = await pool.query(
       `
@@ -12,7 +13,13 @@ export async function getConfiguracion() {
     return rows[0];
   } catch (error) {
     console.error(error);
-    return {};
+    return {
+      id: 0,
+      frase_descuento: '',
+      porcentaje_descuento: 0,
+      mensaje_informativo: '',
+      carrito_habilitado: true,
+    };
   }
 }
 

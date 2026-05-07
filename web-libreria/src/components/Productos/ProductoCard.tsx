@@ -23,7 +23,7 @@ const BtnCarrito = ({ onClick, disabled }: { onClick: () => void; disabled?: boo
 );
 
 export const ProductoCard = ({ producto }: ProductoCardProps) => {
-  const { agregarProducto } = useCarritoStore();
+  const { agregarProducto, habilitado } = useCarritoStore();
 
   const isPriceVisible = producto.isvisibleprecio !== false;
   const isStockAvailable = producto.isvisiblestock !== false && (producto.cantidad ?? 0) > 0;
@@ -59,9 +59,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
         {/* Overlay — SOLO visible en desktop al hacer hover */}
         <div className="hidden md:block absolute inset-x-0 bottom-0 md:translate-y-full md:group-hover:translate-y-0 transition-transform duration-300 ease-out">
           <div className="absolute inset-x-0 bottom-full h-12 bg-linear-to-t from-black/30 to-transparent pointer-events-none" />
-          <div className="bg-white/90 backdrop-blur-sm px-4 py-3">
-            <BtnCarrito onClick={addCarrito} disabled={!isStockAvailable} />
-          </div>
+          <div className="bg-white/90 backdrop-blur-sm px-4 py-3">{habilitado && <BtnCarrito onClick={addCarrito} disabled={!isStockAvailable} />}</div>
         </div>
       </div>
 
@@ -91,9 +89,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
       </div>
 
       {/* Botón — SOLO visible en móvil, siempre abajo del contenido */}
-      <div className="md:hidden px-4 pb-4">
-        <BtnCarrito onClick={addCarrito} disabled={!isStockAvailable} />
-      </div>
+      <div className="md:hidden px-4 pb-4">{habilitado && <BtnCarrito onClick={addCarrito} disabled={!isStockAvailable} />}</div>
     </article>
   );
 };

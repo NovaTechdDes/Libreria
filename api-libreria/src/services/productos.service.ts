@@ -5,9 +5,14 @@ export async function obtenerProductos(
   search?: string | undefined,
   limit?: number,
   servidor?: boolean,
-  id_rubro?: number,
+  id_subrubro?: number,
 ) {
-  return await repo.getProductos(search, limit, servidor, id_rubro);
+  return await repo.getProductos(
+    search,
+    limit,
+    servidor,
+    id_subrubro,
+  );
 }
 
 export async function putProducto(producto: Partial<Producto>) {

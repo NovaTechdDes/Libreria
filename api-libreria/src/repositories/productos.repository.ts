@@ -6,7 +6,7 @@ export async function getProductos(
   search?: string | undefined,
   limit?: number,
   servidor?: boolean,
-  id_rubro?: number,
+  id_subRubro?: number,
 ): Promise<Producto[]> {
   await poolConnect;
 
@@ -14,8 +14,8 @@ export async function getProductos(
   const safeSearch = search ? `%${search}%` : "%";
 
   let query = `WHERE activo = 1`;
-  if (id_rubro) {
-    query += ` AND id_rubro = @id_rubro`;
+  if (id_subRubro) {
+    query += ` AND id_rubro = @id_subRubro`;
   }
   if (search) {
     query += ` AND (descripcion LIKE @search OR CAST(codigo AS VARCHAR) LIKE @search)`;
@@ -24,7 +24,7 @@ export async function getProductos(
   const result = await pool
     .request()
     .input("search", safeSearch)
-    .input("id_rubro", id_rubro).query(`
+    .input("id_subRubro", id_subRubro).query(`
     SELECT TOP (${safeLimit})
     id_articulo,
     codigo,
@@ -41,13 +41,24 @@ export async function getProductos(
     ORDER BY codigo DESC
     `);
 
-  console.log(result);
-
   const productosConImagen = await Promise.all(
-    result.recordset.map(async (producto) => ({
-      ...producto,
-      imagen: await obtenerImagenSegura(producto.codigo, servidor),
-    })),
+    result.recordset.map(async (producto) => {
+      // Parsear el rubro si viene como string JSON desde SQL
+      let rubroParsed = producto.rubro;
+      if (typeof producto.rubro === "string") {
+        try {
+          rubroParsed = JSON.parse(producto.rubro);
+        } catch (e) {
+          console.error("Error al parsear rubro JSON:", e);
+        }
+      }
+
+      return {
+        ...producto,
+        rubro: rubroParsed,
+        imagen: await obtenerImagenSegura(producto.codigo, servidor),
+      };
+    }),
   );
 
   return productosConImagen;
@@ -63,7 +74,7 @@ export async function putProducto(
     .input("codigo", producto.codigo)
     .input("precio", producto.precio)
     .input("cantidad", producto.cantidad).query(`
-      UPDATE api_articuloss
+      UPDATE articulos
       SET precio = @precio,
           cantidad = @cantidad
       WHERE codigo = @codigo

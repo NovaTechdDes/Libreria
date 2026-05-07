@@ -16,6 +16,12 @@ describe("Producto Service", () => {
       codigo: "123",
       descripcion: "Descripcion Test",
       cantidad: 10,
+      id_rubro: 1,
+      id_proveedor: 1,
+      stock_minimo: 1,
+      eliminado: false,
+      id_articulo: 1,
+      activo: true,
     };
 
     // Configuramos el mock para devolver los datos de prueba

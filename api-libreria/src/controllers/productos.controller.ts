@@ -7,13 +7,13 @@ export const getProductos = async (
   next: NextFunction,
 ) => {
   try {
-    const { search, limit, servidor, id_rubro } = req.query;
+    const { search, limit, servidor, id_subrubro } = req.query;
 
     const productos = await service.obtenerProductos(
       search as string,
       Number(limit),
       servidor === "true",
-      Number(id_rubro),
+      Number(id_subrubro),
     );
     res.json({ data: productos });
   } catch (error) {

@@ -8,7 +8,6 @@ export const verificarUsuario = async (
 ) => {
   try {
     const apiKey = req.headers.authorization?.replace("Bearer ", "");
-    console.log(req.headers);
 
     if (!apiKey) {
       return res.status(401).json({

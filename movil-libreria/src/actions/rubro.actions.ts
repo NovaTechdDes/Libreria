@@ -26,7 +26,7 @@ export const getRubros = async (servidor: boolean): Promise<{ rubros: Rubro[]; s
     return { rubros, subRubros };
   } catch (error) {
     console.log('El error es');
-    console.log(error);
+    console.error(error);
     return {
       rubros: [],
       subRubros: [],

@@ -1,6 +1,8 @@
+import { useRubros } from '@/hooks';
 import { useUrl } from '@/hooks/useUrl';
 import { Producto } from '@/interface';
 import { useProductoStore } from '@/store';
+import { useGlobalStore } from '@/store/globalStore';
 import { Image } from 'expo-image';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
@@ -11,10 +13,15 @@ interface Props {
 }
 
 export default function ProductItem({ item, setIsUserModalVisible }: Props) {
+  const { servidor } = useGlobalStore();
+  const { data } = useRubros(servidor);
   const baseUrl = useUrl();
   const imageName = item.imagen || null;
   const imageUrl = baseUrl ? `${imageName}` : null;
   const hasImage = !!imageUrl;
+
+  const buscado = data?.subRubros?.find((subRubro) => subRubro.id_rubro === item.id_rubro)?.nombre_rubro;
+  const subRubro = item.categoria && item.categoria !== 'Sin Categoria' ? item.categoria : buscado;
 
   const { seleccionarProducto, buscador } = useProductoStore();
 
@@ -51,7 +58,7 @@ export default function ProductItem({ item, setIsUserModalVisible }: Props) {
           <View>
             <View className="flex-row justify-between items-start">
               <Text className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-2 py-0.5 rounded-full uppercase tracking-widest mb-1">
-                {item.categoria.slice(0,15).trim()}
+                {subRubro?.trim()}
               </Text>
               <Text className="text-[10px] font-bold text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full uppercase tracking-widest mb-1">{item.codigo.trim()}</Text>
             </View>

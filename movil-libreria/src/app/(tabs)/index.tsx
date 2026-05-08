@@ -5,16 +5,18 @@ import BuscadorProductos from '@/components/productos/BuscadorProductos';
 import CameraScan from '@/components/productos/CameraScan';
 import ProductItem from '@/components/productos/ProductItem';
 import { Loading } from '@/components/ui/Loading';
+import SelectModal from '@/components/ui/SelectedModal';
 import ModalGetUsuario from '@/components/usuarios/ModalGetUsuario';
 import { useRubros } from '@/hooks';
 import { useProductos } from '@/hooks/productos/useProductos';
+import { Rubro, SubRubro } from '@/interface';
 import { useProductoStore } from '@/store';
 import { useGlobalStore } from '@/store/globalStore';
 import { mensaje } from '@/utils/mensaje';
+import { Ionicons } from '@expo/vector-icons';
 import { useCameraPermissions } from 'expo-camera';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, Platform, RefreshControl, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
@@ -28,6 +30,9 @@ export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [isUserModalVisible, setIsUserModalVisible] = useState(false);
+
+  const [visibleRubro, setVisibleRubro] = useState(false);
+  const [visibleSubRubro, setVisibleSubRubro] = useState(false);
 
   const [permission, requestPermission] = useCameraPermissions();
 
@@ -77,13 +82,14 @@ export default function HomeScreen() {
     setServidor(!servidor);
   };
 
-  if (!data && isLoadingRubros) {
-    return <Loading />;
-  }
+  const rubrosConTodos: Rubro[] = (data?.rubros?.length ?? 0) > 0 ? [{ id_rubro: 0, nombre_rubro: 'Todos' }, ...(data?.rubros ?? [])] : [];
+  const subRubrosConTodos: SubRubro[] = useMemo(() => {
+    if (!data?.subRubros?.length) return [];
 
-  const rubrosConTodos = (data?.rubros?.length ?? 0) > 0 ? [{ id_rubro: null, nombre_rubro: 'Todos' }, ...(data?.rubros ?? [])] : [];
-  const subRubrosConTodos =
-    (data?.subRubros?.length ?? 0) > 0 ? [{ id_rubro: null, nombre_rubro: 'Todos' }, ...(data?.subRubros.filter((subRubro) => subRubro.id_rubro_g === rubroSeleccionado) ?? [])] : [];
+    const filtrados = data.subRubros.filter((subRubro) => subRubro.id_rubro_g === rubroSeleccionado);
+
+    return [{ id_rubro: 0, nombre_rubro: 'Todos' }, ...filtrados];
+  }, [data?.subRubros, rubroSeleccionado]);
   const showRubros = isLoadingRubros || rubrosConTodos.length > 0;
   const showSubRubros = isLoadingRubros || subRubrosConTodos.length > 0;
 
@@ -99,67 +105,33 @@ export default function HomeScreen() {
 
       <View className="gap-5">
         {showRubros && (
-          <Dropdown
-            style={[
-              styles.dropdown,
-              {
-                backgroundColor: isDarkMode ? '#0f172a' : 'white',
-                borderColor: isDarkMode ? '#1e293b' : '#e2e8f0',
-              },
-              servidor && { backgroundColor: isDarkMode ? '#450a0a' : '#fef2f2' }, // Tinte rojo si es remoto
-            ]}
-            placeholderStyle={[styles.placeholderStyle, isDarkMode && { color: '#64748b' }]}
-            selectedTextStyle={[styles.selectedTextStyle, isDarkMode && { color: '#f1f5f9' }]}
-            inputSearchStyle={[styles.inputSearchStyle, isDarkMode && { backgroundColor: '#1e293b', color: '#f1f5f9' }]}
-            containerStyle={[styles.containerStyle, isDarkMode && { backgroundColor: '#0f172a', borderColor: '#1e293b' }]}
-            activeColor={isDarkMode ? '#1e293b' : '#eff6ff'}
-            data={rubrosConTodos}
-            search
-            maxHeight={300}
-            labelField="nombre_rubro"
-            valueField="id_rubro"
-            placeholder="Seleccionar rubro"
-            searchPlaceholder="Buscar rubro..."
-            value={rubroSeleccionado}
-            onChange={(item) => seleccionarRubro(item.id_rubro)}
-            renderItem={(item) => (
-              <View className="flex-row justify-between items-center p-4 border-b border-slate-100 dark:border-slate-800">
-                <Text className={`text-base ${item.id_rubro === rubroSeleccionado ? 'text-blue-500 font-bold' : 'text-slate-700 dark:text-slate-200'}`}>{item.nombre_rubro}</Text>
-                {item.id_rubro === rubroSeleccionado && <View className="w-2 h-2 rounded-full bg-blue-500" />}
-              </View>
-            )}
-          />
+          <TouchableOpacity
+            onPress={() => setVisibleRubro(true)}
+            className="bg-white dark:bg-slate-900 border border-neutral-100 dark:border-neutral-800 px-4 py-2 rounded-2xl flex-row items-center justify-between"
+          >
+            <View className="flex-1">
+              <Text className="text-[8px] font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest ">Rubro</Text>
+              <Text className={'font-bold text-base ' + (rubroSeleccionado ? 'text-neutral-900 dark:text-neutral-100' : 'text-neutral-400 dark:text-neutral-600')}>
+                {rubrosConTodos.find((rubro) => rubro.id_rubro === rubroSeleccionado)?.nombre_rubro || 'Todos'}
+              </Text>
+            </View>
+            <Ionicons name="pricetag-outline" size={18} color={isDarkMode ? 'white' : 'black'} />
+          </TouchableOpacity>
         )}
+
         {showSubRubros && rubroSeleccionado !== null && (
-          <Dropdown
-            style={[
-              styles.dropdown,
-              {
-                backgroundColor: isDarkMode ? '#0f172a' : 'white',
-                borderColor: isDarkMode ? '#1e293b' : '#e2e8f0',
-              },
-            ]}
-            placeholderStyle={[styles.placeholderStyle, isDarkMode && { color: '#64748b' }]}
-            selectedTextStyle={[styles.selectedTextStyle, isDarkMode && { color: '#f1f5f9' }]}
-            inputSearchStyle={[styles.inputSearchStyle, isDarkMode && { backgroundColor: '#1e293b', color: '#f1f5f9' }]}
-            containerStyle={[styles.containerStyle, isDarkMode && { backgroundColor: '#0f172a', borderColor: '#1e293b' }]}
-            activeColor={isDarkMode ? '#1e293b' : '#eff6ff'}
-            data={subRubrosConTodos}
-            search
-            maxHeight={300}
-            labelField="nombre_rubro"
-            valueField="id_rubro"
-            placeholder="Seleccionar subrubro"
-            searchPlaceholder="Buscar subrubro..."
-            value={subRubroSeleccionado}
-            onChange={(item) => seleccionarSubRubro(item.id_rubro)}
-            renderItem={(item) => (
-              <View className="flex-row justify-between items-center p-4 border-b border-slate-100 dark:border-slate-800">
-                <Text className={`text-base ${item.id_rubro === subRubroSeleccionado ? 'text-indigo-500 font-bold' : 'text-slate-700 dark:text-slate-200'}`}>{item.nombre_rubro}</Text>
-                {item.id_rubro === subRubroSeleccionado && <View className="w-2 h-2 rounded-full bg-indigo-500" />}
-              </View>
-            )}
-          />
+          <TouchableOpacity
+            onPress={() => setVisibleSubRubro(true)}
+            className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 px-4 py-2 rounded-2xl flex-row items-center justify-between"
+          >
+            <View className="flex-1">
+              <Text className="text-[8px] font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest ">SubRubro</Text>
+              <Text className={'font-bold text-base ' + (subRubroSeleccionado ? 'text-neutral-900 dark:text-neutral-100' : 'text-neutral-400 dark:text-neutral-600')}>
+                {subRubrosConTodos.find((rubro) => rubro.id_rubro === subRubroSeleccionado)?.nombre_rubro || 'Todos'}
+              </Text>
+            </View>
+            <Ionicons name="list-outline" size={18} color={isDarkMode ? 'white' : 'black'} />
+          </TouchableOpacity>
         )}
       </View>
 
@@ -179,6 +151,8 @@ export default function HomeScreen() {
 
       {/* modal */}
       {modal && <ModalProducto servidor={servidor} />}
+      <SelectModal title="Seleccionar Rubro" data={rubrosConTodos} visible={visibleRubro} onSelect={(item) => seleccionarRubro(item.id_rubro)} onClose={() => setVisibleRubro(false)} />
+      <SelectModal title="Seleccionar SubRubro" data={subRubrosConTodos} visible={visibleSubRubro} onSelect={(item) => seleccionarSubRubro(item.id_rubro)} onClose={() => setVisibleSubRubro(false)} />
       <ModalGetUsuario
         visible={isUserModalVisible}
         onClose={() => {

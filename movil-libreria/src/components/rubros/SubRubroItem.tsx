@@ -8,7 +8,6 @@ interface Props {
 }
 
 export default function SubRubroItem({ item, isSelected, onPress }: Props) {
-  console.log(item);
   return (
     <View>
       <Pressable

@@ -6,5 +6,5 @@ export interface Rubro {
 export interface SubRubro {
   id_rubro: number;
   nombre_rubro: string;
-  id_rubro_g: number;
+  id_rubro_g?: number;
 }

@@ -35,7 +35,7 @@ export const getUsuarioByClave = async (clave: string, servidor: boolean): Promi
 
     return mapUsuario(data.data);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return {
       id_usuario: '0',
       denominacion: '',

@@ -25,7 +25,7 @@ export const getProductos = async (search: string, servidor: boolean, id_rubro: 
     });
     return data.data.map(mapProducto);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return [];
   }
 };
@@ -51,8 +51,7 @@ export const putProducto = async (producto: Partial<Producto>, servidor: boolean
     }
     return null;
   } catch (error) {
-    console.log('a');
-    console.log(error);
+    console.error(error);
     return null;
   }
 };

@@ -20,7 +20,7 @@ export const getMovCajas = async (servidor: boolean) => {
     }
     return [];
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return [];
   }
 };
@@ -42,7 +42,7 @@ export const getVales = async (servidor: boolean, usuario: string) => {
     }
     return [];
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return [];
   }
 };
@@ -71,7 +71,7 @@ export const startCierreCaja = async (servidor: boolean, usuario: string): Promi
     }
     return false;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return false;
   }
 };

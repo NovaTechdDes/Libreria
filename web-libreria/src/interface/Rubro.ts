@@ -1,4 +1,4 @@
-export interface Rubro{
-    id: string;
-    nombre: string;
+export interface Rubro {
+  id: number;
+  nombre: string;
 }

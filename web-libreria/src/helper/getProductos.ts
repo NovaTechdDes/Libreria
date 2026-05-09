@@ -1,6 +1,5 @@
 'use server';
 
-import pool from '@/src/lib/db';
 import { Producto } from '../interface/Producto';
 
 export async function getProductos(page: number = 1, limit: number = 20, search: string = '', activo?: boolean): Promise<{ data: Producto[]; totalPages: number; totalProductos: number }> {

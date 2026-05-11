@@ -1,25 +1,19 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { IoEyeOutline } from 'react-icons/io5';
-import { postColor, putColor } from '@/src/helper/postColor';
 import { mensaje } from '@/src/helper/mensaje';
 import { useColorStore } from '@/src/store';
+import { useMutateColor } from '@/src/hooks/color/useMutateColor';
 
 export const FormularioColor = () => {
   const { colorSeleccionado, clearColorSeleccionado } = useColorStore();
+  const { startPutColor, startPostColor } = useMutateColor();
+
   const [error, setError] = useState<boolean>(false);
 
-  const [nombre, setNombre] = useState('');
-  const [codigo, setCodigo] = useState('006A6A');
-  const [prevId, setPrevId] = useState<string | undefined>(undefined);
-
-  // Ajustar el estado durante el renderizado para evitar renderizados en cascada (useEffect)
-  if (colorSeleccionado && colorSeleccionado.id !== prevId) {
-    setNombre(colorSeleccionado.color);
-    setCodigo(colorSeleccionado.codigo.replace('#', ''));
-    setPrevId(colorSeleccionado.id);
-  }
+  const [nombre, setNombre] = useState(colorSeleccionado?.color || '');
+  const [codigo, setCodigo] = useState(colorSeleccionado?.codigo.replace('#', '').toUpperCase() || '006A6A');
 
   const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace('#', '');
@@ -32,14 +26,11 @@ export const FormularioColor = () => {
     e.preventDefault();
     if (!nombre || !codigo) {
       setError(true);
-      setTimeout(() => {
-        setError(false);
-      }, 2500);
       return;
     }
 
     if (colorSeleccionado && colorSeleccionado?.id) {
-      const res = await putColor(colorSeleccionado.id, nombre, `#${codigo}`);
+      const res = await startPutColor.mutateAsync({ id: colorSeleccionado.id, color: nombre, codigo: `#${codigo}` });
 
       if (res) {
         mensaje('Color Actualizado Correctamente', 'success');
@@ -51,7 +42,7 @@ export const FormularioColor = () => {
       return;
     }
 
-    const res = await postColor(nombre, `#${codigo}`);
+    const res = await startPostColor.mutateAsync({ color: nombre, codigo: `#${codigo}` });
 
     if (res) {
       mensaje('Color Agregado Correctamente', 'success');

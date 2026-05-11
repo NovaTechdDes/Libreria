@@ -5,7 +5,7 @@ import { FiPlus, FiUploadCloud, FiCamera, FiImage } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import { ModalColores } from './ModalColores';
 import { ColorFormularioItem } from './ColorFormularioItem';
-import { postrelacionColorProducto } from '@/src/helper/relacionColorProducto';
+
 import { useRef } from 'react';
 import Image from 'next/image';
 
@@ -28,16 +28,16 @@ export const FormularioProducto = () => {
   const handleModal = () => setShowColores(!showColores);
 
   useEffect(() => {
-    if (!productoSeleccionado?.id || !productoSeleccionado?.colores) return;
+    if (!productoSeleccionado?.id_producto || !productoSeleccionado?.productos_colores) return;
 
-    addColores([...productoSeleccionado.colores]);
+    addColores([...productoSeleccionado.productos_colores]);
   }, [productoSeleccionado, addColores]);
 
   if (!productoSeleccionado) return null;
 
   const handleUpdate = () => {
-    if (!productoSeleccionado.id) return;
-    postrelacionColorProducto(productoSeleccionado.id, coloresSeleccionados);
+    if (!productoSeleccionado.id_producto) return;
+    postrelacionColorProducto(productoSeleccionado.id_producto, coloresSeleccionados);
   };
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

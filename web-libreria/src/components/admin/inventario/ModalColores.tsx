@@ -3,9 +3,10 @@
 import { useEffect, useState } from 'react';
 import { FiX, FiPlus, FiLoader } from 'react-icons/fi';
 import type { Color } from '@/src/interface/Color';
-import { getAllColores } from '@/src/helper/getAllColores';
+
 import { ModalColoreItem } from './ModalColoreItem';
 import { useProductoStore } from '@/src/store/producto.store';
+import { createClient } from '@/src/lib/client';
 
 interface Props {
   isOpen: boolean;
@@ -13,18 +14,18 @@ interface Props {
 }
 
 export const ModalColores = ({ isOpen, onClose }: Props) => {
+  const supabase = createClient();
   const { addColores, coloresSeleccionados } = useProductoStore();
+
   const [coloresDB, setColoresDB] = useState<Color[]>([]);
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(
-    new Set(coloresSeleccionados.map((c) => c.id).filter((id): id is string => id !== undefined))
-  );
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set(coloresSeleccionados.map((c) => c.id).filter((id): id is string => id !== undefined)));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (isOpen) {
       const fetchColores = async () => {
         setLoading(true);
-        const data = await getAllColores();
+        const { data, error } = await supabase.from('colores').select('*');
         if (data) {
           setColoresDB(data);
         }

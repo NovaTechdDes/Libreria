@@ -5,15 +5,12 @@ import Link from 'next/link';
 import { HeaderColores } from './HeaderColores';
 
 interface Props {
-  searchParams: {
-    search?: string;
-  };
   colores: Color[];
   totalPages: number;
   currentPage: number;
 }
 
-export const ListaColores = async ({ colores, totalPages, currentPage }: Props) => {
+export const ListaColores = ({ colores, totalPages, currentPage }: Props) => {
   return (
     <div className="mt-12 bg-white flex-1 rounded-4xl border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] overflow-hidden">
       {/* Header de la Lista */}

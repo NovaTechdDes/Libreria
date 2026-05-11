@@ -1,6 +1,5 @@
 'use client';
 
-import { updatePrecioVisibleProducto, updateStockVisibleProducto, updateVisibilidadProducto } from '@/src/helper/getProductos';
 import { mensaje } from '@/src/helper/mensaje';
 import { Producto } from '@/src/interface/Producto';
 import { useProductoStore } from '@/src/store/producto.store';
@@ -14,16 +13,16 @@ interface Props {
 export const InventarioItem = ({ producto }: Props) => {
   const { setProductoSeleccionado } = useProductoStore();
   const [isVisibilidad, setVisibilidad] = useState(producto.activo ?? false);
-  const [isStockVisible, setStockVisible] = useState(producto.isvisiblestock ?? false);
+  const [isStockVisible, setStockVisible] = useState(producto.isStock ?? false);
   const [isPrecioVisible, setPrecioVisible] = useState(producto.isvisibleprecio ?? false);
 
   const handleVisibilidad = async () => {
     const nuevoEstado = !isVisibilidad;
     setVisibilidad(nuevoEstado);
 
-    if (!producto.id) return;
+    if (!producto.id_producto) return;
 
-    const res = await updateVisibilidadProducto(nuevoEstado, producto.id);
+    const res = await updateVisibilidadProducto(nuevoEstado, producto.id_producto);
 
     if (res) {
       mensaje('Producto actualizado correctamente', 'success');
@@ -37,9 +36,9 @@ export const InventarioItem = ({ producto }: Props) => {
     const nuevoEstado = !isStockVisible;
     setStockVisible(nuevoEstado);
 
-    if (!producto.id) return;
+    if (!producto.id_producto) return;
 
-    const res = await updateStockVisibleProducto(nuevoEstado, producto.id);
+    const res = await updateStockVisibleProducto(nuevoEstado, producto.id_producto);
 
     if (res) {
       mensaje('Stock actualizado correctamente', 'success');
@@ -53,9 +52,9 @@ export const InventarioItem = ({ producto }: Props) => {
     const nuevoEstado = !isPrecioVisible;
     setPrecioVisible(nuevoEstado);
 
-    if (!producto.id) return;
+    if (!producto.id_producto) return;
 
-    const res = await updatePrecioVisibleProducto(nuevoEstado, producto.id);
+    const res = await updatePrecioVisibleProducto(nuevoEstado, producto.id_producto);
 
     if (res) {
       mensaje('Precio actualizado correctamente', 'success');
@@ -66,7 +65,7 @@ export const InventarioItem = ({ producto }: Props) => {
   };
 
   return (
-    <tr key={producto.id} className="hover:bg-slate-50/50 transition-colors group">
+    <tr key={producto.id_producto} className="hover:bg-slate-50/50 transition-colors group">
       <td className="px-6 py-5">
         <div className="flex items-center gap-4">
           <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-slate-100 border border-slate-100 shrink-0">

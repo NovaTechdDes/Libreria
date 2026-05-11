@@ -1,5 +1,5 @@
 import { InventarioContainer } from '@/src/components/admin/inventario/InventarioContainer';
-import { getProductos } from '@/src/helper/getProductos';
+import { createClient } from '@/src/lib/server';
 
 interface Props {
   searchParams: {
@@ -10,11 +10,15 @@ interface Props {
 
 export default async function InventarioPage({ searchParams }: Props) {
   const { page, search } = await searchParams;
+  const supabase = await createClient();
 
   const currentPage = Number(page) || 1;
   const limit = 20;
 
-  const result = await getProductos(currentPage, limit, search, false);
+  const { data, error } = await supabase
+    .from('productos')
+    .select('*')
+    .range((currentPage - 1) * limit, currentPage * limit);
 
-  return <InventarioContainer productos={result?.data || []} totalPages={result?.totalPages || 0} currentPage={currentPage} totalProductos={result?.totalProductos || 0} />;
+  return <InventarioContainer productos={data || []} totalPages={0} currentPage={currentPage} totalProductos={0} />;
 }

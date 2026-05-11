@@ -1,9 +1,15 @@
 import { Descuento, Informativo } from '@/src/components';
-import { getConfiguracion } from '@/src/helper/configuracion';
+import { createClient } from '@/src/lib/server';
 import { FiSettings, FiSliders } from 'react-icons/fi';
 
 const page = async () => {
-  const dataConfiguracion = await getConfiguracion();
+  const supabase = await createClient();
+  const { data: dataConfiguracion, error } = await supabase.from('configuracion').select('*').single();
+
+  if (error) {
+    console.error('Error al obtener la configuración:', error);
+    return null;
+  }
 
   return (
     <main className="min-h-screen p-4 md:p-8">

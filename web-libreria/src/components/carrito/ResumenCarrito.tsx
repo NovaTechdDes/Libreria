@@ -1,6 +1,6 @@
 'use client';
 
-import { getConfiguracion } from '@/src/helper/configuracion';
+import { createClient } from '@/src/lib/client';
 import { useCarritoStore } from '@/src/store/carrito.store';
 import { useEffect, useState } from 'react';
 import { FiSend } from 'react-icons/fi';
@@ -14,7 +14,14 @@ export const ResumenCarrito = () => {
   const [envio, setEnvio] = useState<boolean>(false);
 
   const cargarConfiguracion = async () => {
-    const configuracion = await getConfiguracion();
+    const supabase = await createClient();
+    const { data: configuracion, error } = await supabase.from('configuracion').select('*').single();
+
+    if (error) {
+      console.error('Error al obtener la configuración:', error);
+      return null;
+    }
+
     setHabilitado(configuracion.carrito_habilitado);
     setFrase(configuracion.frase_descuento);
     setDescuento(configuracion.porcentaje_descuento);

@@ -1,35 +1,25 @@
 'use client';
-import { getConfiguracion } from '@/src/helper/configuracion';
+
 import { useCarritoStore } from '@/src/store/carrito.store';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+
 import { FaShoppingCart } from 'react-icons/fa';
 import { IoMoon } from 'react-icons/io5';
 import { LuShoppingCart } from 'react-icons/lu';
 
-export const Header = () => {
-  const pathname = usePathname();
-  const { productos, habilitado, setHabilitado, mensaje, setMensaje } = useCarritoStore();
-  const linkClass = (path: string) => (pathname === path ? 'text-primary font-semibold underline underline-offset-4' : 'text-gray-600 hover:text-primary transition');
+interface Props {
+  habilitado: boolean;
+}
 
-  useEffect(() => {
-    const fetchHabilitado = async () => {
-      const data = await getConfiguracion();
-      setHabilitado(data.carrito_habilitado);
-      setMensaje(data.mensaje_informativo);
-    };
-    fetchHabilitado();
-  }, []);
+export const Header = ({ habilitado }: Props) => {
+  const pathname = usePathname();
+  const { productos } = useCarritoStore();
+  const linkClass = (path: string) => (pathname === path ? 'text-primary font-semibold underline underline-offset-4' : 'text-gray-600 hover:text-primary transition');
 
   return (
     <>
-      {mensaje && (
-        <div className="w-full bg-slate-900 text-white py-3 px-6 rounded-2xl flex items-center justify-center text-center text-sm font-medium animate-pulse">
-          <span>{mensaje}</span>
-        </div>
-      )}
       <header className="sticky top-0 z-50 h-20 bg-white/80 backdrop-blur-md border-b border-gray-100 text-black flex justify-between items-center px-6 md:px-12 transition-all duration-300">
         <div className="flex items-center gap-3 group cursor-pointer">
           <div className="relative overflow-hidden rounded-full shadow-md group-hover:shadow-lg transition-all">

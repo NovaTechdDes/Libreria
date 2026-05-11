@@ -13,7 +13,7 @@ export const Rubros = async ({ rubroActivo }: Props) => {
   const { data, error } = await supabase.from('rubros').select('*');
 
   if (error) {
-    console.log(error);
+    console.error(error);
     return null;
   }
 

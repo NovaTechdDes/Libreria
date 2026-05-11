@@ -1,15 +1,35 @@
 import { Producto } from '@/src/interface/Producto';
 import { ProductoCard } from './ProductoCard';
-import { getProductos } from '@/src/helper/getProductos';
+import { createClient } from '@/src/lib/server';
 
 interface Props {
   search?: string;
-  currentPage?: number;
-  limit?: number;
+  currentPage: number;
+  limit: number;
+  subRubroActivo?: number;
 }
 
-export const Productos = async ({ search, currentPage, limit }: Props) => {
-  const { data: productos } = await getProductos(currentPage, limit, search, true);
+export const Productos = async ({ search, currentPage = 1, limit = 20, subRubroActivo }: Props) => {
+  const supabase = await createClient();
+  const from = (currentPage - 1) * limit;
+  const to = from + (limit - 1);
+
+  let query = supabase.from('productos').select('*, subRubros: fk_producto_subrubro(*), productos_colores (colores(*))').eq('activo', true).range(from, to);
+
+  if (search) {
+    query = query.ilike('descripcion', `%${search}%`);
+  }
+
+  if (subRubroActivo) {
+    query = query.eq('id_subrubro', subRubroActivo);
+  }
+
+  const { data: productos, error } = await query;
+
+  if (error) {
+    console.error('error', error);
+    return null;
+  }
 
   if (!productos) return null;
 
@@ -20,7 +40,7 @@ export const Productos = async ({ search, currentPage, limit }: Props) => {
       {/* mapeo de productos */}
       <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-5">
         {productos?.map((producto: Producto) => (
-          <ProductoCard key={producto.id} producto={producto} />
+          <ProductoCard key={producto.id_producto} producto={producto} />
         ))}
       </div>
     </section>

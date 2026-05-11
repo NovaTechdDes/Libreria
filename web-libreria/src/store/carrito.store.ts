@@ -40,13 +40,13 @@ export const useCarritoStore = create<CarritoStore>((set) => ({
     })),
   actualizarCantidad: (id: number, cantidad: number) =>
     set((state) => {
-      const nuevosProductos = state.productos.map((p) => (p.producto.id_articulo === id ? { ...p, cantidad } : p));
+      const nuevosProductos = state.productos.map((p) => (p.producto.id_producto === id ? { ...p, cantidad } : p));
       const nuevoTotal = nuevosProductos.reduce((acc, p) => acc + p.producto.precio * p.cantidad, 0);
       return { productos: nuevosProductos, total: nuevoTotal };
     }),
   removerProducto: (id: number) =>
     set((state) => {
-      const nuevosProductos = state.productos.filter((p) => p.producto.id_articulo !== id);
+      const nuevosProductos = state.productos.filter((p) => p.producto.id_producto !== id);
       let nuevoTotal = nuevosProductos.reduce((acc, p) => acc + p.producto.precio * p.cantidad, 0);
       nuevoTotal = nuevoTotal - (nuevoTotal * state.descuento) / 100;
       return { productos: nuevosProductos, total: nuevoTotal };

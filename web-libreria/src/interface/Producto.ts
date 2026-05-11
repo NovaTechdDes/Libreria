@@ -1,20 +1,25 @@
 import { Color } from './Color';
 
 export interface Producto {
-  id?: number;
-  id_articulo?: number;
+  id_producto: number;
   codigo: string;
+
   descripcion: string;
   precio: number;
   cantidad: number;
   marca: number;
-  id_rubro: number;
+  id_subRubro: number;
   imagen?: string;
   imagen_url?: string;
   activo: boolean;
 
-  isvisiblestock?: boolean;
+  isStock?: boolean;
   isvisibleprecio?: boolean;
 
-  colores?: Color[];
+  subRubros?: {
+    nombre: string;
+    id_subrubro: number;
+  };
+
+  productos_colores?: Color[];
 }

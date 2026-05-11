@@ -1,5 +1,7 @@
 export interface Color {
-    id?: string;
+  colores: {
+    id?: number;
     color: string;
     codigo: string;
+  };
 }

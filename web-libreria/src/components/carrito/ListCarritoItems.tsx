@@ -14,13 +14,11 @@ export const ListCarritoItems = () => {
     );
   }
 
-  console.log(productos);
-
   return (
     <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
       <div className="divide-y divide-slate-100">
         {productos.map((producto) => (
-          <CarritoItem key={producto.producto.id} producto={producto} />
+          <CarritoItem key={producto.producto.id_producto} producto={producto} />
         ))}
       </div>
     </div>

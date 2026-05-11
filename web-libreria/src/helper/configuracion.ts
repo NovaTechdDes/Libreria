@@ -8,7 +8,7 @@ export async function getConfiguracion(): Promise<Configuracion> {
     const { data, error } = await supabase.from('configuracion').select('*').limit(1);
 
     if (error) {
-      console.log(error);
+      console.error(error);
       return {
         id: 0,
         frase_descuento: '',

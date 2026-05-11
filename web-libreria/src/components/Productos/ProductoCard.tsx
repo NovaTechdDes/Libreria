@@ -4,6 +4,7 @@ import { Producto } from '@/src/interface/Producto';
 import { useCarritoStore } from '@/src/store/carrito.store';
 import Image from 'next/image';
 import { CgShoppingCart } from 'react-icons/cg';
+import { ButtonSeleccionarColor } from './ButtonSeleccionarColor';
 
 interface ProductoCardProps {
   producto: Producto;
@@ -26,12 +27,16 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
   const { agregarProducto, habilitado } = useCarritoStore();
 
   const isPriceVisible = producto.isvisibleprecio !== false;
-  const isStockAvailable = producto.isvisiblestock !== false && (producto.cantidad ?? 0) > 0;
+  const isStockAvailable = producto.isStock !== false && (producto.cantidad ?? 0) > 0;
 
   const addCarrito = () => {
     if (!producto || !isStockAvailable) return;
     agregarProducto(producto, 1);
   };
+
+  if (!producto.id_producto) {
+    return null;
+  }
 
   return (
     <article className="group flex flex-col bg-white rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.06),0_4px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.08),0_12px_32px_rgba(0,0,0,0.10)] hover:-translate-y-1 transition-all duration-180 ease-in-out cursor-pointer">
@@ -66,10 +71,16 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
       {/* Contenido del card */}
       <div className="flex flex-col gap-1 flex-1 px-4 pt-3.5 pb-4">
         {/* Rubro / categoría */}
-        <p className="text-[10px] font-semibold tracking-[0.08em] uppercase text-primary m-0">{producto.id_rubro ? `Rubro ${producto.id_rubro}` : 'Sin categoría'}</p>
+        <p className="text-[10px] font-semibold tracking-[0.08em] uppercase text-primary m-0">{producto.subRubros ? `${producto.subRubros.nombre}` : 'Sin categoría'}</p>
 
         {/* Nombre del producto */}
         <h3 className="text-[15px] font-bold text-[#1a1a18] mt-0.5 leading-[1.3] line-clamp-2">{producto.descripcion}</h3>
+
+        <div className="flex gap-2 items-center my-2 justify-end">
+          {producto.productos_colores?.map((color, index) => (
+            <ButtonSeleccionarColor key={color.colores?.id ?? index} color={color} producto_id={producto.id_producto} />
+          ))}
+        </div>
 
         {/* Precio + badge stock */}
         <div className="mt-auto pt-2.5 flex items-center justify-between">

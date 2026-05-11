@@ -8,12 +8,16 @@ interface Props {
 }
 
 export const SubRubros = async ({ rubroActivo, subRubroActivo }: Props) => {
+  if (rubroActivo === 0 || rubroActivo === undefined) {
+    return null;
+  }
+
   const supabase = await createClient();
 
   const { data, error } = await supabase.from('subrubros').select('*').eq('id_rubro', rubroActivo).order('nombre');
 
   if (error) {
-    console.log(error);
+    console.error(error);
     return null;
   }
 

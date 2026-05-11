@@ -23,7 +23,7 @@ export default async function Home({ searchParams }: Props) {
       <SubRubros rubroActivo={rubro} subRubroActivo={subrubro} />
 
       {/* Productos */}
-      {/* <Productos search={search} currentPage={currentPage} limit={limit} /> */}
+      <Productos search={search} currentPage={currentPage} limit={limit} subRubroActivo={subrubro} />
     </div>
   );
 }

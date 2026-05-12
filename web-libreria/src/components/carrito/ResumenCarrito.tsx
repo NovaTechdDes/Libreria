@@ -65,9 +65,9 @@ export const ResumenCarrito = () => {
       '------------------------------',
     ].join('\n');
 
-    const phoneNumber = '5493456445977';
+    const phoneNumber = '5493456414401';
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(mensajeWhatsApp)}`;
-    
+
     window.open(url, '_blank');
   };
 

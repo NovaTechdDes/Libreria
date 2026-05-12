@@ -4,8 +4,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/src/lib/client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiArrowLeft, FiArrowRight, FiEye, FiLock, FiMail } from 'react-icons/fi';
+import { CgSpinner } from 'react-icons/cg';
 
 const LoginPage = () => {
   const router = useRouter();
@@ -13,9 +14,24 @@ const LoginPage = () => {
   const supabase = createClient();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('rememberedUser');
+
+    if (savedUser) {
+      setTimeout(() => {
+        setEmail(savedUser);
+        setRememberMe(true);
+      }, 0);
+    }
+  }, []);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -23,13 +39,19 @@ const LoginPage = () => {
     });
 
     if (!error) {
+      if (rememberMe) {
+        localStorage.setItem('rememberedUser', email);
+      } else {
+        localStorage.removeItem('rememberedUser');
+      }
+      setLoading(false);
       router.push('inventario');
     } else {
+      setLoading(false);
       alert('Error al iniciar sesión: ' + error.message);
       return;
     }
   };
-  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <main className="min-h-screen bg-white flex flex-col items-center justify-center p-6">
@@ -92,7 +114,13 @@ const LoginPage = () => {
 
           {/* Recordar mi sesión */}
           <div className="flex items-center gap-3 px-1">
-            <input type="checkbox" id="remember" className="w-5 h-5 rounded border-slate-300 text-teal-500 focus:ring-teal-500" />
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              id="remember"
+              className="w-5 h-5 rounded border-slate-300 text-teal-500 focus:ring-teal-500"
+            />
             <label htmlFor="remember" className="text-slate-600 font-medium cursor-pointer">
               Recordar mi sesión
             </label>
@@ -101,10 +129,11 @@ const LoginPage = () => {
           {/* Botón Ingresar */}
           <button
             type="submit"
-            className="w-full bg-teal-400 hover:bg-teal-500 active:bg-teal-600 text-slate-900 cursor-pointer py-4 rounded-xl shadow-lg shadow-teal-400/20 flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5"
+            disabled={loading}
+            className="w-full bg-teal-400 hover:bg-teal-500 active:bg-teal-600 text-slate-900 cursor-pointer py-4 rounded-xl shadow-lg shadow-teal-400/20 flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Ingresar
-            <FiArrowRight className="w-5 h-5" />
+            {loading ? <CgSpinner className="w-5 h-5 animate-spin" /> : 'Ingresar'}
+            {loading ? '' : <FiArrowRight className="w-5 h-5" />}
           </button>
         </form>
 

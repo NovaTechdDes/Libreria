@@ -3,11 +3,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import React from 'react';
+import { createClient } from '@/src/lib/client';
 import { BsFillPaletteFill } from 'react-icons/bs';
 import { FiBox, FiLogOut, FiSettings } from 'react-icons/fi';
 
 export const AsideBar = () => {
+  const supabase = createClient();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -30,10 +31,12 @@ export const AsideBar = () => {
   ];
 
   const handleLogOut = async () => {
-    await fetch('/api/auth/logout', {
-      method: 'POST',
-    });
-    router.push('/admin/login');
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('Error al cerrar sesión:', error);
+    } else {
+      router.push('/admin/login');
+    }
   };
 
   return (

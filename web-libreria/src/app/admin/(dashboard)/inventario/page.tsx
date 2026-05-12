@@ -17,8 +17,8 @@ export default async function InventarioPage({ searchParams }: Props) {
 
   let query = supabase
     .from('productos')
-    .select('*, productos_colores (colores(*))')
-    .range((currentPage - 1) * limit, currentPage * limit);
+    .select('*, productos_colores (colores(*))', { count: 'exact' })
+    .range((currentPage - 1) * limit, currentPage * limit - 1);
 
   if (search) {
     query = query.ilike('descripcion', `%${search}%`);
@@ -26,7 +26,9 @@ export default async function InventarioPage({ searchParams }: Props) {
 
   query = query.order('descripcion', { ascending: true });
 
-  const { data } = await query;
+  const { data, count } = await query;
 
-  return <InventarioContainer productos={data || []} totalPages={0} currentPage={currentPage} totalProductos={0} />;
+  const totalPages = Math.ceil((count || 0) / limit);
+
+  return <InventarioContainer productos={data || []} totalPages={totalPages} currentPage={currentPage} totalProductos={count || 0} />;
 }

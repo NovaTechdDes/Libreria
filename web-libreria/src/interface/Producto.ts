@@ -13,7 +13,7 @@ export interface Producto {
   imagen_url?: string;
   activo: boolean;
 
-  isStock?: boolean;
+  isstock?: boolean;
   isvisibleprecio?: boolean;
 
   subRubros?: {

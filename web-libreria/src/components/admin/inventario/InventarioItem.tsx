@@ -1,6 +1,7 @@
 'use client';
 
 import { mensaje } from '@/src/helper/mensaje';
+import { useMutateProductos } from '@/src/hooks/productos/useMutateProductos';
 import { Producto } from '@/src/interface/Producto';
 import { useProductoStore } from '@/src/store/producto.store';
 import Image from 'next/image';
@@ -11,9 +12,11 @@ interface Props {
 }
 
 export const InventarioItem = ({ producto }: Props) => {
+  const { startUpdateVisible, startUpdatePrecioVisible, startUpdateStockVisile } = useMutateProductos();
   const { setProductoSeleccionado } = useProductoStore();
+
   const [isVisibilidad, setVisibilidad] = useState(producto.activo ?? false);
-  const [isStockVisible, setStockVisible] = useState(producto.isStock ?? false);
+  const [isStockVisible, setStockVisible] = useState(producto.isstock ?? false);
   const [isPrecioVisible, setPrecioVisible] = useState(producto.isvisibleprecio ?? false);
 
   const handleVisibilidad = async () => {
@@ -22,7 +25,7 @@ export const InventarioItem = ({ producto }: Props) => {
 
     if (!producto.id_producto) return;
 
-    const res = await updateVisibilidadProducto(nuevoEstado, producto.id_producto);
+    const res = await startUpdateVisible.mutateAsync({ activo: nuevoEstado, id: producto.id_producto });
 
     if (res) {
       mensaje('Producto actualizado correctamente', 'success');
@@ -38,7 +41,7 @@ export const InventarioItem = ({ producto }: Props) => {
 
     if (!producto.id_producto) return;
 
-    const res = await updateStockVisibleProducto(nuevoEstado, producto.id_producto);
+    const res = await startUpdateStockVisile.mutateAsync({ activo: nuevoEstado, id: producto.id_producto });
 
     if (res) {
       mensaje('Stock actualizado correctamente', 'success');
@@ -54,7 +57,7 @@ export const InventarioItem = ({ producto }: Props) => {
 
     if (!producto.id_producto) return;
 
-    const res = await updatePrecioVisibleProducto(nuevoEstado, producto.id_producto);
+    const res = await startUpdatePrecioVisible.mutateAsync({ activo: nuevoEstado, id: producto.id_producto });
 
     if (res) {
       mensaje('Precio actualizado correctamente', 'success');

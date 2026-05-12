@@ -1,8 +1,10 @@
 'use client';
-import { putDescuentoConfig } from '@/src/helper/configuracion';
+
 import { mensaje } from '@/src/helper/mensaje';
+import { useMutateConfiguracion } from '@/src/hooks/configuracion/useMutateConfiguracion';
 import { Configuracion } from '@/src/interface/Configuracion';
 import { useState } from 'react';
+import { BiLoaderAlt } from 'react-icons/bi';
 import { FiPercent, FiType, FiSave, FiTag } from 'react-icons/fi';
 
 interface Props {
@@ -10,13 +12,15 @@ interface Props {
 }
 
 export const Descuento = ({ dataConfiguracion }: Props) => {
+  const { startPutDescuento } = useMutateConfiguracion();
+
   const [frase, setFrase] = useState<string>(dataConfiguracion.frase_descuento);
   const [porcentaje, setPorcentaje] = useState<number>(dataConfiguracion.porcentaje_descuento);
 
   const handleConfiguracionData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const res = await putDescuentoConfig({ mensaje: frase, porcentaje });
+    const res = await startPutDescuento.mutateAsync({ porcentaje, frase });
 
     if (res) {
       mensaje('Descuento actualizado', 'success');
@@ -95,10 +99,11 @@ export const Descuento = ({ dataConfiguracion }: Props) => {
         <div className="pt-4">
           <button
             type="submit"
+            disabled={startPutDescuento.isPending}
             className="w-full md:w-auto px-2 min-w-[200px] bg-teal-500 hover:bg-teal-600 text-white h-12 rounded-2xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-teal-500/20 transition-all active:scale-[0.98] group"
           >
-            <FiSave className="w-5 h-5 group-hover:rotate-6 transition-transform" />
-            Guardar Configuración
+            {startPutDescuento.isPending ? <BiLoaderAlt className="w-5 h-5 animate-spin" /> : <FiSave className="w-5 h-5 group-hover:rotate-6 transition-transform" />}
+            {startPutDescuento.isPending ? 'Actualizando...' : 'Guardar Configuración'}
           </button>
         </div>
       </form>

@@ -1,5 +1,4 @@
 import { Producto } from '@/src/interface/Producto';
-import React from 'react';
 import { InventarioItem } from './InventarioItem';
 import Link from 'next/link';
 
@@ -27,7 +26,7 @@ export const InventarioList = ({ productos, totalPages, currentPage, totalProduc
 
           <tbody className="divide-y divide-slate-50">
             {productos.map((producto) => (
-              <InventarioItem key={producto.id} producto={producto} />
+              <InventarioItem key={producto.id_producto} producto={producto} />
             ))}
           </tbody>
         </table>

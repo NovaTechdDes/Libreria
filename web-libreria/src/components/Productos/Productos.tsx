@@ -14,7 +14,7 @@ export const Productos = async ({ search, currentPage = 1, limit = 20, subRubroA
   const from = (currentPage - 1) * limit;
   const to = from + (limit - 1);
 
-  let query = supabase.from('productos').select('*, subRubros: fk_producto_subrubro(*), productos_colores (colores(*))').eq('activo', true).range(from, to);
+  let query = supabase.from('productos').select('*, subRubros: fk_producto_subrubro(*), productos_colores (colores(*))').eq('activo', true).range(from, to).order('descripcion', { ascending: false });
 
   if (search) {
     query = query.ilike('descripcion', `%${search}%`);

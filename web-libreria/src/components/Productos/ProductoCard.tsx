@@ -27,7 +27,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
   const { agregarProducto, habilitado } = useCarritoStore();
 
   const isPriceVisible = producto.isvisibleprecio !== false;
-  const isStockAvailable = producto.isStock !== false && (producto.cantidad ?? 0) > 0;
+  const isStockAvailable = producto.isstock !== false && (producto.cantidad ?? 0) > 0;
 
   const addCarrito = () => {
     if (!producto || !isStockAvailable) return;

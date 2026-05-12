@@ -1,5 +1,5 @@
 'use client';
-import { putBannerConfig } from '@/src/helper/configuracion';
+
 import { Configuracion } from '@/src/interface/Configuracion';
 import { useState } from 'react';
 import { FiInfo, FiEye, FiSave, FiAlertCircle, FiEyeOff } from 'react-icons/fi';

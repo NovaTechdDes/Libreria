@@ -27,7 +27,7 @@ export const SubRubroItem = ({ subRubro, activo }: Props) => {
       key={subRubro.id_subrubro}
       onClick={handleClick}
       className={`
-              shrink-0 px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 snap-start
+              shrink-0 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 snap-start
               ${activo ? 'bg-secondary text-white shadow-md scale-105' : 'bg-white text-secondary border border-gray-100 hover:border-primary hover:text-primary hover:bg-primary/5 shadow-sm'}
               active:scale-95
             `}

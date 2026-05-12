@@ -21,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${plusJakartaSans.variable} ${plusJakartaSans.variable} scroll-smooth h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
+    <html lang="en" className={`${plusJakartaSans.variable} ${plusJakartaSans.variable} scroll-smooth h-full w-full antialiased`}>
+      <body className="min-h-full flex flex-col w-full">
         <Providers>{children}</Providers>
       </body>
     </html>

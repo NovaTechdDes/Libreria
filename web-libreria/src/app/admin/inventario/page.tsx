@@ -15,9 +15,9 @@ export default async function InventarioPage({ searchParams }: Props) {
   const currentPage = Number(page) || 1;
   const limit = 20;
 
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from('productos')
-    .select('*')
+    .select('*, productos_colores (colores(*))')
     .range((currentPage - 1) * limit, currentPage * limit);
 
   return <InventarioContainer productos={data || []} totalPages={0} currentPage={currentPage} totalProductos={0} />;

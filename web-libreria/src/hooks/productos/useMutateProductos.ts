@@ -1,4 +1,6 @@
-import { updatePrecioVisibleProducto, updateStockVisibleProducto, updateVisibilidadProducto } from '@/src/actions/producto.actions';
+import { updatePrecioVisibleProducto, updateProducto, updateStockVisibleProducto, updateVisibilidadProducto } from '@/src/actions/producto.actions';
+import { ImageItem } from '@/src/components/admin/inventario/FormularioProducto';
+import { Color } from '@/src/interface/Color';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useMutateProductos = () => {
@@ -37,9 +39,21 @@ export const useMutateProductos = () => {
     },
   });
 
+  const startUpdateProducto = useMutation({
+    mutationFn: async ({ colores, imagenes, id }: { colores: Color[]; imagenes: ImageItem[]; id: number }) => {
+      return await updateProducto(colores, imagenes, id);
+    },
+    onSuccess: (data) => {
+      if (data) {
+        queryClient.invalidateQueries({ queryKey: ['productos'] });
+      }
+    },
+  });
+
   return {
     startUpdateVisible,
     startUpdatePrecioVisible,
     startUpdateStockVisile,
+    startUpdateProducto,
   };
 };

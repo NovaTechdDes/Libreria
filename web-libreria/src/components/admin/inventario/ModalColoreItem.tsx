@@ -5,7 +5,7 @@ import { FiCheck } from 'react-icons/fi';
 interface Props {
   color: Color;
   isSelected: boolean;
-  toggleColor: (id: string) => void;
+  toggleColor: (id: number) => void;
 }
 
 export const ModalColoreItem = ({ color, isSelected, toggleColor }: Props) => {

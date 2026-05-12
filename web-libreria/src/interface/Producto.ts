@@ -1,4 +1,4 @@
-import { Color } from './Color';
+import { Color_Relacion } from './Color';
 
 export interface Producto {
   id_producto: number;
@@ -9,7 +9,7 @@ export interface Producto {
   cantidad: number;
   marca: number;
   id_subRubro: number;
-  imagen?: string;
+  imagenes?: string;
   imagen_url?: string;
   activo: boolean;
 
@@ -21,5 +21,5 @@ export interface Producto {
     id_subrubro: number;
   };
 
-  productos_colores?: Color[];
+  productos_colores?: Color_Relacion[];
 }

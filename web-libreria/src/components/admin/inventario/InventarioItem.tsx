@@ -72,8 +72,8 @@ export const InventarioItem = ({ producto }: Props) => {
       <td className="px-6 py-5">
         <div className="flex items-center gap-4">
           <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-slate-100 border border-slate-100 shrink-0">
-            {producto.imagen_url ? (
-              <Image src={producto.imagen_url} alt={producto.descripcion} fill className="object-cover" />
+            {producto.imagenes && JSON.parse(producto.imagenes)[0] ? (
+              <Image src={JSON.parse(producto.imagenes)[0]} alt={producto.descripcion} fill className="object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-slate-300">
                 <span className="text-[10px]">Sin imagen</span>

@@ -18,14 +18,14 @@ export const ModalColores = ({ isOpen, onClose }: Props) => {
   const { addColores, coloresSeleccionados } = useProductoStore();
 
   const [coloresDB, setColoresDB] = useState<Color[]>([]);
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set(coloresSeleccionados.map((c) => c.id).filter((id): id is string => id !== undefined)));
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set(coloresSeleccionados.map((c) => c.id).filter((id): id is number => id !== undefined)));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (isOpen) {
       const fetchColores = async () => {
         setLoading(true);
-        const { data, error } = await supabase.from('colores').select('*');
+        const { data } = await supabase.from('colores').select('*');
         if (data) {
           setColoresDB(data);
         }
@@ -35,7 +35,7 @@ export const ModalColores = ({ isOpen, onClose }: Props) => {
     }
   }, [isOpen]);
 
-  const toggleColor = (id: string) => {
+  const toggleColor = (id: number) => {
     const newSelected = new Set(selectedIds);
     if (newSelected.has(id)) {
       newSelected.delete(id);

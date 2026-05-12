@@ -8,21 +8,31 @@ import { ColorFormularioItem } from './ColorFormularioItem';
 
 import { useRef } from 'react';
 import Image from 'next/image';
+import { useMutateProductos } from '@/src/hooks/productos/useMutateProductos';
+
+export type ImageItem = {
+  file: File | null;
+  preview: string | null;
+  url?: string;
+};
 
 export const FormularioProducto = () => {
+  const { startUpdateProducto } = useMutateProductos();
   const { productoSeleccionado, coloresSeleccionados, removeColor, addColores } = useProductoStore();
+
   const [showColores, setShowColores] = useState(false);
+  const [images, setImages] = useState<ImageItem[]>([
+    { file: null, preview: null },
+    { file: null, preview: null },
+    { file: null, preview: null },
+  ]);
 
   //Primer Imagen
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
-  //Segundo Imagen
-  const [previewImage2, setPreviewImage2] = useState<string | null>(null);
   const inputRef2 = useRef<HTMLInputElement>(null);
 
-  //Tercer Imagen
-  const [previewImage3, setPreviewImage3] = useState<string | null>(null);
   const inputRef3 = useRef<HTMLInputElement>(null);
 
   const handleModal = () => setShowColores(!showColores);
@@ -30,38 +40,43 @@ export const FormularioProducto = () => {
   useEffect(() => {
     if (!productoSeleccionado?.id_producto || !productoSeleccionado?.productos_colores) return;
 
-    addColores([...productoSeleccionado.productos_colores]);
+    addColores([...productoSeleccionado?.productos_colores.map((c) => c.colores)]);
   }, [productoSeleccionado, addColores]);
+
+  useEffect(() => {
+    if (!productoSeleccionado?.id_producto || !productoSeleccionado?.productos_colores || !productoSeleccionado?.imagenes) return;
+
+    const imagenesParseadas = JSON.parse(productoSeleccionado.imagenes);
+
+    imagenesParseadas?.map((image: string, i: number) => {
+      setImages((prev) => {
+        const newImages = [...prev];
+        newImages[i] = { file: null, preview: image };
+        return newImages;
+      });
+    });
+  }, [productoSeleccionado]);
 
   if (!productoSeleccionado) return null;
 
   const handleUpdate = () => {
     if (!productoSeleccionado.id_producto) return;
-    postrelacionColorProducto(productoSeleccionado.id_producto, coloresSeleccionados);
+
+    startUpdateProducto.mutateAsync({ colores: coloresSeleccionados, imagenes: images, id: productoSeleccionado.id_producto });
   };
 
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const render = URL.createObjectURL(file);
-    setPreviewImage(render);
-  };
+    const newImages = [...images];
+    console.log(file);
+    newImages[index] = {
+      file,
+      preview: URL.createObjectURL(file),
+    };
 
-  const handleUpload2 = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const render = URL.createObjectURL(file);
-    setPreviewImage2(render);
-  };
-
-  const handleUpload3 = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const render = URL.createObjectURL(file);
-    setPreviewImage3(render);
+    setImages(newImages);
   };
 
   return (
@@ -93,13 +108,13 @@ export const FormularioProducto = () => {
               onClick={() => inputRef.current?.click()}
               className="w-[85px] h-[85px] border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center bg-slate-50 group cursor-pointer hover:border-teal-500/50 hover:bg-teal-50/30 transition-all"
             >
-              {previewImage ? (
-                <Image src={previewImage} alt="Principal" width={85} height={85} className="w-full h-full object-cover rounded-2xl" />
+              {images[0].preview ? (
+                <Image src={images[0].preview} alt="Principal" width={85} height={85} className="w-full h-full object-cover rounded-2xl" />
               ) : (
                 <>
                   <FiCamera className="w-6 h-6 text-slate-400 group-hover:text-teal-500 mb-1" />
                   <span className="text-[10px] font-black text-slate-400 group-hover:text-teal-500 uppercase tracking-tighter">Principal</span>
-                  <input ref={inputRef} type="file" accept="image/*" name="imagenPrincipal" id="imagenPrincipal" hidden onChange={handleUpload} />
+                  <input ref={inputRef} type="file" accept="image/*" name="imagenPrincipal" id="imagenPrincipal" hidden onChange={(e) => handleUpload(e, 0)} />
                 </>
               )}
             </div>
@@ -109,28 +124,29 @@ export const FormularioProducto = () => {
               onClick={() => inputRef2.current?.click()}
               className="w-[85px] h-[85px] border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center bg-slate-50 group cursor-pointer hover:border-teal-500/50 hover:bg-teal-50/30 transition-all"
             >
-              {previewImage2 ? (
-                <Image src={previewImage2} alt="Principal" width={85} height={85} className="w-full h-full object-cover rounded-2xl" />
+              {images[1].preview ? (
+                <Image src={images[1].preview} alt="Principal" width={85} height={85} className="w-full h-full object-cover rounded-2xl" />
               ) : (
                 <>
                   <FiImage className="w-6 h-6 text-slate-400 group-hover:text-teal-500 mb-1" />
                   <span className="text-[10px] font-black text-slate-400 group-hover:text-teal-500 uppercase tracking-tighter">Segunda</span>
-                  <input ref={inputRef2} type="file" accept="image/*" name="imagenPrincipal" id="imagenPrincipal" hidden onChange={handleUpload2} />
+                  <input ref={inputRef2} type="file" accept="image/*" name="imagenPrincipal" id="imagenPrincipal" hidden onChange={(e) => handleUpload(e, 1)} />
                 </>
               )}
             </div>
+
             {/* Secondary 2 */}
             <div
               onClick={() => inputRef3.current?.click()}
               className="w-[85px] h-[85px] border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center bg-slate-50 group cursor-pointer hover:border-teal-500/50 hover:bg-teal-50/30 transition-all"
             >
-              {previewImage3 ? (
-                <Image src={previewImage3} alt="Principal" width={85} height={85} className="w-full h-full object-cover rounded-2xl" />
+              {images[2].preview ? (
+                <Image src={images[2].preview} alt="Principal" width={85} height={85} className="w-full h-full object-cover rounded-2xl" />
               ) : (
                 <>
                   <FiImage className="w-6 h-6 text-slate-400 group-hover:text-teal-500 mb-1" />
                   <span className="text-[10px] font-black text-slate-400 group-hover:text-teal-500 uppercase tracking-tighter">Tercera</span>
-                  <input ref={inputRef3} type="file" accept="image/*" name="imagenPrincipal" id="imagenPrincipal" hidden onChange={handleUpload3} />
+                  <input ref={inputRef3} type="file" accept="image/*" name="imagenPrincipal" id="imagenPrincipal" hidden onChange={(e) => handleUpload(e, 2)} />
                 </>
               )}
             </div>

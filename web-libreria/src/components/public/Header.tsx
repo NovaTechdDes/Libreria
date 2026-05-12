@@ -21,14 +21,14 @@ export const Header = ({ habilitado }: Props) => {
   return (
     <>
       <header className="sticky top-0 z-50 h-20 bg-white/80 backdrop-blur-md border-b border-gray-100 text-black flex justify-between items-center px-6 md:px-12 transition-all duration-300">
-        <div className="flex items-center gap-3 group cursor-pointer">
+        <Link href={'/'} className="flex items-center gap-3 group cursor-pointer">
           <div className="relative overflow-hidden rounded-full shadow-md group-hover:shadow-lg transition-all">
             <Image src="/Icon.png" alt="Logo" width={48} height={48} className="group-hover:scale-110 transition-transform duration-300" />
           </div>
-          <h2 className="text-secondary font-extrabold text-xl md:text-2xl tracking-tight">
-            Libreria <span className="text-primary">y Juguetería Lachi</span>
+          <h2 className="hidden md:block text-secondary font-semibold text-xl md:text-2xl tracking-tight">
+            Libreria <span className="text-primary font-bold">y Juguetería Lachi</span>
           </h2>
-        </div>
+        </Link>
 
         <nav className="hidden md:block">
           <ul className="flex gap-8 items-center">
@@ -47,7 +47,7 @@ export const Header = ({ habilitado }: Props) => {
               <LuShoppingCart size={24} className="text-secondary group-hover:text-primary transition-colors" />
               {/* si hay prodcutos en el carrito mostrar cantidad */}
               {productos.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-sm transition-all duration-300 scale-100 hover:scale-110">
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full size-5 flex items-center justify-center shadow-sm transition-all duration-300 scale-100 hover:scale-110">
                   {productos.length}
                 </span>
               )}
@@ -57,7 +57,7 @@ export const Header = ({ habilitado }: Props) => {
               <FaShoppingCart size={24} className="text-secondary group-hover:text-primary transition-colors" />
               {/* si hay prodcutos en el carrito mostrar cantidad */}
               {productos.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-sm transition-all duration-300 scale-100 hover:scale-110">
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full size-5 flex items-center justify-center shadow-sm transition-all duration-300 scale-100 hover:scale-110">
                   {productos.length}
                 </span>
               )}

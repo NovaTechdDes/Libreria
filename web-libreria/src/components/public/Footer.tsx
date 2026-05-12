@@ -7,34 +7,31 @@ export const Footer = () => {
     <footer className="bg-slate-50 border-t border-slate-200 pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-6 md:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
-          
           {/* Logo & Info */}
           <div className="space-y-4">
             <h2 className="text-2xl font-black text-slate-900 tracking-tight">
               Librería <span className="text-teal-600">Lachi</span>
             </h2>
-            <p className="text-slate-500 text-sm leading-relaxed max-w-xs">
-              Tu compañera ideal en cada etapa escolar y creativa. Calidad, variedad y la mejor atención personalizada.
-            </p>
+            <p className="text-slate-500 text-sm leading-relaxed max-w-xs">Tu compañera ideal en cada etapa escolar y creativa. Calidad, variedad y la mejor atención personalizada.</p>
             <div className="flex gap-3 pt-2">
-              <a 
-                href="https://www.instagram.com/librerialachi?igsh=eWE2MjU1Y3cyeWhl" 
-                target="_blank" 
+              <a
+                href="https://www.instagram.com/librerialachi?igsh=eWE2MjU1Y3cyeWhl"
+                target="_blank"
                 className="bg-white p-3 rounded-xl text-slate-400 hover:text-pink-600 hover:shadow-md hover:-translate-y-1 transition-all border border-slate-100"
                 aria-label="Instagram"
               >
                 <FiInstagram className="w-5 h-5" />
               </a>
-              <a 
-                href="https://wa.me/5493456414401" 
-                target="_blank" 
+              <a
+                href="https://wa.me/5493456414401"
+                target="_blank"
                 className="bg-white p-3 rounded-xl text-slate-400 hover:text-emerald-600 hover:shadow-md hover:-translate-y-1 transition-all border border-slate-100"
                 aria-label="WhatsApp"
               >
                 <FiMessageCircle className="w-5 h-5" />
               </a>
-              <a 
-                href="mailto:Libreria_lachi@hotmail.com" 
+              <a
+                href="mailto:Libreria_lachi@hotmail.com"
                 className="bg-white p-3 rounded-xl text-slate-400 hover:text-blue-600 hover:shadow-md hover:-translate-y-1 transition-all border border-slate-100"
                 aria-label="Email"
               >
@@ -66,7 +63,7 @@ export const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-slate-500 text-sm">
                 <FiMapPin className="text-teal-600 w-4 h-4" />
-                <span>Chajarí, Entre Ríos</span>
+                <span>Av. 9 de Julio 1895, Chajarí, Entre Ríos</span>
               </li>
               <li className="flex items-center gap-3 text-slate-500 text-sm">
                 <FiPhone className="text-teal-600 w-4 h-4" />
@@ -74,14 +71,11 @@ export const Footer = () => {
               </li>
             </ul>
           </div>
-
         </div>
 
         {/* Bottom */}
         <div className="border-t border-slate-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-slate-400 text-xs font-medium text-center md:text-left">
-            © {new Date().getFullYear()} Librería & Juguetería Lachi. Todos los derechos reservados.
-          </p>
+          <p className="text-slate-400 text-xs font-medium text-center md:text-left">© {new Date().getFullYear()} Librería & Juguetería Lachi. Todos los derechos reservados.</p>
           <div className="flex items-center gap-2">
             <span className="text-slate-300 text-[10px] font-bold uppercase tracking-widest">Powered by</span>
             <span className="text-slate-900 font-bold text-xs">NovaTech</span>

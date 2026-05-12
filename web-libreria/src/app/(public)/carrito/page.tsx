@@ -15,7 +15,7 @@ const CarritoPage = () => {
       lg:flex-row px-4 md:px-12 py-8 gap-8"
     >
       <section className="flex-1">
-        <header className="flex justify-between items-end mb-6">
+        <header className="flex flex-col md:flex-row justify-between items-end mb-6">
           <h1 className="text-slate-900 text-3xl font-bold tracking-tight">Tu Carrito de Compras</h1>
           <span className="text-slate-500 font-medium text-sm mb-1">
             {itemCount} {itemCount === 1 ? 'Artículo' : 'Artículos'}

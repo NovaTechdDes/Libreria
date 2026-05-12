@@ -1,6 +1,6 @@
-import React from "react";
-import Link from "next/link";
-import { BiShareAlt, BiGlobe } from "react-icons/bi";
+import React from 'react';
+import Link from 'next/link';
+import { BiShareAlt, BiGlobe } from 'react-icons/bi';
 
 export const Footer = () => {
   return (
@@ -10,9 +10,7 @@ export const Footer = () => {
           {/* Logo & Info */}
           <div className="max-w-xs">
             <h2 className="text-xl font-bold text-primary mb-2">Librería Lachi</h2>
-            <p className="text-sm text-neutral/60 leading-relaxed">
-              © 2024 Librería & Juguetería. Todos los derechos reservados.
-            </p>
+            <p className="text-sm text-neutral/60 leading-relaxed">© {new Date().getFullYear()} Librería & Juguetería. Todos los derechos reservados.</p>
           </div>
 
           {/* Links & Copyright */}
@@ -39,12 +37,6 @@ export const Footer = () => {
               <BiGlobe className="size-5" />
             </button>
           </div>
-        </div>
-
-        <div className="text-center md:hidden border-t border-neutral-50 pt-8 mt-8">
-           <p className="text-xs text-neutral/40">
-             © 2024 Librería Lachi. Todos los derechos reservados.
-           </p>
         </div>
       </div>
     </footer>

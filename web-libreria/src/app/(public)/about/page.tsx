@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { BiBook, BiCheck, BiHeadphone, BiLeaf, BiShield, BiSolidTruck, BiStar } from 'react-icons/bi';
 import { HiOutlineRocketLaunch } from 'react-icons/hi2';
 import { IoDocumentTextOutline } from 'react-icons/io5';
@@ -26,11 +27,13 @@ const AboutPage = () => {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <button className="bg-primary text-white py-3 px-8 text-lg font-medium rounded-lg hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/20">Explorar Catálogo</button>
+              <Link href={'/'} className="bg-primary text-white py-3 px-8 text-lg font-medium rounded-lg hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/20">
+                Explorar Catálogo
+              </Link>
 
-              <button className="bg-white/10 backdrop-blur-md border border-white/30 text-white py-3 px-8 text-lg font-medium rounded-lg hover:bg-white/20 transition-all shadow-lg">
+              <Link href={'#servicios'} className="bg-white/10 backdrop-blur-md border border-white/30 text-white py-3 px-8 text-lg font-medium rounded-lg hover:bg-white/20 transition-all shadow-lg">
                 Nuestros Servicios
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -98,7 +101,7 @@ const AboutPage = () => {
       </section>
 
       {/* Sectores Section */}
-      <section className="bg-tertiary/50 py-24">
+      <section id="servicios" className="bg-tertiary/50 py-24">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-4xl font-bold text-secondary mb-4">Nuestros Sectores de Especialidad</h2>

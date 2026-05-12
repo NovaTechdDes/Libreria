@@ -1,6 +1,7 @@
 import { Producto } from '@/src/interface/Producto';
 import { ProductoCard } from './ProductoCard';
 import { createClient } from '@/src/lib/server';
+import { CartInitializer } from '../carrito/CartInitializer';
 
 interface Props {
   search?: string;
@@ -13,6 +14,9 @@ export const Productos = async ({ search, currentPage = 1, limit = 20, subRubroA
   const supabase = await createClient();
   const from = (currentPage - 1) * limit;
   const to = from + (limit - 1);
+
+  const { data: configuracion } = await supabase.from('configuracion').select('*').single();
+  console.log(configuracion);
 
   let query = supabase.from('productos').select('*, subRubros: fk_producto_subrubro(*), productos_colores (colores(*))').eq('activo', true).range(from, to).order('descripcion', { ascending: false });
 
@@ -34,15 +38,23 @@ export const Productos = async ({ search, currentPage = 1, limit = 20, subRubroA
   if (!productos) return null;
 
   return (
-    <section className="w-full px-8 py-6">
-      <h2 className="text-[22px] font-bold text-[#1a1a18] mb-5 tracking-tight">Productos</h2>
+    <>
+      <CartInitializer
+        habilitado={configuracion?.carrito_habilitado}
+        frase={configuracion?.frase_descuento}
+        mensaje={configuracion?.mensaje_informativo}
+        descuento={configuracion?.porcentaje_descuento}
+      />
+      <section className="w-full px-8 py-6">
+        <h2 className="text-[22px] font-bold text-[#1a1a18] mb-5 tracking-tight">Productos</h2>
 
-      {/* mapeo de productos */}
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-5">
-        {productos?.map((producto: Producto) => (
-          <ProductoCard key={producto.id_producto} producto={producto} />
-        ))}
-      </div>
-    </section>
+        {/* mapeo de productos */}
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-5">
+          {productos?.map((producto: Producto) => (
+            <ProductoCard key={producto.id_producto} producto={producto} />
+          ))}
+        </div>
+      </section>
+    </>
   );
 };

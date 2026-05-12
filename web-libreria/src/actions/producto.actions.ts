@@ -52,14 +52,38 @@ export const updateProducto = async (colores: Color[], imagenes: ImageItem[], id
   try {
     const supabase = await createClient();
 
-    const urls = await uploadImages(imagenes, id);
+    // 1. Obtener imágenes actuales para comparar
+    const { data: productoActual } = await supabase.from('productos').select('imagenes').eq('id_producto', id).single();
+    const imagenesActuales: string[] = productoActual?.imagenes ? JSON.parse(productoActual.imagenes) : [];
 
-    //Guardar URL de las imaganes
-    await supabase.from('productos').update({ imagenes: urls }).eq('id_producto', id);
+    // 2. Subir nuevas imágenes y obtener lista final
+    const urlsFinales = await uploadImages(imagenes, id);
+
+    // 3. Identificar imágenes a borrar (estaban antes pero no están ahora)
+    const imagenesABorrar = imagenesActuales.filter((url) => !urlsFinales.includes(url));
+
+    if (imagenesABorrar.length > 0) {
+      const pathsABorrar = imagenesABorrar
+        .map((url) => {
+          const parts = url.split('/productos/');
+          return parts.length > 1 ? `productos/${parts[parts.length - 1]}` : null;
+        })
+        .filter((path): path is string => path !== null);
+
+      if (pathsABorrar.length > 0) {
+        await supabase.storage.from('productos').remove(pathsABorrar);
+      }
+    }
+
+    // 4. Guardar URL de las imágenes en la base de datos
+    await supabase
+      .from('productos')
+      .update({ imagenes: JSON.stringify(urlsFinales) })
+      .eq('id_producto', id);
 
     //Eliminar relaciones de colores con el producto
     const { error } = await supabase.from('productos_colores').delete().eq('id_producto', id);
-    console.log({ error, id });
+
     if (error) throw error;
 
     //Insertar nuevas relaciones de colores con el producto

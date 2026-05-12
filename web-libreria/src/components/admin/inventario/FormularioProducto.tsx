@@ -1,7 +1,7 @@
 'use client';
 
 import { useProductoStore } from '@/src/store/producto.store';
-import { FiPlus, FiUploadCloud, FiCamera, FiImage } from 'react-icons/fi';
+import { FiPlus, FiUploadCloud, FiCamera, FiImage, FiX } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import { ModalColores } from './ModalColores';
 import { ColorFormularioItem } from './ColorFormularioItem';
@@ -9,6 +9,7 @@ import { ColorFormularioItem } from './ColorFormularioItem';
 import { useRef } from 'react';
 import Image from 'next/image';
 import { useMutateProductos } from '@/src/hooks/productos/useMutateProductos';
+import { mensaje } from '@/src/helper/mensaje';
 
 export type ImageItem = {
   file: File | null;
@@ -59,10 +60,16 @@ export const FormularioProducto = () => {
 
   if (!productoSeleccionado) return null;
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     if (!productoSeleccionado.id_producto) return;
 
-    startUpdateProducto.mutateAsync({ colores: coloresSeleccionados, imagenes: images, id: productoSeleccionado.id_producto });
+    const res = await startUpdateProducto.mutateAsync({ colores: coloresSeleccionados, imagenes: images, id: productoSeleccionado.id_producto });
+
+    if (res) {
+      mensaje('Producto Actualizado Correctamente', 'success');
+    } else {
+      mensaje('Error al actualizar el producto', 'error');
+    }
   };
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
@@ -76,6 +83,12 @@ export const FormularioProducto = () => {
       preview: URL.createObjectURL(file),
     };
 
+    setImages(newImages);
+  };
+
+  const removeImage = (index: number) => {
+    const newImages = [...images];
+    newImages[index] = { file: null, preview: null };
     setImages(newImages);
   };
 
@@ -109,7 +122,18 @@ export const FormularioProducto = () => {
               className="w-[85px] h-[85px] border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center bg-slate-50 group cursor-pointer hover:border-teal-500/50 hover:bg-teal-50/30 transition-all"
             >
               {images[0].preview ? (
-                <Image src={images[0].preview} alt="Principal" width={85} height={85} className="w-full h-full object-cover rounded-2xl" />
+                <div className="relative w-full h-full group/image">
+                  <Image src={images[0].preview} alt="Principal" width={85} height={85} className="w-full h-full object-cover rounded-2xl" />
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeImage(0);
+                    }}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover/image:opacity-100 transition-opacity z-10"
+                  >
+                    <FiX className="w-3 h-3" />
+                  </button>
+                </div>
               ) : (
                 <>
                   <FiCamera className="w-6 h-6 text-slate-400 group-hover:text-teal-500 mb-1" />
@@ -125,7 +149,18 @@ export const FormularioProducto = () => {
               className="w-[85px] h-[85px] border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center bg-slate-50 group cursor-pointer hover:border-teal-500/50 hover:bg-teal-50/30 transition-all"
             >
               {images[1].preview ? (
-                <Image src={images[1].preview} alt="Principal" width={85} height={85} className="w-full h-full object-cover rounded-2xl" />
+                <div className="relative w-full h-full group/image">
+                  <Image src={images[1].preview} alt="Principal" width={85} height={85} className="w-full h-full object-cover rounded-2xl" />
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeImage(1);
+                    }}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover/image:opacity-100 transition-opacity z-10"
+                  >
+                    <FiX className="w-3 h-3" />
+                  </button>
+                </div>
               ) : (
                 <>
                   <FiImage className="w-6 h-6 text-slate-400 group-hover:text-teal-500 mb-1" />
@@ -141,7 +176,18 @@ export const FormularioProducto = () => {
               className="w-[85px] h-[85px] border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center bg-slate-50 group cursor-pointer hover:border-teal-500/50 hover:bg-teal-50/30 transition-all"
             >
               {images[2].preview ? (
-                <Image src={images[2].preview} alt="Principal" width={85} height={85} className="w-full h-full object-cover rounded-2xl" />
+                <div className="relative w-full h-full group/image">
+                  <Image src={images[2].preview} alt="Principal" width={85} height={85} className="w-full h-full object-cover rounded-2xl" />
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeImage(2);
+                    }}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover/image:opacity-100 transition-opacity z-10"
+                  >
+                    <FiX className="w-3 h-3" />
+                  </button>
+                </div>
               ) : (
                 <>
                   <FiImage className="w-6 h-6 text-slate-400 group-hover:text-teal-500 mb-1" />

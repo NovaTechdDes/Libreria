@@ -10,14 +10,14 @@ export const CarritoItem = ({ producto }: Props) => {
   const { actualizarCantidad, removerProducto } = useCarritoStore();
 
   const handleIncrement = () => {
-    actualizarCantidad(producto.producto.id_articulo!, producto.cantidad + 1);
+    actualizarCantidad(producto.producto.id_producto!, producto.cantidad + 1);
   };
 
   const handleDecrement = () => {
     if (producto.cantidad > 1) {
-      actualizarCantidad(producto.producto.id_articulo!, producto.cantidad - 1);
+      actualizarCantidad(producto.producto.id_producto!, producto.cantidad - 1);
     } else {
-      removerProducto(producto.producto.id_articulo!);
+      removerProducto(producto.producto.id_producto!);
     }
   };
 
@@ -25,14 +25,16 @@ export const CarritoItem = ({ producto }: Props) => {
     <article className="flex items-center p-6 gap-6 group">
       {/* Imagen del producto */}
       <div className="relative h-24 w-24 shrink-0">
-        {producto.producto.imagen && <Image src={producto.producto.imagen} alt={producto.producto.descripcion} fill className="rounded-xl object-cover shadow-sm border border-slate-100" />}
+        {producto.producto.imagenes && JSON.parse(producto.producto.imagenes)[0] ? (
+          <Image src={JSON.parse(producto.producto.imagenes)[0]} alt={producto.producto.descripcion} fill className="rounded-xl object-cover shadow-sm border border-slate-100" />
+        ) : null}
       </div>
 
       {/* Detalles del producto */}
       <div className="flex-1 min-w-0">
         <div className="flex flex-col">
           <h3 className="text-slate-900 text-lg font-bold truncate group-hover:text-teal-700 transition-colors">{producto.producto.descripcion}</h3>
-          <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-0.5">{producto.producto.id_rubro || 'Librería'}</p>
+          <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-0.5">{producto.producto.id_subRubro || 'Librería'}</p>
           {producto.observacion && (
             <div className="flex items-center gap-2 mt-2">
               <span className="w-3 h-3 rounded-full bg-teal-500 shadow-sm" />

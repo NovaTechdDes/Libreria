@@ -4,12 +4,14 @@ import { Configuracion } from '@/src/interface/Configuracion';
 import { useState } from 'react';
 import { FiInfo, FiEye, FiSave, FiAlertCircle, FiEyeOff } from 'react-icons/fi';
 import { mensaje as mensajeSwal } from '@/src/helper/mensaje';
+import { useMutateConfiguracion } from '@/src/hooks/configuracion/useMutateConfiguracion';
 
 interface Props {
   dataConfiguracion: Configuracion;
 }
 
 export const Informativo = ({ dataConfiguracion }: Props) => {
+  const {startPutBannerConfig} = useMutateConfiguracion();
   const [mensaje, setMensaje] = useState<string>(dataConfiguracion.mensaje_informativo);
 
   const [activo, setActivo] = useState<boolean>(dataConfiguracion.carrito_habilitado);
@@ -17,7 +19,7 @@ export const Informativo = ({ dataConfiguracion }: Props) => {
   const handleConfiguracionData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const res = await putBannerConfig({ mensaje, habilitado: activo });
+    const res = await startPutBannerConfig.mutateAsync({ mensaje, habilitado: activo });
 
     if (res) {
       mensajeSwal('Banner actualizado', 'success');

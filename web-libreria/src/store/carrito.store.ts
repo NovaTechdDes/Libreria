@@ -1,9 +1,11 @@
 import { create } from 'zustand';
 import { Producto } from '../interface/Producto';
+import { Color } from '../interface/Color';
 
 export interface ProductosCarrito {
   cantidad: number;
   producto: Producto;
+  color?: Color | null;
   observacion?: string;
 }
 
@@ -24,7 +26,7 @@ export interface CarritoStore {
   setFrase: (frase: string) => void;
 
   productos: ProductosCarrito[];
-  agregarProducto: (producto: Producto, cantidad: number, observacion?: string) => void;
+  agregarProducto: (producto: Producto, cantidad: number, color: Color | null) => void;
   actualizarCantidad: (id: number, cantidad: number) => void;
   removerProducto: (id: number) => void;
 }
@@ -33,11 +35,25 @@ export const useCarritoStore = create<CarritoStore>((set) => ({
   total: 0,
   subtotal: 0,
   productos: [],
-  agregarProducto: (producto: Producto, cantidad: number, observacion?: string) =>
-    set((state) => ({
-      productos: [...state.productos, { producto, cantidad, observacion }],
-      total: state.total + producto.precio * cantidad,
-    })),
+  agregarProducto: (producto: Producto, cantidad: number, color: Color | null) =>
+    set((state) => {
+      const productoExiste = state.productos.find((p) => (p.color?.id === color?.id && p.producto.id_producto === producto.id_producto));
+
+      if (productoExiste) {
+        const nuevosProductos = state.productos.map((p) => ((p.producto.id_producto === producto.id_producto && p.color?.id === color?.id)? { ...p, cantidad: p.cantidad + cantidad } : p));
+
+        
+        return {
+          productos: nuevosProductos,
+          total: state.total + producto.precio * cantidad,
+        };
+      }
+
+      return {
+        productos: [...state.productos, { producto, cantidad, color }],
+        total: state.total + producto.precio * cantidad,
+      }
+    }),
   actualizarCantidad: (id: number, cantidad: number) =>
     set((state) => {
       const nuevosProductos = state.productos.map((p) => (p.producto.id_producto === id ? { ...p, cantidad } : p));

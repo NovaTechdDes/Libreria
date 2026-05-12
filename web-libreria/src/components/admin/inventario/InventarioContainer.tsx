@@ -34,7 +34,7 @@ export const InventarioContainer = ({ productos, totalPages, currentPage, totalP
     },
     {
       label: 'Categorías',
-      value: Array.from(new Set(productos?.map((p) => p.id_rubro))).length || 0,
+      value: Array.from(new Set(productos?.map((p) => p.id_subRubro))).length || 0,
       icon: FiBox,
       color: 'text-purple-600',
       bg: 'bg-purple-50',

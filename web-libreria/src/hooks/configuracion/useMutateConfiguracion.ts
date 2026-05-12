@@ -1,4 +1,4 @@
-import { putDescuentoConfig } from '@/src/actions/configuracion.actions';
+import { putBannerConfig, putDescuentoConfig } from '@/src/actions/configuracion.actions';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useMutateConfiguracion = () => {
@@ -13,7 +13,17 @@ export const useMutateConfiguracion = () => {
     },
   });
 
+  const startPutBannerConfig = useMutation({
+    mutationFn: async ({ mensaje, habilitado }: { mensaje: string; habilitado: boolean }) => {
+      return await putBannerConfig(mensaje, habilitado);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['configuracion'] });
+    },
+  });
+
   return {
     startPutDescuento,
+    startPutBannerConfig
   };
 };

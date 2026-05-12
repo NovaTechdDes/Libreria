@@ -12,7 +12,6 @@ interface Props {
 export const CartInitializer = ({ habilitado, frase, descuento, mensaje }: Props) => {
   const { setHabilitado, setMensaje, setDescuento, setFrase } = useCarritoStore();
 
-  console.log(habilitado, frase, descuento);
 
   useEffect(() => {
     setHabilitado(habilitado);

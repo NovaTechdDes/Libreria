@@ -5,6 +5,7 @@ import { useCarritoStore } from '@/src/store/carrito.store';
 import Image from 'next/image';
 import { CgShoppingCart } from 'react-icons/cg';
 import { ButtonSeleccionarColor } from './ButtonSeleccionarColor';
+import { useState } from 'react';
 
 interface ProductoCardProps {
   producto: Producto;
@@ -25,13 +26,17 @@ const BtnCarrito = ({ onClick, disabled }: { onClick: () => void; disabled?: boo
 
 export const ProductoCard = ({ producto }: ProductoCardProps) => {
   const { agregarProducto, habilitado } = useCarritoStore();
+  const [colorSeleccionado, setColorSeleccionado] = useState<number>(producto.productos_colores?.[0].colores?.id ?? 0);
 
   const isPriceVisible = producto.isvisibleprecio !== false;
   const isStockAvailable = producto.isstock !== false && (producto.cantidad ?? 0) > 0;
 
   const addCarrito = () => {
     if (!producto || !isStockAvailable) return;
-    agregarProducto(producto, 1);
+    
+    const color = producto.productos_colores?.find((color) => color.colores?.id === colorSeleccionado);
+
+    agregarProducto(producto, 1, color?.colores ?? null);
   };
 
   if (!producto.id_producto) {
@@ -78,7 +83,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
 
         <div className="flex gap-2 items-center my-2 justify-end">
           {producto.productos_colores?.map((color, index) => (
-            <ButtonSeleccionarColor key={color.colores?.id ?? index} color={color} producto_id={producto.id_producto} />
+            <ButtonSeleccionarColor key={color.colores?.id ?? index} color={color} producto_id={producto.id_producto} colorSeleccionado={colorSeleccionado} setColorSeleccionado={setColorSeleccionado} />
           ))}
         </div>
 

@@ -6,6 +6,9 @@ import { CarritoItem } from './CarritoItem';
 export const ListCarritoItems = () => {
   const { productos } = useCarritoStore();
 
+  console.log(productos)
+
+
   if (productos.length === 0) {
     return (
       <div className="bg-white rounded-2xl p-12 text-center border border-slate-100 shadow-sm">
@@ -17,8 +20,8 @@ export const ListCarritoItems = () => {
   return (
     <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
       <div className="divide-y divide-slate-100">
-        {productos.map((producto) => (
-          <CarritoItem key={producto.producto.id_producto} producto={producto} />
+        {productos.map((producto, index) => (
+          <CarritoItem key={producto.producto.id_producto + String(producto?.color?.id ?? index)} producto={producto}/>
         ))}
       </div>
     </div>

@@ -35,12 +35,13 @@ export const CarritoItem = ({ producto }: Props) => {
         <div className="flex flex-col">
           <h3 className="text-slate-900 text-lg font-bold truncate group-hover:text-teal-700 transition-colors">{producto.producto.descripcion}</h3>
           <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-0.5">{producto.producto.id_subRubro || 'Librería'}</p>
-          {producto.observacion && (
-            <div className="flex items-center gap-2 mt-2">
-              <span className="w-3 h-3 rounded-full bg-teal-500 shadow-sm" />
-              <span className="text-slate-500 text-sm font-medium">{producto.observacion}</span>
+          
+          {producto.color ? (
+            <div className='flex items-center gap-2'>
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-0.5">Color: </p>
+              <div className="flex items-center gap-2" style={{ backgroundColor: producto.color?.codigo, width: '20px', height: '20px', borderRadius: '50%' }}></div>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
 
@@ -62,6 +63,8 @@ export const CarritoItem = ({ producto }: Props) => {
           </button>
         </div>
       </div>
+
+      
     </article>
   );
 };

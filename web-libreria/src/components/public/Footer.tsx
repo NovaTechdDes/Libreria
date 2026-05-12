@@ -1,41 +1,90 @@
 import React from 'react';
 import Link from 'next/link';
-import { BiShareAlt, BiGlobe } from 'react-icons/bi';
+import { FiInstagram, FiMail, FiMessageCircle, FiMapPin, FiPhone } from 'react-icons/fi';
 
 export const Footer = () => {
   return (
-    <footer className="bg-white border-t border-neutral-100 py-12">
+    <footer className="bg-slate-50 border-t border-slate-200 pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-6 md:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+          
           {/* Logo & Info */}
-          <div className="max-w-xs">
-            <h2 className="text-xl font-bold text-primary mb-2">Librería Lachi</h2>
-            <p className="text-sm text-neutral/60 leading-relaxed">© {new Date().getFullYear()} Librería & Juguetería. Todos los derechos reservados.</p>
-          </div>
-
-          {/* Links & Copyright */}
-          <div className="flex flex-col items-center flex-1">
-            <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-4">
-              <Link href="/about" className="text-sm font-medium text-secondary hover:text-primary transition-colors">
-                Nosotros
-              </Link>
-              <Link href="/servicios" className="text-sm font-medium text-secondary hover:text-primary transition-colors">
-                Servicios de Impresión
-              </Link>
+          <div className="space-y-4">
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+              Librería <span className="text-teal-600">Lachi</span>
+            </h2>
+            <p className="text-slate-500 text-sm leading-relaxed max-w-xs">
+              Tu compañera ideal en cada etapa escolar y creativa. Calidad, variedad y la mejor atención personalizada.
+            </p>
+            <div className="flex gap-3 pt-2">
+              <a 
+                href="https://www.instagram.com/librerialachi?igsh=eWE2MjU1Y3cyeWhl" 
+                target="_blank" 
+                className="bg-white p-3 rounded-xl text-slate-400 hover:text-pink-600 hover:shadow-md hover:-translate-y-1 transition-all border border-slate-100"
+                aria-label="Instagram"
+              >
+                <FiInstagram className="w-5 h-5" />
+              </a>
+              <a 
+                href="https://wa.me/5493456414401" 
+                target="_blank" 
+                className="bg-white p-3 rounded-xl text-slate-400 hover:text-emerald-600 hover:shadow-md hover:-translate-y-1 transition-all border border-slate-100"
+                aria-label="WhatsApp"
+              >
+                <FiMessageCircle className="w-5 h-5" />
+              </a>
+              <a 
+                href="mailto:Libreria_lachi@hotmail.com" 
+                className="bg-white p-3 rounded-xl text-slate-400 hover:text-blue-600 hover:shadow-md hover:-translate-y-1 transition-all border border-slate-100"
+                aria-label="Email"
+              >
+                <FiMail className="w-5 h-5" />
+              </a>
             </div>
-            <Link href="/politicas" className="text-xs text-neutral/50 hover:text-primary transition-colors">
-              Políticas de Devolución
-            </Link>
           </div>
 
-          {/* Socials */}
-          <div className="flex gap-4">
-            <button className="bg-tertiary p-2.5 rounded-full text-secondary hover:bg-primary hover:text-white transition-all shadow-sm">
-              <BiShareAlt className="size-5" />
-            </button>
-            <button className="bg-tertiary p-2.5 rounded-full text-secondary hover:bg-primary hover:text-white transition-all shadow-sm">
-              <BiGlobe className="size-5" />
-            </button>
+          {/* Enlaces Rápidos */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest">Explorar</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link href="/about" className="text-slate-500 hover:text-teal-600 text-sm font-medium transition-colors">
+                  Sobre Nosotros
+                </Link>
+              </li>
+              <li>
+                <Link href="/" className="text-slate-500 hover:text-teal-600 text-sm font-medium transition-colors">
+                  Productos
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contacto */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest">Contacto</h3>
+            <ul className="space-y-3">
+              <li className="flex items-center gap-3 text-slate-500 text-sm">
+                <FiMapPin className="text-teal-600 w-4 h-4" />
+                <span>Chajarí, Entre Ríos</span>
+              </li>
+              <li className="flex items-center gap-3 text-slate-500 text-sm">
+                <FiPhone className="text-teal-600 w-4 h-4" />
+                <span>+54 9 3456 414401</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        {/* Bottom */}
+        <div className="border-t border-slate-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-slate-400 text-xs font-medium text-center md:text-left">
+            © {new Date().getFullYear()} Librería & Juguetería Lachi. Todos los derechos reservados.
+          </p>
+          <div className="flex items-center gap-2">
+            <span className="text-slate-300 text-[10px] font-bold uppercase tracking-widest">Powered by</span>
+            <span className="text-slate-900 font-bold text-xs">NovaTech</span>
           </div>
         </div>
       </div>

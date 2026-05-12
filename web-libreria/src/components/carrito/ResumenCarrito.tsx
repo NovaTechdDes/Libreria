@@ -32,10 +32,42 @@ export const ResumenCarrito = () => {
   }, []);
 
   const handleSendWhatsApp = () => {
-    // Lógica básica para abrir WhatsApp con el pedido
-    const message = productos.map((p) => `- ${p.cantidad}x ${p.producto.descripcion}`).join('\n');
-    const totalMsg = `\n\nTotal: $${total.toLocaleString('es-AR')}`;
-    const url = `https://wa.me/?text=${encodeURIComponent('Hola, me gustaría realizar el siguiente pedido:\n\n' + message + totalMsg)}`;
+    if (!nombre.trim()) {
+      alert('Por favor, ingresa tu nombre para continuar.');
+      return;
+    }
+
+    const productsList = productos
+      .map((p) => {
+        const colorInfo = p.color ? ` (Color: *${p.color.color}*)` : '';
+        return `• *${p.cantidad}x* ${p.producto.descripcion}${colorInfo}`;
+      })
+      .join('\n');
+
+    const totalFormateado = total.toLocaleString('es-AR', {
+      style: 'currency',
+      currency: 'ARS',
+    });
+
+    const mensajeWhatsApp = [
+      '- *NUEVO PEDIDO - LIBRERIA Y JUGUETERIA LACHI*',
+      '------------------------------',
+      `- *Cliente:* ${nombre}`,
+      `- *WhatsApp:* ${whatsapp || 'No especificado'}`,
+      `- *Entrega:* ${envio ? 'Envío a domicilio' : 'Retiro en tienda'}`,
+      '',
+      '- *PRODUCTOS:*',
+      productsList,
+      '',
+      notas ? `📝 *NOTAS:* ${notas}\n` : '',
+      '------------------------------',
+      `💰 *TOTAL: ${totalFormateado}*`,
+      '------------------------------',
+    ].join('\n');
+
+    const phoneNumber = '5493456445977';
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(mensajeWhatsApp)}`;
+    
     window.open(url, '_blank');
   };
 

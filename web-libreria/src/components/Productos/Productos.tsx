@@ -8,6 +8,7 @@ interface Props {
   currentPage: number;
   limit: number;
   subRubroActivo?: number;
+  rubroActivo?: number;
 }
 
 export const Productos = async ({ search, currentPage = 1, limit = 20, subRubroActivo }: Props) => {

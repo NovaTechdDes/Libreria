@@ -43,6 +43,8 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
     return null;
   }
 
+  
+
   return (
     <article className="group flex flex-col bg-white rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.06),0_4px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.08),0_12px_32px_rgba(0,0,0,0.10)] hover:-translate-y-1 transition-all duration-180 ease-in-out cursor-pointer">
       {/* Área de imagen con botón overlay — solo en desktop al hacer hover */}

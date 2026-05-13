@@ -1,3 +1,4 @@
+import Banners from '@/src/components/banners/Banners';
 import { Productos } from '@/src/components/Productos/Productos';
 import { Rubros } from '@/src/components/rubros/Rubros';
 import { SubRubros } from '@/src/components/subRubro/SubRubros';
@@ -21,6 +22,8 @@ export default async function Home({ searchParams }: Props) {
       {/* Rubros */}
       <Rubros rubroActivo={rubro} />
       <SubRubros rubroActivo={rubro} subRubroActivo={subrubro} />
+
+      <Banners />
 
       {/* Productos */}
       <Productos search={search} currentPage={currentPage} limit={limit} subRubroActivo={subrubro} rubroActivo={rubro} />

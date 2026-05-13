@@ -1,5 +1,7 @@
 import { createClient } from '../lib/server';
 import { ImageItem } from '../components/admin/inventario/FormularioProducto';
+import { BannerImage } from '../components/banners/BannerForm';
+import { Banner } from '../interface/Banner';
 
 export async function uploadImages(imagenes: ImageItem[], productoId: number) {
   const supabase = await createClient();
@@ -21,7 +23,7 @@ export async function uploadImages(imagenes: ImageItem[], productoId: number) {
 
       const { data } = await supabase.storage.from('productos').getPublicUrl(`productos/${fileName}`);
       finalURLS.push(data.publicUrl);
-    } 
+    }
     // Si no tiene archivo pero sí una preview que ya es una URL, la mantenemos
     else if (image.preview && image.preview.startsWith('http')) {
       finalURLS.push(image.preview);
@@ -29,4 +31,20 @@ export async function uploadImages(imagenes: ImageItem[], productoId: number) {
   }
 
   return finalURLS;
+}
+
+export async function uploadImageBanner(image: BannerImage, banner: Banner) {
+  const supabase = await createClient();
+
+  if (image.file) {
+    const fileExt = image.file.name.split('.').pop();
+    const fileName = `${banner.id}.${fileExt}`;
+
+    const { error } = await supabase.storage.from('banners').upload(`banners/${fileName}`, image.file);
+
+    if (error) throw new Error('Error al subir la imagen del banner');
+
+    const { data } = await supabase.storage.from('banners').getPublicUrl(`banners/${fileName}`);
+    return data.publicUrl;
+  }
 }

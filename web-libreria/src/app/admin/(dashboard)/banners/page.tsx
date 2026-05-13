@@ -1,4 +1,3 @@
-import { FiPlus } from 'react-icons/fi';
 import { BannerCard } from '@/src/components/banners/BannerCard';
 import { BannerForm } from '@/src/components/banners/BannerForm';
 import { BannerFilters } from '@/src/components/banners/BannerFilters';
@@ -21,10 +20,6 @@ const PageBanners = async () => {
           <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Gestión de Banners</h1>
           <p className="text-slate-500 text-sm font-medium">Organiza y programa las promociones visuales de tu tienda.</p>
         </div>
-        <button className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-teal-500/30 flex items-center gap-2 transition-all active:scale-95">
-          <FiPlus className="text-xl" />
-          <span>Nuevo Banner</span>
-        </button>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">

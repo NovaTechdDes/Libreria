@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/src/lib/client';
-import { BsFillPaletteFill } from 'react-icons/bs';
+import { BsFillImageFill, BsFillPaletteFill } from 'react-icons/bs';
 import { FiBox, FiLogOut, FiSettings } from 'react-icons/fi';
 
 export const AsideBar = () => {
@@ -17,6 +17,11 @@ export const AsideBar = () => {
       label: 'Inventario',
       icon: FiBox,
       href: '/admin/inventario',
+    },
+    {
+      label: 'Banners',
+      icon: BsFillImageFill,
+      href: '/admin/banners',
     },
     {
       label: 'Gestión de Colores',

@@ -14,8 +14,8 @@ export const useMutateConfiguracion = () => {
   });
 
   const startPutBannerConfig = useMutation({
-    mutationFn: async ({ mensaje, habilitado }: { mensaje: string; habilitado: boolean }) => {
-      return await putBannerConfig(mensaje, habilitado);
+    mutationFn: async ({ mensaje, fecha_inicio, fecha_fin, habilitado }: { mensaje: string; fecha_inicio: string; fecha_fin: string; habilitado: boolean }) => {
+      return await putBannerConfig(mensaje, fecha_inicio, fecha_fin, habilitado);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['configuracion'] });
@@ -24,6 +24,6 @@ export const useMutateConfiguracion = () => {
 
   return {
     startPutDescuento,
-    startPutBannerConfig
+    startPutBannerConfig,
   };
 };

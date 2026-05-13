@@ -25,6 +25,11 @@ export interface CarritoStore {
   frase: string;
   setFrase: (frase: string) => void;
 
+  inicio: string;
+  fin: string;
+  setInicio: (inicio: string) => void;
+  setFin: (fin: string) => void;
+
   productos: ProductosCarrito[];
   agregarProducto: (producto: Producto, cantidad: number, color: Color | null) => void;
   actualizarCantidad: (id: number, cantidad: number) => void;
@@ -35,6 +40,11 @@ export const useCarritoStore = create<CarritoStore>((set) => ({
   total: 0,
   subtotal: 0,
   productos: [],
+
+  inicio: '',
+  fin: '',
+  setInicio: (inicio: string) => set({ inicio }),
+  setFin: (fin: string) => set({ fin }),
 
   agregarProducto: (producto: Producto, cantidad: number, color: Color | null) =>
     set((state) => {

@@ -41,6 +41,8 @@ export const Productos = async ({ search, currentPage = 1, limit = 20, subRubroA
   return (
     <>
       <CartInitializer
+        inicio={configuracion?.fecha_inicio}
+        fin={configuracion?.fecha_fin}
         habilitado={configuracion?.carrito_habilitado}
         frase={configuracion?.frase_descuento}
         mensaje={configuracion?.mensaje_informativo}

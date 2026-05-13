@@ -23,8 +23,7 @@ export const putDescuentoConfig = async (porcentaje: number, frase: string): Pro
   }
 };
 
-
-export const putBannerConfig = async (mensaje: string, habilitado: boolean): Promise<boolean> => {
+export const putBannerConfig = async (mensaje: string, fecha_inicio: string, fecha_fin: string, habilitado: boolean): Promise<boolean> => {
   try {
     const supabase = await createClient();
 
@@ -32,6 +31,8 @@ export const putBannerConfig = async (mensaje: string, habilitado: boolean): Pro
       .from('configuracion')
       .update({
         mensaje_informativo: mensaje,
+        fecha_inicio: fecha_inicio,
+        fecha_fin: fecha_fin,
         carrito_habilitado: habilitado,
       })
       .eq('id', 1);

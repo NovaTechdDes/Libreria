@@ -6,6 +6,6 @@ export interface Configuracion {
 
   mensaje_informativo: string;
   carrito_habilitado: boolean;
-  fecha_inicio: Date;
-  fecha_fin: Date;
+  fecha_inicio: string;
+  fecha_fin: string;
 }

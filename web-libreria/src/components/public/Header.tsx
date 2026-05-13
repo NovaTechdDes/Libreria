@@ -1,5 +1,6 @@
 'use client';
 
+import { carritoHabilitado } from '@/src/helper/carritoHabilitado';
 import { useCarritoStore } from '@/src/store/carrito.store';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -15,7 +16,7 @@ interface Props {
 
 export const Header = ({ habilitado }: Props) => {
   const pathname = usePathname();
-  const { productos } = useCarritoStore();
+  const { productos, inicio, fin } = useCarritoStore();
   const linkClass = (path: string) => (pathname === path ? 'text-primary font-semibold underline underline-offset-4' : 'text-gray-600 hover:text-primary transition');
 
   return (
@@ -42,7 +43,7 @@ export const Header = ({ habilitado }: Props) => {
         </nav>
 
         <div className="flex items-center gap-4">
-          {habilitado ? (
+          {carritoHabilitado(inicio, fin, habilitado) ? (
             <Link href={'/carrito'} className="relative group p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer">
               <LuShoppingCart size={24} className="text-secondary group-hover:text-primary transition-colors" />
               {/* si hay prodcutos en el carrito mostrar cantidad */}

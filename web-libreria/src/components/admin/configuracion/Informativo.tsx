@@ -11,15 +11,17 @@ interface Props {
 }
 
 export const Informativo = ({ dataConfiguracion }: Props) => {
-  const {startPutBannerConfig} = useMutateConfiguracion();
+  const { startPutBannerConfig } = useMutateConfiguracion();
   const [mensaje, setMensaje] = useState<string>(dataConfiguracion.mensaje_informativo);
+  const [fecha_inicio, setInicio] = useState<string>(dataConfiguracion.fecha_inicio || new Date().toISOString().split('T')[0]);
+  const [fecha_fin, setFin] = useState<string>(dataConfiguracion.fecha_fin || new Date().toISOString().split('T')[0]);
 
   const [activo, setActivo] = useState<boolean>(dataConfiguracion.carrito_habilitado);
 
   const handleConfiguracionData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const res = await startPutBannerConfig.mutateAsync({ mensaje, habilitado: activo });
+    const res = await startPutBannerConfig.mutateAsync({ mensaje, fecha_inicio, fecha_fin, habilitado: activo });
 
     if (res) {
       mensajeSwal('Banner actualizado', 'success');
@@ -76,6 +78,34 @@ export const Informativo = ({ dataConfiguracion }: Props) => {
               className="w-full bg-slate-50 border border-slate-400 rounded-2xl p-5 text-slate-600 outline-none transition-all focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 resize-none"
               value={mensaje}
               onChange={(e) => setMensaje(e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-slate-700 ml-1 flex items-center gap-2" htmlFor="inicio">
+              Fecha Inicio
+            </label>
+            <input
+              className="w-full bg-slate-50 border border-slate-400 rounded-2xl p-5 text-slate-600 outline-none transition-all focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+              type="date"
+              name="inicio"
+              value={fecha_inicio}
+              onChange={(e) => setInicio(e.target.value)}
+              id="inicio"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-slate-700 ml-1 flex items-center gap-2" htmlFor="fin">
+              Fecha Fin
+            </label>
+            <input
+              className="w-full bg-slate-50 border border-slate-400 rounded-2xl p-5 text-slate-600 outline-none transition-all focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+              type="date"
+              name="fin"
+              value={fecha_fin}
+              onChange={(e) => setFin(e.target.value)}
+              id="fin"
             />
           </div>
         </div>

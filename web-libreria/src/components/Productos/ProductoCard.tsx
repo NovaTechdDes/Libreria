@@ -1,6 +1,7 @@
 'use client';
 
 import { Producto } from '@/src/interface/Producto';
+import { carritoHabilitado } from '@/src/helper/carritoHabilitado';
 import { useCarritoStore } from '@/src/store/carrito.store';
 import Image from 'next/image';
 import { CgShoppingCart } from 'react-icons/cg';
@@ -12,7 +13,7 @@ interface ProductoCardProps {
 }
 
 export const ProductoCard = ({ producto }: ProductoCardProps) => {
-  const { agregarProducto, habilitado } = useCarritoStore();
+  const { agregarProducto, habilitado, inicio, fin } = useCarritoStore();
   const [colorSeleccionado, setColorSeleccionado] = useState<number>(producto.productos_colores?.[0].colores?.id ?? 0);
 
   const isPriceVisible = producto.isvisibleprecio !== false;
@@ -67,7 +68,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
         {/* Desktop Overlay Cart Button */}
         <div className="hidden md:flex absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center justify-center">
           <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300 w-full px-4 absolute bottom-4">
-            {habilitado && (
+            {carritoHabilitado(inicio, fin, habilitado) && (
               <button
                 onClick={addCarrito}
                 disabled={!isStockAvailable}
@@ -109,7 +110,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
 
           {/* Botón Móvil */}
           <div className="">
-            {habilitado && (
+            {carritoHabilitado(inicio, fin, habilitado) && (
               <button
                 onClick={addCarrito}
                 disabled={!isStockAvailable}

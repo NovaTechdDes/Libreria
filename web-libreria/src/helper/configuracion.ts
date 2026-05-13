@@ -15,8 +15,8 @@ export async function getConfiguracion(): Promise<Configuracion> {
         porcentaje_descuento: 0,
         mensaje_informativo: '',
         carrito_habilitado: true,
-        fecha_inicio: new Date(),
-        fecha_fin: new Date(),
+        fecha_inicio: new Date().toISOString(),
+        fecha_fin: new Date().toISOString(),
       };
     }
 
@@ -29,8 +29,8 @@ export async function getConfiguracion(): Promise<Configuracion> {
       porcentaje_descuento: 0,
       mensaje_informativo: '',
       carrito_habilitado: true,
-      fecha_inicio: new Date(),
-      fecha_fin: new Date(),
+      fecha_inicio: new Date().toISOString(),
+      fecha_fin: new Date().toISOString(),
     };
   }
 }

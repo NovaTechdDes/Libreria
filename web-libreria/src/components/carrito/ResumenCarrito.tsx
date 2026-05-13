@@ -37,10 +37,13 @@ export const ResumenCarrito = () => {
       return;
     }
 
+    const hasHiddenPrices = productos.some((p) => !p.producto.isvisibleprecio);
+
     const productsList = productos
       .map((p) => {
         const colorInfo = p.color ? ` (Color: *${p.color.color}*)` : '';
-        return `• *${p.cantidad}x* ${p.producto.descripcion}${colorInfo}`;
+        const priceInfo = p.producto.isvisibleprecio ? '' : ' _(Precio a consultar)_';
+        return `• *${p.cantidad}x* ${p.producto.descripcion}${colorInfo}${priceInfo}`;
       })
       .join('\n');
 
@@ -59,6 +62,7 @@ export const ResumenCarrito = () => {
       '- *PRODUCTOS:*',
       productsList,
       '',
+      hasHiddenPrices ? '⚠️ *Nota:* Algunos productos requieren consulta de precio y no están sumados al total.\n' : '',
       notas ? `📝 *NOTAS:* ${notas}\n` : '',
       '------------------------------',
       `💰 *TOTAL: ${totalFormateado}*`,
@@ -95,6 +99,12 @@ export const ResumenCarrito = () => {
           <span className="text-slate-900 text-xl font-bold">Total</span>
           <span className="text-teal-600 text-2xl font-extrabold tracking-tight">${total.toLocaleString('es-AR')}</span>
         </div>
+
+        {productos.some((p) => !p.producto.isvisibleprecio) && (
+          <p className="text-amber-600 text-[10px] font-medium bg-amber-50 p-2 rounded-lg border border-amber-100 italic">
+            * Algunos productos no tienen precio visible y se consultarán por WhatsApp. No están incluidos en el total.
+          </p>
+        )}
       </div>
 
       {/* Formulario */}

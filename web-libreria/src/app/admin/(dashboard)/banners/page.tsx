@@ -30,7 +30,7 @@ const PageBanners = async () => {
             <BannerFilters activos={banners.filter((b) => b.activo).length} pausados={banners.filter((b) => !b.activo).length} />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6">
             {banners.map((banner) => (
               <BannerCard key={banner.id} banner={banner} />
             ))}

@@ -1,8 +1,16 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* Librería Design Tokens */
+  --ink-base: #0a1128;
+  --paper-parchment: #fdf6e3;
+  --vellum-glass: rgba(255, 255, 255, 0.05);
+  --graphite: #2d3436;
 }
 
 @theme inline {
@@ -20,12 +28,27 @@
   --color-tertiary-foreground: #ffffff;
   --color-neutral: #475569;
   --color-neutral-foreground: #ffffff;
+  
+  /* Librería semantic tokens */
+  --color-ink: var(--ink-base);
+  --color-parchment: var(--paper-parchment);
+}
+
+:root.dark {
+  --background: #060914; /* Deep Ink */
+  --foreground: #f1f5f9;
+  --color-tertiary: #0f172a;
+  --color-secondary: #1e293b;
+  --color-neutral: #94a3b8;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not(.light) {
+    --background: #060914;
+    --foreground: #f1f5f9;
+    --color-tertiary: #0f172a;
+    --color-secondary: #1e293b;
+    --color-neutral: #94a3b8;
   }
 }
 
@@ -33,6 +56,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @layer utilities {

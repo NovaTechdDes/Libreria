@@ -29,9 +29,9 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
   if (!producto.id_producto) return null;
 
   return (
-    <article className="group flex flex-row sm:flex-col bg-white rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] transition-all duration-300 ease-out cursor-pointer border border-gray-100/50 h-full min-h-[140px] sm:min-h-0">
+    <article className="group flex flex-row sm:flex-col bg-white dark:bg-white/5 rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] dark:hover:bg-white/8 transition-all duration-300 ease-out cursor-pointer border border-gray-100/50 dark:border-white/10 h-full min-h-[140px] sm:min-h-0">
       {/* Área de imagen */}
-      <div className="relative w-36 h-36 sm:w-full sm:h-auto sm:aspect-4/5 bg-[#F9F9F7] overflow-hidden shrink-0">
+      <div className="relative w-36 h-36 sm:w-full sm:h-auto sm:aspect-4/5 bg-[#F9F9F7] dark:bg-black/20 overflow-hidden shrink-0">
         {producto.imagenes && JSON.parse(producto.imagenes)[0] ? (
           <Image
             src={JSON.parse(producto.imagenes)[0]}
@@ -54,14 +54,18 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
         {/* Stock Badge - Top Right */}
         {!isStockAvailable && (
           <div className="absolute top-1.5 right-1.5 z-10">
-            <span className="bg-white/90 backdrop-blur-md text-red-600 text-[8px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-tighter shadow-sm border border-red-50">Agotado</span>
+            <span className="bg-white/90 dark:bg-black/60 backdrop-blur-md text-red-600 dark:text-red-400 text-[8px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-tighter shadow-sm border border-red-50 dark:border-red-900/30">
+              Agotado
+            </span>
           </div>
         )}
 
         {/* Category Badge - Top Left */}
         {producto.subRubros && (
           <div className="absolute top-1.5 left-1.5 z-10">
-            <span className="bg-primary/90 backdrop-blur-md text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-tighter shadow-sm">{producto.subRubros.nombre}</span>
+            <span className="bg-primary/90 dark:bg-primary/80 backdrop-blur-md text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-tighter shadow-sm">
+              {producto.subRubros.nombre}
+            </span>
           </div>
         )}
 
@@ -72,7 +76,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
               <button
                 onClick={addCarrito}
                 disabled={!isStockAvailable}
-                className="w-full bg-white/95 backdrop-blur-md text-primary font-bold py-2.5 rounded-xl shadow-lg hover:bg-white transition-all flex items-center justify-center gap-2 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-white/95 dark:bg-primary backdrop-blur-md text-primary dark:text-white font-bold py-2.5 rounded-xl shadow-lg hover:bg-white dark:hover:bg-primary/90 transition-all flex items-center justify-center gap-2 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <CgShoppingCart size={18} />
                 Agregar
@@ -86,7 +90,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
       <div className="flex flex-col flex-1 p-3 sm:p-4 gap-1.5 sm:gap-2">
         {/* Nombre y Colores */}
         <div className="space-y-1 sm:space-y-1.5">
-          <h3 className="text-[13px] sm:text-[15px] font-semibold text-gray-800 leading-tight line-clamp-2 min-h-0 sm:min-h-[40px]">{producto.descripcion}</h3>
+          <h3 className="text-[13px] sm:text-[15px] font-semibold text-gray-800 dark:text-white leading-tight line-clamp-2 min-h-0 sm:min-h-[40px]">{producto.descripcion}</h3>
 
           <div className="flex flex-wrap gap-1 sm:gap-1.5 items-center">
             {producto.productos_colores?.map((color, index) => (
@@ -104,8 +108,10 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
         {/* Precio y CTA Móvil */}
         <div className="mt-auto pt-1 sm:pt-2 flex flex-col gap-2 sm:gap-3">
           <div className="flex items-baseline gap-1">
-            <span className="text-[15px] sm:text-lg font-bold text-gray-900">{isPriceVisible && producto.precio != null ? `$${Number(producto.precio).toLocaleString('es-AR')}` : 'Consultar'}</span>
-            {isPriceVisible && producto.precio != null && <span className="text-[9px] sm:text-[10px] text-gray-400 font-medium">c/u</span>}
+            <span className="text-[15px] sm:text-lg font-bold text-gray-900 dark:text-white">
+              {isPriceVisible && producto.precio != null ? `$${Number(producto.precio).toLocaleString('es-AR')}` : 'Consultar'}
+            </span>
+            {isPriceVisible && producto.precio != null && <span className="text-[9px] sm:text-[10px] text-gray-400 dark:text-slate-400 font-medium">c/u</span>}
           </div>
 
           {/* Botón Móvil */}
@@ -115,7 +121,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
                 onClick={addCarrito}
                 disabled={!isStockAvailable}
                 className={`w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-[11px] font-bold transition-all ${
-                  isStockAvailable ? 'bg-primary text-white shadow-sm active:scale-95' : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  isStockAvailable ? 'bg-primary text-white shadow-sm active:scale-95' : 'bg-gray-100 dark:bg-white/10 text-gray-400 dark:text-slate-500 cursor-not-allowed'
                 }`}
               >
                 <CgShoppingCart size={14} />

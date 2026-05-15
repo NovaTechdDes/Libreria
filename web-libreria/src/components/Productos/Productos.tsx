@@ -50,7 +50,7 @@ export const Productos = async ({ search, currentPage = 1, limit = 20, subRubroA
       />
       <section className="w-full px-2 sm:px-6 lg:px-8 py-4 sm:py-6 max-w-[98%] sm:max-w-[90%] mx-auto">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 mb-4 sm:mb-6">
-          <h2 className="text-xl md:text-2xl font-semibold text-[#1a1a18] tracking-tight">Productos</h2>
+          <h2 className="text-xl md:text-2xl font-semibold text-[#1a1a18] dark:text-white tracking-tight">Productos</h2>
 
           <BuscadorCarrito />
         </div>

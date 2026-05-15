@@ -92,7 +92,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
         <div className="space-y-1 sm:space-y-1.5">
           <h3 className="text-[13px] sm:text-[15px] font-semibold text-gray-800 dark:text-white leading-tight line-clamp-2 min-h-0 sm:min-h-[40px]">{producto.descripcion}</h3>
 
-          <div className="flex flex-wrap gap-1 sm:gap-1.5 items-center">
+          <div className="flex flex-wrap gap-3 sm:gap-3 items-center">
             {producto.productos_colores?.map((color, index) => (
               <ButtonSeleccionarColor
                 key={color.colores?.id ?? index}

@@ -1,29 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from './lib/server';
+import { updateSession } from './helper/middleware';
 
 export async function proxy(request: NextRequest) {
-  const response = NextResponse.next();
-
-  const supabase = await createClient();
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const { supabaseResponse, user } = await updateSession(request);
 
   const isAdminRoute = request.nextUrl.pathname.startsWith('/admin');
   const isLoginRoute = request.nextUrl.pathname === '/admin/login';
 
-  if (isAdminRoute && !isLoginRoute && !session) {
+  if (isAdminRoute && !isLoginRoute && !user) {
     return NextResponse.redirect(new URL('/admin/login', request.url));
   }
 
-  if (session && isLoginRoute) {
+  if (user && isLoginRoute) {
     return NextResponse.redirect(new URL('/admin/inventario', request.url));
   }
 
-  return response;
+  return supabaseResponse;
 }
 
-export const config = {
-  matcher: '/admin/:path*',
-};
+export const config = {};

@@ -40,7 +40,11 @@ export const BannerCarousel = ({ banners }: Props) => {
         >
           {/* Overlay gradiente */}
           <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent z-10" />
-          <Image src={banner.imagen_url || ''} alt={banner.titulo || 'Banner'} fill className="object-cover" priority={index === 0} />
+          {banner.imagen_url ? (
+            <Image src={banner.imagen_url || ''} alt={banner.titulo || 'Banner'} width={1920} height={1080} className="object-cover w-full h-full" priority={index === 0} />
+          ) : (
+            <div className="bg-gray-100 w-full h-full" />
+          )}
 
           {/* Contenido del Banner */}
           <div className="absolute bottom-6 left-6 md:left-12 z-20 text-white max-w-2xl">

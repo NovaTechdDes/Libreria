@@ -20,10 +20,10 @@ export default async function Home({ searchParams }: Props) {
   return (
     <div className="flex flex-col flex-1 items-center pt-5 bg-zinc-200 dark:bg-transparent font-sans ">
       {/* Rubros */}
-      <Rubros rubroActivo={rubro} />
-      <SubRubros rubroActivo={rubro} subRubroActivo={subrubro} />
 
       <Banners />
+      <Rubros rubroActivo={rubro} />
+      <SubRubros rubroActivo={rubro} subRubroActivo={subrubro} />
 
       {/* Productos */}
       <Productos search={search} currentPage={currentPage} limit={limit} subRubroActivo={subrubro} rubroActivo={rubro} />

@@ -17,7 +17,7 @@ export default async function InventarioPage({ searchParams }: Props) {
 
   let query = supabase
     .from('productos')
-    .select('*, productos_colores (colores(*))', { count: 'exact' })
+    .select('*, subRubros: fk_producto_subrubro (*), productos_colores (colores(*))', { count: 'exact' })
     .range((currentPage - 1) * limit, currentPage * limit - 1);
 
   if (search) {

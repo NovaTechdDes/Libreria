@@ -8,7 +8,7 @@ export interface Producto {
   precio: number;
   cantidad: number;
   marca: number;
-  id_subRubro: number;
+  id_subrubro: number;
   imagenes?: string;
   imagen_url?: string;
   activo: boolean;

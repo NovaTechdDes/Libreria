@@ -75,14 +75,14 @@ export const InventarioItem = ({ producto }: Props) => {
             {producto.imagenes && JSON.parse(producto.imagenes)[0] ? (
               <Image src={JSON.parse(producto.imagenes)[0]} alt={producto.descripcion} fill className="object-cover" />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-slate-300">
-                <span className="text-[10px]">Sin imagen</span>
+              <div className="w-full h-full flex items-center justify-center  bg-gray-100 border border-gray-400 rounded-xl">
+                <span className="text-[10px] text-gray-400">Sin imagen</span>
               </div>
             )}
           </div>
           <div className="flex flex-col min-w-0">
             <span className="text-[15px] font-bold text-slate-900 truncate">{producto.descripcion}</span>
-            <span className="text-[12px] font-medium text-slate-400">SKU: {producto.codigo || 'N/A'}</span>
+            <span className="text-[12px] font-medium text-slate-400">Sub rubro: {producto.subRubros?.nombre || 'N/A'}</span>
           </div>
         </div>
       </td>
@@ -117,7 +117,7 @@ export const InventarioItem = ({ producto }: Props) => {
 };
 
 const Toggle = ({ active }: { active: boolean }) => (
-  <div className={`w-11 h-6 rounded-full p-1 transition-colors duration-200 ease-in-out cursor-pointer ${active ? 'bg-teal-500' : 'bg-slate-200'}`}>
+  <div className={`w-11 h-6 rounded-full p-1 transition-colors duration-200 ease-in-out cursor-pointer ${active ? 'bg-teal-500' : 'bg-gray-400'}`}>
     <div className={`bg-white w-4 h-4 rounded-full shadow-sm transform transition-transform duration-200 ease-in-out ${active ? 'translate-x-5' : 'translate-x-0'}`} />
   </div>
 );

@@ -27,7 +27,16 @@ export const CarritoItem = ({ producto }: Props) => {
       <div className="relative h-24 w-24 shrink-0">
         {producto.producto.imagenes && JSON.parse(producto.producto.imagenes)[0] ? (
           <Image src={JSON.parse(producto.producto.imagenes)[0]} alt={producto.producto.descripcion} fill className="rounded-xl object-cover shadow-sm border border-slate-100" />
-        ) : null}
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-gray-400 border border-gray-400 rounded-xl">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <path d="M21 15l-5-5L5 21" />
+            </svg>
+            <span className="text-[8px] font-medium uppercase tracking-wider">Sin imagen</span>
+          </div>
+        )}
       </div>
 
       {/* Detalles del producto */}
@@ -36,10 +45,10 @@ export const CarritoItem = ({ producto }: Props) => {
           <h3 className="text-slate-900 text-lg font-bold truncate group-hover:text-teal-700 transition-colors">{producto.producto.descripcion}</h3>
           <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-0.5">{producto.producto.id_subRubro || 'Librería'}</p>
 
-          {producto.color ? (
+          {producto?.color ? (
             <div className="flex items-center gap-2">
               <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-0.5">Color: </p>
-              <div className="flex items-center gap-2" style={{ backgroundColor: producto.color?.codigo, width: '20px', height: '20px', borderRadius: '50%' }}></div>
+              <div className="flex items-center gap-2" style={{ backgroundColor: producto?.color?.codigo, width: '20px', height: '20px', borderRadius: '50%' }}></div>
             </div>
           ) : null}
         </div>

@@ -14,7 +14,7 @@ interface ProductoCardProps {
 
 export const ProductoCard = ({ producto }: ProductoCardProps) => {
   const { agregarProducto, habilitado, inicio, fin } = useCarritoStore();
-  const [colorSeleccionado, setColorSeleccionado] = useState<number>(producto.productos_colores?.[0].colores?.id ?? 0);
+  const [colorSeleccionado, setColorSeleccionado] = useState<number>(producto?.productos_colores?.[0]?.colores?.id ?? 0);
 
   const isPriceVisible = producto.isvisibleprecio !== false;
   const isStockAvailable = producto.isstock !== false && (producto.cantidad ?? 0) > 0;

@@ -43,7 +43,7 @@ export const CarritoItem = ({ producto }: Props) => {
       <div className="flex-1 min-w-0">
         <div className="flex flex-col">
           <h3 className="text-slate-900 text-lg font-bold truncate group-hover:text-teal-700 transition-colors">{producto.producto.descripcion}</h3>
-          <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-0.5">{producto.producto.id_subRubro || 'Librería'}</p>
+          <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-0.5">{producto.producto.id_subrubro || 'Librería'}</p>
 
           {producto?.color ? (
             <div className="flex items-center gap-2">

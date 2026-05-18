@@ -7,6 +7,7 @@ import {
   usuariosRoutes,
   ventasRoutes,
 } from "./routes";
+import { syncProducts } from "./services/syncPorducts.service";
 
 const app = express();
 
@@ -27,5 +28,9 @@ app.use("/usuarios", usuariosRoutes);
 app.use("/ventas", ventasRoutes);
 app.use("/caja", cajaRoutes);
 app.use("/rubro", rubroRoutes);
+
+//Sincronizar productos con supabase
+
+syncProducts();
 
 export default app;

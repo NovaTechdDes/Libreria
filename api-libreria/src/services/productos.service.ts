@@ -19,3 +19,8 @@ export async function putProducto(producto: Partial<Producto>) {
   const result = await repo.putProducto(producto);
   return result;
 }
+
+
+export async function obtenerProductosPorRubro(rubros:number[]) {
+    return await repo.getProductosPorRubro(rubros);
+}

@@ -3,13 +3,19 @@ import { obtenerRubros } from "./rubro.service";
 import { supabase } from "../utils/supabase";
 import { mapRubrosSupabase } from "../mappers/rubrosSupaase";
 import { mapSubRubrosSupabase } from "../mappers/subRubrosSupabase";
+import { obtenerProductosPorRubro } from "./productos.service";
+
+const rubrosSync = process.env.RUBROS?.split(",") || [];
+
+// 1. Normalizar los nombres a minúsculas y sin espacios para evitar errores de tipeo
+const rubrosSyncLower = rubrosSync.map(r => r.toLowerCase().trim());
+
 
 export const syncProducts = async() => {
     try {
         console.log("Iniciando Sincronizacion...");
 
         const rubros = await obtenerRubros();
-
 
         const rubrosMap = mapRubrosSupabase(rubros.rubros);
 
@@ -27,6 +33,22 @@ export const syncProducts = async() => {
 
         if (error) throw error;
         if (errorSubrubros) throw errorSubrubros;
+
+        // 2. Filtrar los Rubros Generales para obtener sus id_rubro_g
+        const parentIds = rubros.rubros
+            .filter(r => rubrosSyncLower.includes(r.nom_rubro_g.toLowerCase().trim()))
+            .map(r => r.id_rubro_g);
+
+        
+        // 3. Filtrar los Sub Rubros que pertenezcan a esos parentIds y obtener sus id_rubro (IDs finales)
+        const subRubrosIds: number[] = rubros.subrubros
+            .filter(sub => parentIds.includes(sub.id_rubro_g))
+            .map(sub => sub.id_rubro);
+        console.log("IDs de subrubros a sincronizar:", subRubrosIds);
+
+        // sync products
+        const productos = await obtenerProductosPorRubro(subRubrosIds)
+        console.log(productos)
 
         console.log("Rubros sincronizados correctamente");
         

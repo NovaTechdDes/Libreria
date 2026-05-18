@@ -81,4 +81,47 @@ export async function putProducto(
     `);
 
   return result.rowsAffected[0] > 0;
+};
+
+
+export async function getProductosPorRubro(rubros: number[]): Promise<Producto[]> {
+  await poolConnect;
+
+  if (rubros.length === 0) return [];
+
+  const request = pool.request();
+  const params = rubros.map((_, index) => `@rubro${index}`);
+
+  rubros.forEach((rubro, index) => {
+    request.input(`rubro${index}`, rubro);
+  });
+
+  console.log(rubros);
+    
+  const result = await request.query(`
+    SELECT *
+    FROM api_articuloss
+    WHERE id_rubro IN (${params.join(",")})
+  `);
+
+  const productosConImagen = await Promise.all(
+    result.recordset.map(async (producto) => {
+      let rubroParsed = producto.rubro;
+      if (typeof producto.rubro === "string") {
+        try {
+          rubroParsed = JSON.parse(producto.rubro);
+        } catch (e) {
+          console.error("Error al parsear rubro JSON:", e);
+        }
+      }
+
+      return {
+        ...producto,
+        rubro: rubroParsed,
+        imagen: await obtenerImagenSegura(producto.codigo, false),
+      };
+    }),
+  );
+
+  return productosConImagen;
 }

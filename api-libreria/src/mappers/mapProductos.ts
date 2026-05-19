@@ -12,7 +12,7 @@ interface ProductoSupabase {
 
 export const mapProductos = (productos: Producto[]): ProductoSupabase[] => {
   return productos.map((producto) => ({
-    descripcion: producto.descripcion.trim().toUpperCase(),
+    descripcion: producto.descripcion?.trim()?.toUpperCase() || "",
     id_subrubro: producto.id_rubro,
     precio: producto.precio,
     cantidad: producto.cantidad,

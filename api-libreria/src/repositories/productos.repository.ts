@@ -81,10 +81,11 @@ export async function putProducto(
     `);
 
   return result.rowsAffected[0] > 0;
-};
+}
 
-
-export async function getProductosPorRubro(rubros: number[]): Promise<Producto[]> {
+export async function getProductosPorRubro(
+  rubros: number[],
+): Promise<Producto[]> {
   await poolConnect;
 
   if (rubros.length === 0) return [];
@@ -96,8 +97,6 @@ export async function getProductosPorRubro(rubros: number[]): Promise<Producto[]
     request.input(`rubro${index}`, rubro);
   });
 
-  console.log(rubros);
-    
   const result = await request.query(`
     SELECT *
     FROM api_articuloss

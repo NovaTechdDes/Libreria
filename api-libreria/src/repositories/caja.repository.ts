@@ -1,7 +1,8 @@
 import { pool } from "../config/db";
+import { getLocalDateString } from "../utils/date";
 
 export async function getValesDelDia() {
-  const fecha = new Date().toISOString().split("T")[0];
+  const fecha = getLocalDateString();
 
   const query = `
     SELECT tipo_importe, SUM(ISNULL(haber, 0)) - SUM(ISNULL(debe, 0)) as saldo
@@ -32,11 +33,11 @@ export async function getValesDelDia() {
   );
 
   const tieneCredito = result.recordset.some(
-    (elem) => elem.tipo_importe === "Credito",
+    (elem) => elem.tipo_importe === "Crédito",
   );
 
   const tieneDebito = result.recordset.some(
-    (elem) => elem.tipo_importe === "Debito",
+    (elem) => elem.tipo_importe === "Débito",
   );
 
   if (!tieneEfectivo) {
@@ -63,7 +64,7 @@ export async function getValesDelDia() {
 }
 
 export async function getMovCajaDelDia() {
-  const fecha = new Date().toISOString().split("T")[0];
+  const fecha = getLocalDateString();
 
   const query = `
     SELECT * FROM caja WHERE fecha = '${fecha}'`;
@@ -73,7 +74,7 @@ export async function getMovCajaDelDia() {
 }
 
 export async function postCloseCaja() {
-  const fecha = new Date().toISOString().split("T")[0];
+  const fecha = getLocalDateString();
 
   const query = `
   INSERT INTO caja (id_tipo, fecha, hora, concepto, tipo_mov, debe, haber, tipo_importe)

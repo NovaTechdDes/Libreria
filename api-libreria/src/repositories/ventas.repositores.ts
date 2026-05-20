@@ -1,7 +1,8 @@
 import { pool, poolConnect } from "../config/db";
+import { getLocalDateString } from "../utils/date";
 
 export async function getVentasDelDia() {
-  const fecha = new Date().toISOString().split("T")[0];
+  const fecha = getLocalDateString();
   await poolConnect;
   const result = await pool.request().query(`
         SELECT 

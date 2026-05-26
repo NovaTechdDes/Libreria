@@ -104,11 +104,16 @@ Flags: runhidden waituntilterminated
 
 [Code]
 var
+  SupabasePage: TInputQueryWizardPage;
   DBPage: TInputQueryWizardPage;
   ConfigPage: TInputQueryWizardPage;
 
 procedure InitializeWizard;
 begin
+  SupabasePage := CreateInputQueryPage(wpWelcome, 'Configuración de Base de Datos de supabase', 'Ingrese la url de conexion y la clave de supabase', 'Este valor se guardará en el archivo .env del sistema.');
+  SupabasePage.Add('SUPABASE_URL:', False);
+  SupabasePage.Add('SUPABASE_SERVICE_ROLE_KEY:', False);
+
   DBPage := CreateInputQueryPage(wpWelcome, 'Configuración de Base de Datos', 'Ingrese el nombre de la base de datos', 'Este valor se guardará en el archivo .env del sistema.');
   DBPage.Add('Nombre de la base de datos:', False);
   DBPage.Add('Ip del servidor para servir imagenes:', False);
@@ -139,6 +144,8 @@ begin
                 'DB_USER=' + ConfigPage.Values[0] + #13#10 +
                 'DB_PASSWORD=' + ConfigPage.Values[1] + #13#10 +
                 'DB_HOST=' + ConfigPage.Values[2] + #13#10 +
-                'DB_PORT=' + ConfigPage.Values[3] + #13#10;
+                'DB_PORT=' + ConfigPage.Values[3] + #13#10 +
+                'SUPABASE_URL=' + SupabasePage.Values[0] + #13#10 +
+                'SUPABASE_SERVICE_ROLE_KEY=' + SupabasePage.Values[1] + #13#10;
   SaveStringToFile(EnvFile, EnvContent, False);
 end;

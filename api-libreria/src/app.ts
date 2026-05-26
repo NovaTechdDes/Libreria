@@ -30,7 +30,8 @@ app.use("/caja", cajaRoutes);
 app.use("/rubro", rubroRoutes);
 
 //Sincronizar productos con supabase
-
-syncProducts();
+setInterval(() => {
+  syncProducts();
+}, 1000 * 60);
 
 export default app;

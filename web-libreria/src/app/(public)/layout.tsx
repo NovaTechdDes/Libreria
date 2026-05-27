@@ -13,7 +13,7 @@ const PublicLayout = async ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col min-h-screen">
       {configuracion.mensaje_informativo && (
         <div className="w-full bg-linear-to-r from-secondary via-primary to-secondary py-2 px-4 md:px-6 flex items-center justify-center text-center text-[11px] sm:text-xs md:text-sm font-semibold text-white shadow-lg overflow-hidden relative group">
           {/* Shimmer Effect */}

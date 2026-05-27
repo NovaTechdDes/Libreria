@@ -31,7 +31,7 @@ export const BannerCarousel = ({ banners }: Props) => {
   if (!banners.length) return null;
 
   return (
-    <div className="relative w-full h-[200px] md:h-[350px] overflow-hidden shadow-xl group" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
+    <div className="relative w-full h-50 md:h-87.5 overflow-hidden shadow-xl group" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
       {/* Slides */}
       {banners.map((banner, index) => (
         <div
@@ -43,7 +43,7 @@ export const BannerCarousel = ({ banners }: Props) => {
           <Image src={banner.imagen_url || ''} alt={banner.titulo || 'Banner'} width={1920} height={1080} className="object-cover w-full h-full" priority={index === 0} />
 
           {/* Contenido del Banner */}
-          <div className="absolute bottom-6 left-6 md:left-12 z-20 text-white max-w-2xl">
+          <div className="absolute bottom-6 left-6 md:left-12 z-20 bg-black/50 rounded-lg p-2 text-white max-w-2xl">
             <h2 className="text-3xl md:text-5xl font-black mb-1 drop-shadow-lg leading-tight animate-in fade-in slide-in-from-left-10 duration-700">{banner.titulo}</h2>
             <p className="text-sm md:text-lg text-white/90 font-medium drop-shadow-md animate-in fade-in slide-in-from-left-10 duration-1000">{banner.subtitulo}</p>
           </div>

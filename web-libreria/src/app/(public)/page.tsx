@@ -18,7 +18,7 @@ export default async function Home({ searchParams }: Props) {
   const limit = 20;
 
   return (
-    <div className="flex flex-col flex-1 items-center pt-5 bg-zinc-200 dark:bg-transparent font-sans ">
+    <div className="flex flex-col w-full flex-1 items-center pt-5 bg-zinc-200 dark:bg-transparent font-sans ">
       {/* Rubros */}
 
       <Banners />

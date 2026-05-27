@@ -11,8 +11,8 @@ export interface SubRubroSupabase {
 }
 
 export const mapSubRubrosSupabase = (subrubros: SubRubro[]): SubRubroSupabase[] => {
-    console.log(subrubros)
     return subrubros.map(subrubro => ({
+        id_subrubro: subrubro.id_rubro,
         id_interno: subrubro.id_rubro,
         nombre: subrubro.nom_rubro.trim().toUpperCase(),
         id_rubro: subrubro.id_rubro_g

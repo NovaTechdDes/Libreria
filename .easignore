@@ -1,19 +1,17 @@
-# Node
+# Ignorar node_modules globales y otras carpetas de proyectos hermanos
 node_modules/
 **/node_modules/
 
-# Sibling projects (in case EAS runs relative to root)
-../api-libreria/
-../web-libreria/
+# Ignorar proyectos hermanos enteros desde la raíz de Git para que EAS no los suba
 api-libreria/
 web-libreria/
 
-# Expo / Build
+# Ignorar archivos locales temporales y builds de Expo
 .expo/
 dist/
 web-build/
 
-# Carpetas nativas (generadas por prebuild)
+# Carpetas nativas
 android/
 ios/
 

@@ -1,5 +1,4 @@
 import { useRubros } from '@/hooks';
-import { useUrl } from '@/hooks/useUrl';
 import { Producto } from '@/interface';
 import { useProductoStore } from '@/store';
 import { useGlobalStore } from '@/store/globalStore';
@@ -15,9 +14,10 @@ interface Props {
 export default function ProductItem({ item, setIsUserModalVisible }: Props) {
   const { servidor } = useGlobalStore();
   const { data } = useRubros(servidor);
-  const baseUrl = useUrl();
+
   const imageName = item.imagen || null;
-  const imageUrl = baseUrl ? `${imageName}` : null;
+
+  const imageUrl = item.imagen ? (servidor ? `https://${imageName}` : `${imageName}`) : null;
   const hasImage = !!imageUrl;
 
   const buscado = data?.subRubros?.find((subRubro) => subRubro.id_rubro === item.id_rubro)?.nombre_rubro;

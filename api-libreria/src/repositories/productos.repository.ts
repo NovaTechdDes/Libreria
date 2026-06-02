@@ -100,7 +100,7 @@ export async function getProductosPorRubro(
   const result = await request.query(`
     SELECT *
     FROM api_articuloss
-    WHERE id_rubro IN (${params.join(",")})
+    WHERE id_rubro IN (${params.join(",")}) and activo = 1
   `);
 
   const productosConImagen = await Promise.all(

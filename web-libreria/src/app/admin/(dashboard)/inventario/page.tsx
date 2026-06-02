@@ -13,7 +13,7 @@ export default async function InventarioPage({ searchParams }: Props) {
   const supabase = await createClient();
 
   const currentPage = Number(page) || 1;
-  const limit = 20;
+  const limit = 50;
 
   let query = supabase
     .from('productos')
@@ -30,5 +30,5 @@ export default async function InventarioPage({ searchParams }: Props) {
 
   const totalPages = Math.ceil((count || 0) / limit);
 
-  return <InventarioContainer productos={data || []} totalPages={totalPages} currentPage={currentPage} totalProductos={count || 0} />;
+  return <InventarioContainer limit={limit} productos={data || []} totalPages={totalPages} currentPage={currentPage} totalProductos={count || 0} />;
 }

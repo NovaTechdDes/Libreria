@@ -7,12 +7,48 @@ interface Props {
   totalPages: number;
   currentPage: number;
   totalProductos: number;
+  limit: number;
 }
 
-export const InventarioList = ({ productos, totalPages, currentPage, totalProductos }: Props) => {
+export const InventarioList = ({ limit, productos, totalPages, currentPage, totalProductos }: Props) => {
+  const getPaginasVisibles = () => {
+    const paginas: (number | string)[] = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) {
+        paginas.push(i);
+      }
+    } else {
+      paginas.push(1);
+
+      let start = Math.max(2, currentPage - 1);
+      let end = Math.min(totalPages - 1, currentPage + 1);
+
+      if (currentPage <= 3) {
+        end = 4;
+      } else if (currentPage >= totalPages - 2) {
+        start = totalPages - 3;
+      }
+
+      if (start > 2) {
+        paginas.push('...');
+      }
+
+      for (let i = start; i <= end; i++) {
+        paginas.push(i);
+      }
+
+      if (end < totalPages - 1) {
+        paginas.push('...');
+      }
+
+      paginas.push(totalPages);
+    }
+    return paginas;
+  };
+
   return (
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mt-6">
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto overflow-y-scroll max-h-[600px]">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-50/50 border-b border-slate-100">
@@ -34,9 +70,19 @@ export const InventarioList = ({ productos, totalPages, currentPage, totalProduc
 
       {/* Footer / Pagination */}
       <div className="px-6 py-5 border-t border-slate-100 flex items-center justify-between bg-white">
-        <p className="text-[14px] font-medium text-slate-500">
-          Mostrando <span className="text-slate-900">{productos.length}</span> de <span className="text-slate-900">{totalProductos}</span> productos
-        </p>
+        {productos.length > 0 && (
+          <p className="text-xs md:text-[14px] font-medium text-slate-500 gap-2 flex  ">
+            Mostrando 
+            <span className="text-slate-900">{productos.length}</span> 
+            de 
+            <span className="text-slate-900">{totalProductos}</span> 
+            productos desde
+            <span className='text-slate-900'>{currentPage * limit - limit + 1}</span>
+            hasta
+            <span className='text-slate-900'>{(currentPage * limit - limit) + productos.length}</span>
+          </p>
+        )}
+
         <div className="flex gap-3">
           {currentPage > 1 ? (
             <Link
@@ -60,6 +106,33 @@ export const InventarioList = ({ productos, totalPages, currentPage, totalProduc
           )}
         </div>
       </div>
+
+      {totalPages > 1 && (
+        <div className="px-6 py-4 pb-5 overflow-auto flex justify-center items-center gap-1 border-t border-slate-50 bg-slate-50/30">
+          {getPaginasVisibles().map((pagina, idx) => {
+            if (pagina === '...') {
+              return (
+                <span key={`dots-${idx}`} className="px-2 py-1 text-slate-400 select-none">
+                  ...
+                </span>
+              );
+            }
+            return (
+              <Link
+                key={pagina}
+                className={`px-3 py-1 rounded-lg border text-sm font-medium transition-all ${
+                  currentPage === pagina
+                    ? 'border-[#0096B1] bg-[#0096B1] text-white shadow-sm'
+                    : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                }`}
+                href={`/admin/inventario?page=${pagina}`}
+              >
+                {pagina}
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

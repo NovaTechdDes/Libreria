@@ -12,9 +12,10 @@ interface Props {
   totalPages: number;
   currentPage: number;
   totalProductos: number;
+  limit: number;
 }
 
-export const InventarioContainer = ({ productos, totalPages, currentPage, totalProductos }: Props) => {
+export const InventarioContainer = ({ limit, productos, totalPages, currentPage, totalProductos }: Props) => {
   const { productoSeleccionado } = useProductoStore();
 
   const stats = [
@@ -71,7 +72,7 @@ export const InventarioContainer = ({ productos, totalPages, currentPage, totalP
         <section className={`flex-1 transition-all duration-500 ${productoSeleccionado ? 'lg:w-2/3' : 'w-full'}`}>
           <BuscadorProductos />
 
-          <InventarioList productos={productos || []} totalPages={totalPages} currentPage={currentPage} totalProductos={totalProductos} />
+          <InventarioList limit={limit} productos={productos || []} totalPages={totalPages} currentPage={currentPage} totalProductos={totalProductos} />
         </section>
 
         {/* Sidebar - Form */}

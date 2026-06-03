@@ -21,7 +21,7 @@ export default async function InventarioPage({ searchParams }: Props) {
     .range((currentPage - 1) * limit, currentPage * limit - 1);
 
   if (search) {
-    query = query.ilike('descripcion', `%${search}%`);
+    query = query.or(`descripcion.ilike.%${search}%,id_interno.eq.${search}`);
   }
 
   query = query.order('descripcion', { ascending: true });

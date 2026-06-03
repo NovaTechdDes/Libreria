@@ -13,6 +13,9 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: 'Libreria Lachi',
   description: 'Carrito Online para la carga de pedidos de juguetes y libreria lachi',
+  icons: {
+    icon: "/favicon.webp"
+  }
 };
 
 export default function RootLayout({
@@ -21,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${plusJakartaSans.variable} ${plusJakartaSans.variable} scroll-smooth h-full w-full antialiased`}>
+    <html lang="es" className={`${plusJakartaSans.variable} ${plusJakartaSans.variable} scroll-smooth h-full w-full antialiased`}>
       <body className="min-h-full flex flex-col w-full">
         <Providers>{children}</Providers>
       </body>

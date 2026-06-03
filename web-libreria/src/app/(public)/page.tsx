@@ -20,6 +20,7 @@ export default async function Home({ searchParams }: Props) {
   return (
     <div className="flex flex-col w-full flex-1 items-center pt-5 bg-zinc-200 dark:bg-transparent font-sans ">
       {/* Rubros */}
+      <h2 className='underline flex w-full justify-start pl-5 text-start text-2xl text-gray-500 font-bold'>Rubros</h2>
 
       <Banners />
       <Rubros rubroActivo={rubro} />

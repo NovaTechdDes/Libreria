@@ -1,6 +1,8 @@
 import { Producto } from '@/src/interface/Producto';
 import { InventarioItem } from './InventarioItem';
 import Link from 'next/link';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   productos: Producto[];
@@ -11,6 +13,9 @@ interface Props {
 }
 
 export const InventarioList = ({ limit, productos, totalPages, currentPage, totalProductos }: Props) => {
+  const router = useRouter();
+  const [numeroProducto, setNumeroProducto] = useState<number>(1)
+
   const getPaginasVisibles = () => {
     const paginas: (number | string)[] = [];
     if (totalPages <= 7) {
@@ -45,6 +50,11 @@ export const InventarioList = ({ limit, productos, totalPages, currentPage, tota
     }
     return paginas;
   };
+
+  const handlePage = () => {
+    const page = Math.ceil(numeroProducto / limit);
+    router.push(`/admin/inventario?page=${page}`)
+  }
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mt-6">
@@ -107,32 +117,50 @@ export const InventarioList = ({ limit, productos, totalPages, currentPage, tota
         </div>
       </div>
 
-      {totalPages > 1 && (
-        <div className="px-6 py-4 pb-5 overflow-auto flex justify-center items-center gap-1 border-t border-slate-50 bg-slate-50/30">
-          {getPaginasVisibles().map((pagina, idx) => {
-            if (pagina === '...') {
-              return (
-                <span key={`dots-${idx}`} className="px-2 py-1 text-slate-400 select-none">
-                  ...
-                </span>
-              );
-            }
-            return (
-              <Link
-                key={pagina}
-                className={`px-3 py-1 rounded-lg border text-sm font-medium transition-all ${
-                  currentPage === pagina
-                    ? 'border-[#0096B1] bg-[#0096B1] text-white shadow-sm'
-                    : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
-                }`}
-                href={`/admin/inventario?page=${pagina}`}
-              >
-                {pagina}
-              </Link>
-            );
-          })}
+
+      <div className='w-full flex flex-col sm:flex-row gap-4 items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50/20'>
+        <div className='flex gap-3 items-center text-sm text-slate-500 font-medium'>
+          <span>Ir al producto N°</span>
+          <input 
+            type="number" 
+            value={numeroProducto}
+            onChange={(e) => setNumeroProducto(Number(e.target.value))}
+            min={1} 
+            max={totalProductos} 
+            className='border border-slate-500 focus:border-[#0096B1] focus:ring-2 focus:ring-[#0096B1]/20 rounded-xl w-20 py-1.5 text-center text-slate-800 font-bold outline-none transition-all bg-white text-sm' 
+          />
+          <button onClick={handlePage} className='px-4 py-2 rounded-xl bg-[#0096B1] text-white font-bold text-[13px] hover:bg-[#008199] active:scale-95 transition-all shadow-sm hover:shadow-md cursor-pointer'>
+            Ir
+          </button>
         </div>
-      )}
+
+        {totalPages > 1 && (
+          <div className="overflow-auto flex justify-center items-center gap-1.5 py-1">
+            {getPaginasVisibles().map((pagina, idx) => {
+              if (pagina === '...') {
+                return (
+                  <span key={`dots-${idx}`} className="px-2 py-1 text-slate-400 select-none">
+                    ...
+                  </span>
+                );
+              }
+              return (
+                <Link
+                  key={pagina}
+                  className={`px-3 py-1.5 rounded-xl border text-sm font-semibold transition-all cursor-pointer ${
+                    currentPage === pagina
+                      ? 'border-[#0096B1] bg-[#0096B1] text-white shadow-sm'
+                      : 'border-slate-500 bg-white text-slate-600 hover:bg-slate-300 hover:border-slate-300'
+                  }`}
+                  href={`/admin/inventario?page=${pagina}`}
+                >
+                  {pagina}
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

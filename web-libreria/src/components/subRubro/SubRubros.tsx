@@ -1,6 +1,6 @@
 import { SubRubro } from '@/src/interface/SubRubro';
 import { createClient } from '@/src/lib/server';
-import { SubRubroItem } from './SubRubroItem';
+import { SubRubrosSelect } from './SubRubrosSelect';
 
 interface Props {
   rubroActivo: number;
@@ -24,12 +24,11 @@ export const SubRubros = async ({ rubroActivo, subRubroActivo }: Props) => {
   const subRubros = [{ id_subrubro: 0, nombre: 'TODOS', id_rubro: 0 }, ...data] as SubRubro[];
 
   return (
-    <div className="w-full py-4 px-2">
-      <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x snap-proximity">
-        {subRubros.map((subRubro) => (
-          <SubRubroItem key={subRubro.id_subrubro} subRubro={subRubro} activo={Number(subRubroActivo) === subRubro.id_subrubro || (subRubroActivo === undefined && subRubro.id_subrubro === 0)} />
-        ))}
-      </div>
+    <div className="w-full py-4 px-4 flex flex-col gap-2">
+      <label htmlFor="subrubro-select" className="text-xs font-bold text-neutral uppercase tracking-widest opacity-80">
+        Sub Rubros
+      </label>
+      <SubRubrosSelect subRubros={subRubros} subRubroActivo={Number(subRubroActivo)} />
     </div>
   );
 };

@@ -3,40 +3,22 @@ import { ProductoCard } from './ProductoCard';
 import { createClient } from '@/src/lib/server';
 import { CartInitializer } from '../carrito/CartInitializer';
 import { BuscadorCarrito } from './BuscadorCarrito';
+import { Pagination } from './Pagination';
+import { getProductos } from '@/src/helper/getProductos';
 
 interface Props {
   search?: string;
   currentPage: number;
-  limit: number;
   subRubroActivo?: number;
   rubroActivo?: number;
 }
 
-export const Productos = async ({ search, currentPage = 1, limit = 20, subRubroActivo }: Props) => {
+export const Productos = async ({ search, currentPage = 1, subRubroActivo }: Props) => {
   const supabase = await createClient();
-  const from = (currentPage - 1) * limit;
-  const to = from + (limit - 1);
 
   const { data: configuracion } = await supabase.from('configuracion').select('*').single();
 
-  let query = supabase.from('productos').select('*, subRubros: fk_producto_subrubro(*), productos_colores (colores(*))').eq('activo', true).range(from, to).order('descripcion', { ascending: false });
-
-  if (search) {
-    query = query.ilike('descripcion', `%${search}%`);
-  }
-
-  if (subRubroActivo) {
-    query = query.eq('id_subrubro', subRubroActivo);
-  }
-
-  const { data: productos, error } = await query;
-
-  if (error) {
-    console.error('error', error);
-    return null;
-  }
-
-  if (!productos) return null;
+const { productos,  totalPages } = await getProductos(currentPage, search ?? '', subRubroActivo ?? 0);
 
   return (
     <>
@@ -61,6 +43,8 @@ export const Productos = async ({ search, currentPage = 1, limit = 20, subRubroA
             <ProductoCard key={producto.id_producto} producto={producto} />
           ))}
         </div>
+
+        <Pagination currentPage={currentPage} totalPages={totalPages} />
       </section>
     </>
   );

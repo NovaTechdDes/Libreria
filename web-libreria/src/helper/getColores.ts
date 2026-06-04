@@ -9,7 +9,7 @@ export async function getColores(page: number, search: string) {
 
     let query =  supabase
     .from('colores').
-    select('*')
+    select('*', {count: "exact"})
     .range(from, to)
     .order('id', { ascending: false });
 
@@ -17,13 +17,13 @@ export async function getColores(page: number, search: string) {
         query = query.ilike('color', `%${search}%`);
     }
 
-    const { data, error } = await query;
+    const { data, count, error } = await query;
 
     if(error) throw error;
 
     return {
         colores: data,
-        total: data?.length || 0,
-        totalPages: Math.ceil(data?.length || 0)
+        total: count || 0,
+        totalPages: Math.ceil((count ?? 0) / PAGE_SIZE),
     }
 }

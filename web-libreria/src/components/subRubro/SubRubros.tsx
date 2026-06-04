@@ -1,6 +1,6 @@
-import { SubRubro } from '@/src/interface/SubRubro';
-import { createClient } from '@/src/lib/server';
+
 import { SubRubrosSelect } from './SubRubrosSelect';
+import { getSubRubros } from '@/src/helper/getSubRubros';
 
 interface Props {
   rubroActivo: number;
@@ -12,16 +12,7 @@ export const SubRubros = async ({ rubroActivo, subRubroActivo }: Props) => {
     return null;
   }
 
-  const supabase = await createClient();
-
-  const { data, error } = await supabase.from('subrubros').select('*').eq('id_rubro', rubroActivo).order('nombre');
-
-  if (error) {
-    console.error(error);
-    return null;
-  }
-
-  const subRubros = [{ id_subrubro: 0, nombre: 'TODOS', id_rubro: 0 }, ...data] as SubRubro[];
+  const subRubros = await getSubRubros(rubroActivo.id);
 
   return (
     <div className="w-full py-4 px-4 flex flex-col gap-2">

@@ -1,7 +1,5 @@
 import { ColoresContainer } from '@/src/components/admin/color/ColoresContainer';
-
-import { createClient } from '@/src/lib/server';
-
+import { getColores } from '@/src/helper/getColores';
 import { IoAddOutline } from 'react-icons/io5';
 
 interface Props {
@@ -13,19 +11,9 @@ interface Props {
 
 const ColoresPage = async ({ searchParams }: Props) => {
   const { page } = await searchParams;
-  const supabase = await createClient();
-
-  const currentPage = Number(page) || 1;
-  const limit = 9;
-
-  const { data } = await supabase
-    .from('colores')
-    .select('*')
-    .range((currentPage - 1) * limit, currentPage * limit - 1)
-    .order('id', { ascending: false });
-
-    console.log(data)
-
+  
+  const { colores, totalPages } = await getColores(Number(page) || 1, '');
+  
   return (
     <div className="p-8 max-w-7xl mx-auto">
       {/* Header Colores */}
@@ -43,7 +31,7 @@ const ColoresPage = async ({ searchParams }: Props) => {
         </div>
       </header>
 
-      <ColoresContainer coloresIniciales={data || []} />
+      <ColoresContainer coloresIniciales={colores || []} totalPages={totalPages} currentPage={Number(page) || 1} />
     </div>
   );
 };

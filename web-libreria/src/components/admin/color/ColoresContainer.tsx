@@ -7,15 +7,17 @@ import { useColorStore } from '@/src/store';
 
 interface Props {
   coloresIniciales: Color[];
+  totalPages: number;
+  currentPage: number;
 }
 
-export const ColoresContainer = ({ coloresIniciales }: Props) => {
+export const ColoresContainer = ({ coloresIniciales, totalPages, currentPage }: Props) => {
   const { colorSeleccionado } = useColorStore();
 
   return (
     <main className="flex gap-4">
       <FormularioColor key={colorSeleccionado?.id ?? 'nuevo'} />
-      <ListaColores colores={coloresIniciales} totalPages={1} currentPage={1} />
+      <ListaColores colores={coloresIniciales} totalPages={totalPages} currentPage={currentPage} />
     </main>
   );
 };

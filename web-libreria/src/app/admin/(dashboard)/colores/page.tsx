@@ -24,6 +24,8 @@ const ColoresPage = async ({ searchParams }: Props) => {
     .range((currentPage - 1) * limit, currentPage * limit - 1)
     .order('id', { ascending: false });
 
+    console.log(data)
+
   return (
     <div className="p-8 max-w-7xl mx-auto">
       {/* Header Colores */}

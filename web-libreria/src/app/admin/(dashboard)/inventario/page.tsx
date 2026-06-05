@@ -17,8 +17,9 @@ export default async function InventarioPage({ searchParams }: Props) {
 
   let query = supabase
     .from('productos')
-    .select('*, subRubros: fk_producto_subrubro (*), productos_colores (colores(*))', { count: 'exact' })
+    .select('*, subRubros: fk_producto_subrubro (*), productos_colores (colores(*)), variantes:productos_variantes (*)', { count: 'exact' })
     .range((currentPage - 1) * limit, currentPage * limit - 1);
+    
 
   if (search) {
     query = query.or(`descripcion.ilike.%${search}%,id_interno.eq.${search}`);
@@ -29,6 +30,5 @@ export default async function InventarioPage({ searchParams }: Props) {
   const { data, count } = await query;
 
   const totalPages = Math.ceil((count || 0) / limit);
-
   return <InventarioContainer limit={limit} productos={data || []} totalPages={totalPages} currentPage={currentPage} totalProductos={count || 0} />;
 }

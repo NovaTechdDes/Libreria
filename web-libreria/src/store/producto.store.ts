@@ -1,13 +1,12 @@
 import { create } from 'zustand';
-import { Producto } from '../interface/Producto';
 import { Color } from '../interface/Color';
 
 export interface ProductoState {
-  productoSeleccionado: Producto | null;
+  productoSeleccionado: number | null;
   coloresSeleccionados: Color[];
 
   // Acciones
-  setProductoSeleccionado: (producto: Producto) => void;
+  setProductoSeleccionado: (idProducto: number) => void;
   clearProductoSeleccionado: () => void;
   addColores: (colores: Color[]) => void;
   clearColores: () => void;
@@ -18,7 +17,7 @@ export const useProductoStore = create<ProductoState>()((set) => ({
   productoSeleccionado: null,
   coloresSeleccionados: [],
 
-  setProductoSeleccionado: (producto) => set({ productoSeleccionado: producto }),
+  setProductoSeleccionado: (idProducto: number) => set({ productoSeleccionado: idProducto }),
   clearProductoSeleccionado: () => set({ productoSeleccionado: null }),
 
   addColores: (colores) => set({ coloresSeleccionados: colores }),

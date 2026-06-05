@@ -108,3 +108,22 @@ export const updateProducto = async (colores: Color[], imagenes: ImageItem[], id
     return false;
   }
 };
+
+export const getProductoById = async(id: number) => {
+  try {
+    const supabase = await createClient();
+
+    const { data, error} = await supabase
+    .from('productos')
+    .select('*, subRubros: fk_producto_subrubro (*), productos_colores (colores(*)), variantes:productos_variantes (*)')
+    .eq('id_producto', id)
+    .single();
+
+    if(error) throw error;
+
+    return data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}

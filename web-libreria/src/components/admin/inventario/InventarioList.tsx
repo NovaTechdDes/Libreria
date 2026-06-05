@@ -57,8 +57,8 @@ export const InventarioList = ({ limit, productos, totalPages, currentPage, tota
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mt-6">
-      <div className="overflow-x-auto overflow-y-scroll max-h-[600px]">
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mt-1">
+      <div className="overflow-x-auto overflow-y-scroll max-h-[50vh]">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-50/50 border-b border-slate-100">

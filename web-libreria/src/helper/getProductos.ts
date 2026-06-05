@@ -7,7 +7,7 @@ export async function getProductos(page: number, search: string, subRubroActivo:
     const from = (page - 1) * PAGE_SIZE;
     const to = from + PAGE_SIZE - 1;
 
-    let query = supabase.from('productos').select('*, subRubros: fk_producto_subrubro(*), productos_colores (colores(*))', {count: 'exact'}).eq('activo', true).range(from, to).order('descripcion', {ascending: true});
+    let query = supabase.from('productos').select('*, subRubros: fk_producto_subrubro(*), productos_colores (colores(*)), variantes:productos_variantes(*)', {count: 'exact'}).eq('activo', true).range(from, to).order('descripcion', {ascending: true});
 
     if(search){
         query = query.ilike('descripcion', `%${search}%`);

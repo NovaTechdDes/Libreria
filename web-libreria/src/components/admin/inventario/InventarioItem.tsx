@@ -108,7 +108,7 @@ export const InventarioItem = ({ producto }: Props) => {
       </td>
 
       <td className="text-center">
-        <button onClick={() => setProductoSeleccionado(producto)} className="text-teal-600 hover:text-teal-800">
+        <button onClick={() => setProductoSeleccionado(producto.id_producto)} className="text-teal-600 hover:text-teal-800">
           Editar
         </button>
       </td>

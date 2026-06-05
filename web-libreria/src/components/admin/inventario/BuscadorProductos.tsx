@@ -14,8 +14,7 @@ export const BuscadorProductos = () => {
     router.push(`/admin/inventario?${params.toString()}`);
   };
   return (
-    <div className="flex flex-col w-full  justify-between mb-4">
-      <h3 className="text-xl font-bold text-slate-800">Lista de Productos</h3>
+    <div className="flex flex-col w-full  justify-between mb-1">
 
       <form onSubmit={handleSearch} className="flex w-full">
         <input

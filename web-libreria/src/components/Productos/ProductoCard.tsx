@@ -105,6 +105,29 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
           </div>
         </div>
 
+        {/* variantes */}
+        {producto.tiene_variantes && (
+          <div className="relative w-full mt-1" onClick={(e) => e.stopPropagation()}>
+            <select
+              name="variante"
+              id="variante"
+              className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px] font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 cursor-pointer appearance-none pr-8"
+            >
+              <option value="" className="text-slate-400">Seleccionar Variante</option>
+              {producto.variantes?.map((variante) => (
+                <option key={variante.id} value={variante.id} className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">
+                  {variante.nombre}
+                </option>
+              ))}
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+        )}
+
         {/* Precio y CTA Móvil */}
         <div className="mt-auto pt-1 sm:pt-2 flex flex-col gap-2 sm:gap-3">
           <div className="flex items-baseline gap-1">

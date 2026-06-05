@@ -10,6 +10,13 @@ import { useRef } from 'react';
 import Image from 'next/image';
 import { useMutateProductos } from '@/src/hooks/productos/useMutateProductos';
 import { mensaje } from '@/src/helper/mensaje';
+import Swal from 'sweetalert2';
+import { useCreateVariante, useDeleteVariante } from '@/src/hooks/variante/useVariante';
+import { BiLoader, BiTrash } from 'react-icons/bi';
+import { productos_variantes } from '@/src/interface/Variantes';
+import { useProductoById } from '@/src/hooks/productos/useProducto';
+import { Color } from '@/src/interface/Color';
+import { Loading } from '../../ui/Loading';
 
 export type ImageItem = {
   file: File | null;
@@ -18,8 +25,16 @@ export type ImageItem = {
 };
 
 export const FormularioProducto = () => {
+  const { productoSeleccionado, coloresSeleccionados, removeColor, addColores, clearProductoSeleccionado} = useProductoStore();
+
   const { startUpdateProducto } = useMutateProductos();
-  const { productoSeleccionado, coloresSeleccionados, removeColor, addColores } = useProductoStore();
+
+  const { mutateAsync, isPending:isPendingVariante } = useCreateVariante();
+  const deleteVariante = useDeleteVariante();
+
+  const { data: producto, isLoading } = useProductoById(productoSeleccionado!);
+
+
 
   const [showColores, setShowColores] = useState(false);
   const [images, setImages] = useState<ImageItem[]>([
@@ -27,6 +42,7 @@ export const FormularioProducto = () => {
     { file: null, preview: null },
     { file: null, preview: null },
   ]);
+
 
   //Primer Imagen
 
@@ -39,15 +55,15 @@ export const FormularioProducto = () => {
   const handleModal = () => setShowColores(!showColores);
 
   useEffect(() => {
-    if (!productoSeleccionado?.id_producto || !productoSeleccionado?.productos_colores) return;
+    if (!producto?.id_producto || !producto?.productos_colores) return;
 
-    addColores([...productoSeleccionado?.productos_colores.map((c) => c.colores)]);
-  }, [productoSeleccionado, addColores]);
+    addColores([...producto?.productos_colores.map((c: {colores: Color}) => c.colores)]);
+  }, [producto, addColores]);
 
   useEffect(() => {
-    if (!productoSeleccionado?.id_producto || !productoSeleccionado?.productos_colores || !productoSeleccionado?.imagenes) return;
+    if (!producto?.id_producto || !producto?.productos_colores || !producto?.imagenes) return;
 
-    const imagenesParseadas = JSON.parse(productoSeleccionado.imagenes);
+    const imagenesParseadas = JSON.parse(producto.imagenes);
 
     imagenesParseadas?.map((image: string, i: number) => {
       setImages((prev) => {
@@ -61,9 +77,9 @@ export const FormularioProducto = () => {
   if (!productoSeleccionado) return null;
 
   const handleUpdate = async () => {
-    if (!productoSeleccionado.id_producto) return;
+    if (!producto.id_producto) return;
 
-    const res = await startUpdateProducto.mutateAsync({ colores: coloresSeleccionados, imagenes: images, id: productoSeleccionado.id_producto });
+    const res = await startUpdateProducto.mutateAsync({ colores: coloresSeleccionados, imagenes: images, id: producto.id_producto });
 
     if (res) {
       mensaje('Producto Actualizado Correctamente', 'success');
@@ -77,7 +93,6 @@ export const FormularioProducto = () => {
     if (!file) return;
 
     const newImages = [...images];
-    console.log(file);
     newImages[index] = {
       file,
       preview: URL.createObjectURL(file),
@@ -91,6 +106,60 @@ export const FormularioProducto = () => {
     newImages[index] = { file: null, preview: null };
     setImages(newImages);
   };
+
+
+  const handleAddVariante = async () => {
+    const {isConfirmed, value} = await Swal.fire({
+      text: `Agregar Variante de ${producto.descripcion}`,
+      input: 'text',
+      showCancelButton: true,
+      confirmButtonText: "Agregar",
+      cancelButtonText: "Cancelar",
+      preConfirm: (value) => {
+        if (!value) {
+          Swal.showValidationMessage("Por favor ingresa un nombre");
+        }
+        return value;
+      }
+    });
+    
+    if(isConfirmed && value){
+      const res = await mutateAsync({productoId: producto.id_producto, nombre: value});
+
+      if(res){
+        mensaje("Variante agregada correctamente", "success");
+      }else{
+        mensaje("Error al agregar la variante", "error");
+      }
+    } 
+  };
+
+  const handleDeleteVariante = async (id: number) => {
+    const {isConfirmed} = await Swal.fire({
+      title: `Seguro quiere eliminar la variante`,
+      confirmButtonText: "Eliminar",
+      showCancelButton: true
+    });
+
+    if(isConfirmed){
+      const res = await deleteVariante.mutateAsync({idVariante: id, productoId: productoSeleccionado});
+
+      if(res) {
+        mensaje('Variante eliminada correctamente', 'success')
+      }else{
+        
+        mensaje('Error al eliminar la variante', 'error')
+      }
+    }
+  }
+
+  if(isLoading) return (
+    <Loading/>
+  )
+
+
+  console.log(producto)
+
 
   return (
     <div className="bg-white rounded-[24px] border border-slate-200 shadow-sm p-8 w-full lg:sticky lg:top-8 animate-in fade-in slide-in-from-right-4 duration-500">
@@ -109,7 +178,7 @@ export const FormularioProducto = () => {
           <label className="block text-[14px] font-bold text-slate-400 uppercase tracking-wide mb-2" htmlFor="nombre">
             Descripción
           </label>
-          <p className="text-black font-bold text-2xl">{productoSeleccionado.descripcion}</p>
+          <p className="text-black font-bold text-2xl">{producto.descripcion}</p>
         </div>
 
         {/* Imágenes */}
@@ -200,7 +269,7 @@ export const FormularioProducto = () => {
         </div>
 
         {/* Colores */}
-        <div>
+        <div className='border border-gray-500 rounded-lg p-2'>
           <label className="block text-[14px] font-bold text-slate-700 mb-3">Colores Disponibles</label>
           <div className="flex flex-wrap items-center gap-3">
             {coloresSeleccionados.map((color, i) => (
@@ -208,25 +277,67 @@ export const FormularioProducto = () => {
             ))}
             <button
               onClick={handleModal}
+              disabled={isPendingVariante}
               className="w-10 h-10 rounded-full border-2 border-dashed border-slate-200 flex items-center justify-center text-slate-400 hover:border-teal-500 hover:text-teal-500 transition-all"
             >
-              <FiPlus className="w-5 h-5" />
+              {isPendingVariante ? <BiLoader className="w-5 h-5 animate-spin text-teal-500" /> : <FiPlus className="w-5 h-5" />}
             </button>
           </div>
           <p className="text-[10px] font-black text-slate-400 mt-3 tracking-widest uppercase">Click para agregar nuevo tono</p>
         </div>
 
+            {/* Variantes */}
+        <div className='border border-gray-500 rounded-lg p-2'>
+          <div className="flex justify-between">
+            <label className="block text-[14px] font-bold text-slate-700 mb-3">Agregar variante</label>
+          <button onClick={handleAddVariante} className="flex items-center cursor-pointer hover:bg-[#008199] transition-all gap-2 bg-[#0096B1] text-white rounded-full p-2  font-bold">
+            <FiPlus size={25}/>
+          </button>
+          </div>
+          <div className='flex flex-wrap items-center gap-3 border rounded-lg border-gray-200 max-h-50 mt-5 overflow-y-auto p-3'>
+            {producto.tiene_variantes ? (
+              <div className='space-y-2 w-full'>
+                {producto?.variantes?.map((variante: productos_variantes) => <VarianteItem handleDeleteVariante={handleDeleteVariante} key={variante.id} variante={variante}/>)}
+              </div>
+            ) : (
+              <p>Producto sin variantes</p>
+            )}
+          </div>
+        </div>
+
         {/* Submit */}
-        <button
+       <div className='flex gap-5 items-center'>
+         <button
           onClick={handleUpdate}
-          className="w-full bg-[#0096B1] text-white rounded-[20px] py-4.5 px-6 font-bold flex items-center justify-center gap-3 shadow-lg shadow-teal-100 hover:bg-[#008199] transition-all mt-4 group"
+          className=" bg-[#0096B1] text-white rounded-[20px] py-4.5 px-6 font-bold flex items-center justify-center gap-3 shadow-lg shadow-teal-100 hover:bg-[#008199] transition-all mt-4 group"
         >
           <FiUploadCloud className="w-6 h-6 group-hover:-translate-y-1 transition-transform" />
           <span className="text-[17px]">Actualizar Producto</span>
         </button>
+
+        <button
+        onClick={clearProductoSeleccionado}
+        className=' bg-gray-50 border-gray-500 border text-gray-500 py-2 px-6 font-bold flex items-center justify-center gap-3 rounded-lg hover:bg-gray-200 transition-all mt-4'>
+          Cancelar
+        </button>
+       </div>
       </div>
 
       {showColores && <ModalColores isOpen={showColores} onClose={handleModal} />}
     </div>
   );
 };
+
+
+const VarianteItem = ({variante, handleDeleteVariante}: {variante: productos_variantes, handleDeleteVariante: (id: number) => void}) => {
+
+
+  return (
+    <div className="flex items-center justify-between p-3 rounded-xl border border-slate-300 bg-white">
+      <span className='font-medium text-slate-700'>{variante.nombre}</span>
+      <button type='button' onClick={() => handleDeleteVariante(variante.id)} className='p-2 rounded-lg cursor-pointer hover:bg-red-50 text-red-500 transition'>
+        <BiTrash size={18}/>
+      </button>
+    </div>
+  )
+}

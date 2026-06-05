@@ -51,6 +51,13 @@ export const CarritoItem = ({ producto }: Props) => {
               <div className="flex items-center gap-2" style={{ backgroundColor: producto?.color?.codigo, width: '20px', height: '20px', borderRadius: '50%' }}></div>
             </div>
           ) : null}
+
+          {producto?.variante ? (
+            <div className="flex items-center gap-2">
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-0.5">Variante: </p>
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-0.5">{producto?.variante?.nombre}</p>
+            </div>
+          ) : null}
         </div>
       </div>
 

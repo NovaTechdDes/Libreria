@@ -15,6 +15,7 @@ interface ProductoCardProps {
 export const ProductoCard = ({ producto }: ProductoCardProps) => {
   const { agregarProducto, habilitado, inicio, fin } = useCarritoStore();
   const [colorSeleccionado, setColorSeleccionado] = useState<number>(producto?.productos_colores?.[0]?.colores?.id ?? 0);
+  const [varianteSeleccionada, setVarianteSeleccionado] = useState<number | undefined>(undefined)
 
   const isPriceVisible = producto.isvisibleprecio !== false;
   const isStockAvailable = producto.isstock !== false && (producto.cantidad ?? 0) > 0;
@@ -23,7 +24,8 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
     e.stopPropagation();
     if (!producto || !isStockAvailable) return;
     const color = producto.productos_colores?.find((color) => color.colores?.id === colorSeleccionado);
-    agregarProducto(producto, 1, color?.colores ?? null);
+    const variante = producto.variantes?.find((v) => v.id === varianteSeleccionada);
+    agregarProducto(producto, 1, color?.colores ?? null, variante ?? null);
   };
 
   if (!producto.id_producto) return null;
@@ -111,6 +113,9 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
             <select
               name="variante"
               id="variante"
+              value={varianteSeleccionada}
+              onChange={(e) => setVarianteSeleccionado(Number(e.target.value))}
+
               className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px] font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 cursor-pointer appearance-none pr-8"
             >
               <option value="" className="text-slate-400">Seleccionar Variante</option>

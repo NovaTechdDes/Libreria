@@ -1,12 +1,14 @@
 import { create } from 'zustand';
 import { Producto } from '../interface/Producto';
 import { Color } from '../interface/Color';
+import { productos_variantes } from '../interface/Variantes';
 
 export interface ProductosCarrito {
   cantidad: number;
   producto: Producto;
   color?: Color | null;
   observacion?: string;
+  variante: productos_variantes | null;
 }
 
 export interface CarritoStore {
@@ -31,7 +33,7 @@ export interface CarritoStore {
   setFin: (fin: string) => void;
 
   productos: ProductosCarrito[];
-  agregarProducto: (producto: Producto, cantidad: number, color: Color | null) => void;
+  agregarProducto: (producto: Producto, cantidad: number, color: Color | null, variante: productos_variantes | null) => void;
   actualizarCantidad: (id: number, cantidad: number) => void;
   removerProducto: (id: number) => void;
 }
@@ -46,12 +48,19 @@ export const useCarritoStore = create<CarritoStore>((set) => ({
   setInicio: (inicio: string) => set({ inicio }),
   setFin: (fin: string) => set({ fin }),
 
-  agregarProducto: (producto: Producto, cantidad: number, color: Color | null) =>
+  agregarProducto: (producto: Producto, cantidad: number, color: Color | null, variante: productos_variantes | null) =>
     set((state) => {
-      const productoExiste = state.productos.find((p) => p.color?.id === color?.id && p.producto.id_producto === producto.id_producto);
+      const productoExiste = state.productos.find((p) =>
+        p.color?.id === color?.id
+        && p.producto.id_producto === producto.id_producto
+        && p.variante?.id === variante?.id
+      );
 
       if (productoExiste) {
-        const nuevosProductos = state.productos.map((p) => (p.producto.id_producto === producto.id_producto && p.color?.id === color?.id ? { ...p, cantidad: p.cantidad + cantidad } : p));
+        const nuevosProductos = state.productos.map((p) => (
+          p.producto.id_producto === producto.id_producto
+            && p.color?.id === color?.id
+            && p.variante?.id === variante?.id ? { ...p, cantidad: p.cantidad + cantidad } : p));
 
         const subtotal = state.productos.reduce((acc, p) => acc + (p.producto.isvisibleprecio ? p.producto.precio : 0) * p.cantidad, 0);
         const total = subtotal - (subtotal * state.descuento) / 100;
@@ -62,7 +71,7 @@ export const useCarritoStore = create<CarritoStore>((set) => ({
       const subtotal = state.productos.reduce((acc, p) => acc + p.producto.precio * p.cantidad, 0);
       const total = subtotal - (subtotal * state.descuento) / 100;
 
-      return { productos: [...state.productos, { producto, cantidad, color }], total, subtotal };
+      return { productos: [...state.productos, { producto, cantidad, color, variante }], total, subtotal };
     }),
 
   actualizarCantidad: (id: number, cantidad: number) =>

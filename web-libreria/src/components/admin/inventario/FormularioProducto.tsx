@@ -158,7 +158,6 @@ export const FormularioProducto = () => {
   )
 
 
-  console.log(producto)
 
 
   return (

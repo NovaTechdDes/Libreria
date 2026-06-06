@@ -18,7 +18,7 @@ export const Productos = async ({ search, currentPage = 1, subRubroActivo }: Pro
 
   const { data: configuracion } = await supabase.from('configuracion').select('*').single();
 
-const { productos,  totalPages } = await getProductos(currentPage, search ?? '', subRubroActivo ?? 0);
+const { productos,  totalPages } = await getProductos(currentPage, search ?? '', true ,subRubroActivo ?? 0);
 
   return (
     <>

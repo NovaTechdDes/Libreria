@@ -38,7 +38,7 @@ export const postBanner = async (banner: Banner, image: BannerImage): Promise<bo
 
     return true;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return false;
   }
 };

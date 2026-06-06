@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const ListaColores = ({ colores, totalPages, currentPage }: Props) => {
-  console.log(totalPages)
+  
   return (
     <div className="mt-12 bg-white flex-1 rounded-4xl border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] overflow-hidden">
       {/* Header de la Lista */}

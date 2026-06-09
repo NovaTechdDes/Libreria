@@ -3,6 +3,7 @@
 import { mensaje } from '@/src/helper/mensaje';
 import { useMutateProductos } from '@/src/hooks/productos/useMutateProductos';
 import { Producto } from '@/src/interface/Producto';
+import { createClient } from '@/src/lib/client';
 import { useProductoStore } from '@/src/store/producto.store';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -12,6 +13,11 @@ interface Props {
 }
 
 export const InventarioItem = ({ producto }: Props) => {
+
+  const supabase = createClient();
+  const { data: { publicUrl } } = supabase.storage.from('productos/productos').getPublicUrl(producto.imagenes ?? '');
+
+
   const { startUpdateVisible, startUpdatePrecioVisible, startUpdateStockVisile } = useMutateProductos();
   const { setProductoSeleccionado } = useProductoStore();
 
@@ -72,8 +78,8 @@ export const InventarioItem = ({ producto }: Props) => {
       <td className="px-6 py-5">
         <div className="flex items-center gap-4">
           <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-slate-100 border border-slate-100 shrink-0">
-            {producto.imagenes && JSON.parse(producto.imagenes)[0] ? (
-              <Image src={JSON.parse(producto.imagenes)[0]} alt={producto.descripcion} fill className="object-cover" />
+            {producto.imagenes && publicUrl ? (
+              <Image src={publicUrl} alt={producto.descripcion} fill className="object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center  bg-gray-100 border border-gray-400 rounded-xl">
                 <span className="text-[10px] text-gray-400">Sin imagen</span>
@@ -83,6 +89,7 @@ export const InventarioItem = ({ producto }: Props) => {
           <div className="flex flex-col min-w-0">
             <span className="text-[15px] font-bold text-slate-900 truncate">{producto.descripcion}</span>
             <span className="text-[12px] font-medium text-slate-400">Sub rubro: {producto.subRubros?.nombre || 'N/A'}</span>
+            <span className="text-[12px] font-medium text-slate-400">Codigo: {producto.codigo || 'N/A'}</span>
           </div>
         </div>
       </td>

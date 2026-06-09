@@ -6,9 +6,7 @@ import { supabase } from '../utils/supabase';
 import mime from "mime-types";
 import pLimit from "p-limit";
 
-
 const carpeta = "./uploads";
-
 
 const rubrosSync = process.env.RUBROS?.split(",") || [];
 const rubrosSyncLower = rubrosSync.map((r) => r.toLowerCase().trim());
@@ -99,10 +97,13 @@ export const subirImagen = async (codigo: string, rutaArchivo: string) => {
         const { error } = await supabase.storage.from('productos/productos').upload(nombreArchivo, buffer, {
             upsert: true,
             contentType
-        })
+        });
 
-        if(error){
-            throw error
+
+        const {error: errorUpdate } = await supabase.from('productos').update({ imagenes: nombreArchivo }).eq('codigo', codigo);
+
+        if(error || errorUpdate){
+            throw error || errorUpdate
         }
 
         return nombreArchivo

@@ -8,6 +8,8 @@ import {
   ventasRoutes,
 } from "./routes";
 import { syncProducts } from "./services/syncPorducts.service";
+import { syncImages } from "./services/syncImages.service";
+
 
 const app = express();
 
@@ -29,9 +31,14 @@ app.use("/ventas", ventasRoutes);
 app.use("/caja", cajaRoutes);
 app.use("/rubro", rubroRoutes);
 
+//sincronizar imagenes una vez al dia
+setTimeout(() => syncImages(), 1000 * 60 * 2); // 2 minutos
+
+
 //Sincronizar productos con supabase
 setInterval(() => {
   syncProducts();
 }, 1000 * 60 * 60);
   
 export default app;
+

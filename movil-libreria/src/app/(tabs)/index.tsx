@@ -16,7 +16,7 @@ import { mensaje } from '@/utils/mensaje';
 import { Ionicons } from '@expo/vector-icons';
 import { useCameraPermissions } from 'expo-camera';
 import React, { useMemo, useState } from 'react';
-import { FlatList, KeyboardAvoidingView, Platform, RefreshControl, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
+import { Alert, FlatList, KeyboardAvoidingView, Linking, Platform, RefreshControl, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
@@ -37,16 +37,17 @@ export default function HomeScreen() {
   const [permission, requestPermission] = useCameraPermissions();
 
   const handleScan = () => {
-    if (!permission?.granted) {
+    if (!permission?.granted && permission?.canAskAgain) {
       requestPermission();
+    } else if (!permission?.canAskAgain) {
+      Alert.alert('Permiso requerido', 'Necesitamos acceso a la cámara para escanear códigos de barra para la busqueda de articulos. Puedes habilitarlo desde la configuración del dispositivo.', [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Abrir configuración', onPress: () => Linking.openURL('app-settings:') },
+      ]);
     } else {
       setIsScanning(true);
     }
   };
-
-  if (isScanning) {
-    return <CameraScan onClose={() => setIsScanning(false)} />;
-  }
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -92,6 +93,10 @@ export default function HomeScreen() {
   }, [data?.subRubros, rubroSeleccionado]);
   const showRubros = isLoadingRubros || rubrosConTodos.length > 0;
   const showSubRubros = isLoadingRubros || subRubrosConTodos.length > 0;
+
+  if (isScanning) {
+    return <CameraScan onClose={() => setIsScanning(false)} />;
+  }
 
   return (
     <KeyboardAvoidingView keyboardVerticalOffset={100} style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 bg-gray-100 dark:bg-slate-950 p-4">

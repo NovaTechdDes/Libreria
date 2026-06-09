@@ -18,6 +18,7 @@
       "icon": "./assets/images/Logo.png",
       "bundleIdentifier": "com.pelusaaal.movillibrerialachi",
       "infoPlist": {
+        "NSCameraUsageDescription": "La camara se utiliza para escanear codigo de barras de productos y agilizar la busqueda de los articulos dentro del sistema de gestion",
         "ITSAppUsesNonExemptEncryption": false,
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true

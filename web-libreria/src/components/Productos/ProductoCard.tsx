@@ -45,7 +45,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
             alt={producto.descripcion}
             fill
             sizes="(max-width: 640px) 150px, (max-width: 1024px) 33vw, 20vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-contain transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-gray-300">

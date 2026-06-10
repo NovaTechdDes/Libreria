@@ -3,6 +3,7 @@ import { createClient } from "@/src/lib/server";
 const PAGE_SIZE = 50;
 
 export async function getProductos(page: number, search: string, activo: boolean = true, subRubroActivo?: number){
+    
     const supabase = await createClient();
     const from = (page - 1) * PAGE_SIZE;
     const to = from + PAGE_SIZE - 1;

@@ -77,7 +77,7 @@ export const Footer = () => {
         <div className="border-t border-slate-200 dark:border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-slate-400 dark:text-slate-500 text-xs font-medium text-center md:text-left">© {new Date().getFullYear()} Librería & Juguetería Lachi. Todos los derechos reservados.</p>
           <div className="flex items-center gap-2">
-            <span className="text-slate-300 dark:text-slate-600 text-[10px] font-bold uppercase tracking-widest">Powered by</span>
+            <span className="text-slate-800 dark:text-slate-200 text-[10px] font-bold uppercase tracking-widest">Desarrollado por </span>
             <span className="text-slate-900 dark:text-white font-bold text-xs">NovaTech</span>
           </div>
         </div>

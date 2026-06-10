@@ -1,13 +1,15 @@
 'use client';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { CgSearch } from 'react-icons/cg';
 import { usePathname, useRouter } from 'next/navigation';
+import { Spinner } from '../ui/Spinner';
 
 export const BuscadorCarrito = () => {
   const router = useRouter();
   const pathname = usePathname();
 
   const [value, setValue] = useState('');
+  const [isPending, startTransition] = useTransition();
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -16,10 +18,15 @@ export const BuscadorCarrito = () => {
     params.set('search', value);
     params.set('page', '1');
 
-    router.push(`${pathname}?${params.toString()}`);
+    startTransition(() => {
+      router.push(`${pathname}?${params.toString()}`);
+    });
+
   };
 
   return (
+    <>
+    
     <form
       onSubmit={handleSearch}
       className="w-full flex items-center bg-white rounded-2xl border border-gray-200/80 hover:border-primary/60 transition-all duration-200 focus-within:border-primary focus-within:shadow-[0_0_0_3px_rgba(248,113,113,0.1)] px-4 py-2.5"
@@ -35,5 +42,7 @@ export const BuscadorCarrito = () => {
         autoCapitalize="off"
       />
     </form>
+      {isPending && <Spinner/>}
+      </>
   );
 };

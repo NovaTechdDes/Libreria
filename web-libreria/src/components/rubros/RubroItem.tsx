@@ -2,7 +2,8 @@
 
 import { Rubro } from '@/src/interface/Rubro';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { useRef, useState, useTransition } from 'react';
+import { Spinner } from '../ui/Spinner';
 
 interface Props {
   rubro: Rubro;
@@ -16,8 +17,11 @@ export const RubroItem = ({ rubro, activo }: Props) => {
   const tieneSubrubros = (rubro.subrubros?.length ?? 0) > 0;
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+
   const [abierto, setAbierto] = useState(false);
   const [coords, setCoords] = useState({ top: 0, left: 0 });
+
+  const [isPending, startTransition] = useTransition();
 
   const abrir = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -32,6 +36,12 @@ export const RubroItem = ({ rubro, activo }: Props) => {
     timeoutRef.current = setTimeout(() => setAbierto(false), 180);
   };
 
+  const handleRouter = () => {
+    startTransition(() => {
+      router.push(rubro.id === 0 ? '/' : `/?rubro=${rubro.id}`);
+    })
+  }
+
   return (
     <div
       ref={wrapperRef}
@@ -41,7 +51,7 @@ export const RubroItem = ({ rubro, activo }: Props) => {
     >
       {/* Pill principal */}
       <button
-        onClick={() => router.push(rubro.id === 0 ? '/' : `/?rubro=${rubro.id}`)}
+        onClick={handleRouter}
         className={[
           'flex items-center gap-1.5 px-4 py-2 sm:px-5 sm:py-2 rounded-full text-xs font-semibold',
           'transition-all duration-200 ease-in-out outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
@@ -60,6 +70,7 @@ export const RubroItem = ({ rubro, activo }: Props) => {
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
         )}
+        {isPending && <Spinner className='w-5 h-5' />}
       </button>
 
       {/* Dropdown — posición fixed calculada desde el wrapper */}
@@ -83,7 +94,7 @@ export const RubroItem = ({ rubro, activo }: Props) => {
         >
           {/* "Todos" — fijo arriba */}
           <button
-            onClick={() => router.push(rubro.id === 0 ? '/' : `/?rubro=${rubro.id}`)}
+            onClick={handleRouter}
             className={[
               'relative shrink-0 w-full text-left px-4 py-2.5 text-xs font-medium transition-colors duration-150',
               activo && !subrubroActivo

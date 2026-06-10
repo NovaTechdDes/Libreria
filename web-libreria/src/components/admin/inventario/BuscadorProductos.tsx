@@ -24,6 +24,7 @@ export const BuscadorProductos = () => {
           placeholder="Buscar por nombre..."
           className="px-5 w-full py-2.5 rounded-2xl border border-slate-400 text-slate-600 font-bold text-[14px] hover:bg-slate-50 transition-all"
         />
+        
       </form>
     </div>
   );

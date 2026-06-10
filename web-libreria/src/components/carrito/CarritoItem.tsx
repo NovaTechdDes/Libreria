@@ -1,3 +1,4 @@
+import { createClient } from '@/src/lib/client';
 import { ProductosCarrito, useCarritoStore } from '@/src/store/carrito.store';
 import Image from 'next/image';
 import { FiMinus, FiPlus, FiTrash2 } from 'react-icons/fi';
@@ -7,6 +8,9 @@ interface Props {
 }
 
 export const CarritoItem = ({ producto }: Props) => {
+    const supabase = createClient();
+    const { data: { publicUrl } } = supabase.storage.from('productos/productos').getPublicUrl(producto.producto.imagenes ?? '');
+  
   const { actualizarCantidad, removerProducto } = useCarritoStore();
 
   const handleIncrement = () => {
@@ -25,8 +29,8 @@ export const CarritoItem = ({ producto }: Props) => {
     <article className="flex items-center p-6 gap-6 group">
       {/* Imagen del producto */}
       <div className="relative h-24 w-24 shrink-0">
-        {producto.producto.imagenes && JSON.parse(producto.producto.imagenes)[0] ? (
-          <Image src={JSON.parse(producto.producto.imagenes)[0]} alt={producto.producto.descripcion} fill className="rounded-xl object-cover shadow-sm border border-slate-100" />
+        {producto.producto.imagenes && publicUrl ? (
+          <Image src={publicUrl} alt={producto.producto.descripcion} fill className="rounded-xl object-cover shadow-sm border border-slate-100" />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-gray-400 border border-gray-400 rounded-xl">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">

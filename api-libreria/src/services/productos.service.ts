@@ -6,12 +6,14 @@ export async function obtenerProductos(
   limit?: number,
   servidor?: boolean,
   id_subrubro?: number,
+  id_rubro?: number
 ) {
   return await repo.getProductos(
     search,
     limit,
     servidor,
     id_subrubro,
+    id_rubro
   );
 }
 

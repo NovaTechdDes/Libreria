@@ -7,38 +7,52 @@ export async function getProductos(
   limit?: number,
   servidor?: boolean,
   id_subRubro?: number,
+  id_rubro?: number
 ): Promise<Producto[]> {
   await poolConnect;
+
 
   const safeLimit = Number(limit) || 50;
   const safeSearch = search ? `%${search}%` : "%";
 
-  let query = `WHERE activo = 1`;
+  let query = `WHERE a.activo = 1`;
+  let joinClause = ``;
+
   if (id_subRubro) {
-    query += ` AND id_rubro = @id_subRubro`;
+    query += ` AND a.id_rubro = @id_subRubro`;
+  }
+  if (id_rubro) {
+    joinClause = `INNER JOIN rubros r ON a.id_rubro = r.id_rubro`;
+    query += ` AND r.id_rubro_g = @id_rubro`;
   }
   if (search) {
-    query += ` AND (descripcion LIKE @search OR CAST(codigo AS VARCHAR) LIKE @search)`;
+    query += ` AND (a.descripcion LIKE @search OR CAST(a.codigo AS VARCHAR) LIKE @search)`;
   }
 
-  const result = await pool
+  const request = pool
     .request()
     .input("search", safeSearch)
-    .input("id_subRubro", id_subRubro).query(`
+    .input("id_subRubro", id_subRubro);
+
+  if (id_rubro) {
+    request.input("id_rubro", id_rubro);
+  }
+
+  const result = await request.query(`
     SELECT TOP (${safeLimit})
-    id_articulo,
-    codigo,
-    descripcion,
-    precio,
-    cantidad,
-    marca,
-    rubro_tempo,
-    id_rubro,
-    
-    rubro
-    FROM api_articuloss
+    a.id_articulo,
+    a.codigo,
+    a.descripcion,
+    a.precio,
+    a.cantidad,
+    a.marca,
+    a.rubro_tempo,
+    a.id_rubro,
+    a.rubro
+    FROM api_articuloss a
+    ${joinClause}
     ${query}
-    ORDER BY codigo DESC
+    ORDER BY a.codigo DESC
     `);
 
   const productosConImagen = await Promise.all(

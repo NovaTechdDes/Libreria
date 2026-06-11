@@ -3,7 +3,7 @@
 ; ==============================
 [Setup]
 AppName=ServidorLibreria
-AppVersion=3.2.1
+AppVersion=3.2.2
 DefaultDirName={commonappdata}\ServidorLibreria
 DefaultGroupName=ServidorLibreria
 OutputDir=output

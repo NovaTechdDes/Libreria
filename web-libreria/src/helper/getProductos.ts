@@ -2,13 +2,13 @@ import { createClient } from "@/src/lib/server";
 
 const PAGE_SIZE = 50;
 
-export async function getProductos(page: number, search: string, activo: boolean = true, subRubroActivo?: number){
+export async function getProductos(page: number, search: string, activo: boolean = true, subRubroActivo?: number, rubro?: number){
     
     const supabase = await createClient();
     const from = (page - 1) * PAGE_SIZE;
     const to = from + PAGE_SIZE - 1;
 
-    let query = supabase.from('productos').select('*, subRubros: fk_producto_subrubro(*), productos_colores (colores(*)), variantes:productos_variantes(*)', {count: 'exact'}).range(from, to).order('descripcion', {ascending: true});
+    let query = supabase.from('productos').select('*, subRubros: fk_producto_subrubro!inner(*), productos_colores (colores(*)), variantes:productos_variantes(*)', {count: 'exact'}).range(from, to).order('descripcion', {ascending: true});
 
     if(search){
         query = query.or(`descripcion.ilike.%${search}%,codigo.ilike.%${search}%`);
@@ -16,6 +16,10 @@ export async function getProductos(page: number, search: string, activo: boolean
 
     if(subRubroActivo){
         query = query.eq('id_subrubro', subRubroActivo);
+    }
+
+    if(rubro){
+        query = query.eq('fk_producto_subrubro.id_rubro', rubro);
     }
 
     if(activo){

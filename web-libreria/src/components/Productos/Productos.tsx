@@ -13,12 +13,12 @@ interface Props {
   rubroActivo?: number;
 }
 
-export const Productos = async ({ search, currentPage = 1, subRubroActivo }: Props) => {
+export const Productos = async ({ search, currentPage = 1, subRubroActivo, rubroActivo }: Props) => {
   const supabase = await createClient();
 
   const { data: configuracion } = await supabase.from('configuracion').select('*').single();
 
-const { productos,  totalPages } = await getProductos(currentPage, search ?? '', true ,subRubroActivo ?? 0);
+const { productos,  totalPages } = await getProductos(currentPage, search ?? '', true ,subRubroActivo ?? 0, rubroActivo ?? 0);
 
   return (
     <>

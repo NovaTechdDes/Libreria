@@ -4,6 +4,7 @@ import { Rubro } from '@/src/interface/Rubro';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useRef, useState, useTransition } from 'react';
 import { Spinner } from '../ui/Spinner';
+import { ordenarSubRubros } from '@/src/helper/ordernarRubros';
 
 interface Props {
   rubro: Rubro;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export const RubroItem = ({ rubro, activo }: Props) => {
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const subrubroActivo = Number(searchParams.get('subrubro'));
@@ -22,6 +24,8 @@ export const RubroItem = ({ rubro, activo }: Props) => {
   const [coords, setCoords] = useState({ top: 0, left: 0 });
 
   const [isPending, startTransition] = useTransition();
+
+  const subrubrosOrdenados = ordenarSubRubros(rubro.subrubros ?? []);
 
   const abrir = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -112,7 +116,7 @@ export const RubroItem = ({ rubro, activo }: Props) => {
 
           {/* Lista con scroll interno */}
           <div className="overflow-y-auto overscroll-contain scrollbar-hide flex-1">
-            {rubro.subrubros!.map((sub) => {
+            {subrubrosOrdenados!.map((sub) => {
               const isActive = subrubroActivo === sub.id_subrubro && activo;
               return (
                 <button

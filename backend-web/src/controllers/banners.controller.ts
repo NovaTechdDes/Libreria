@@ -15,7 +15,7 @@ export const getBanners = async(req: Request, res: Response) => {
             banners: result.recordset
         })
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(500).json({
             ok: false,
             msg: 'Error al obtener banners'
@@ -72,7 +72,7 @@ export const putBanner = async(req: Request, res: Response) => {
             banner: result.recordset[0]
         })
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({
             ok: false,
             msg: 'Error al actualizar banner'
@@ -104,7 +104,7 @@ export const deleteBanner = async(req: Request, res: Response) => {
             msg: 'Banner eliminado'
         })
     } catch (error) {
-                console.log(error);
+                console.error(error);
         return res.status(500).json({
             ok: false,
             msg: 'Error al eliminar banner'
@@ -139,7 +139,7 @@ export const putStatusBanner = async(req: Request, res: Response) => {
         });
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(500).json({
             ok: false,
             msg: 'Error al actualizar banner'

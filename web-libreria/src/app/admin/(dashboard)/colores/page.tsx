@@ -1,5 +1,6 @@
 import { ColoresContainer } from '@/src/components/admin/color/ColoresContainer';
-import { getColores } from '@/src/helper/getColores';
+import { getColores } from '@/src/service/color.service';
+
 import { IoAddOutline } from 'react-icons/io5';
 
 interface Props {
@@ -10,9 +11,9 @@ interface Props {
 }
 
 const ColoresPage = async ({ searchParams }: Props) => {
-  const { page } = await searchParams;
+  const { page, search } = await searchParams;
   
-  const { colores, totalPages } = await getColores(Number(page) || 1, '');
+  const { colores, totalPages } = await getColores(Number(page) || 1, search || '');
   
   return (
     <div className="p-8 max-w-7xl mx-auto">

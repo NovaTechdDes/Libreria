@@ -1,7 +1,8 @@
-import { createClient } from '@/src/lib/server';
+
 import { RubroItem } from './RubroItem';
 import { DragScrollContainer } from './DragScrollContainer';
 import { ordenarRubros } from '@/src/helper/ordernarRubros';
+import { api } from '@/src/service';
 
 
 export const revalidate = 3600; // 1 hora
@@ -11,16 +12,16 @@ interface Props {
 }
 
 export const Rubros = async ({ rubroActivo }: Props) => {
-  const supabase = await createClient();
 
-  const { data, error } = await supabase.from('rubros').select('*, subrubros(*)');
+  const { data } = await api.get('api/rubros');
 
-  if (error) {
-    console.error(error);
+  if (!data.ok) {
+    console.error(data.msg);
     return null;
-  }
+  };
 
-  const rubros = [{ id: 0, nombre: 'TODOS' }, ...data];
+
+  const rubros = [{ id: 0, nombre: 'TODOS' }, ...data.rubros];
 
   const rubrosOrdenados = ordenarRubros(rubros);
 

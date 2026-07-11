@@ -25,7 +25,7 @@ export const RubroItem = ({ rubro, activo }: Props) => {
 
   const [isPending, startTransition] = useTransition();
 
-  const subrubrosOrdenados = ordenarSubRubros(rubro.subrubros ?? []);
+  const subrubrosOrdenados = ordenarSubRubros(JSON.parse(rubro.subrubros || '[]'));
 
   const abrir = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);

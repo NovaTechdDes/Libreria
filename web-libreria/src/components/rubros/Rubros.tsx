@@ -2,7 +2,7 @@
 import { RubroItem } from './RubroItem';
 import { DragScrollContainer } from './DragScrollContainer';
 import { ordenarRubros } from '@/src/helper/ordernarRubros';
-import { api } from '@/src/service';
+import { getRubrosSubRubrosClient } from '@/src/helper/getRubrosSubRubros';
 
 
 export const revalidate = 3600; // 1 hora
@@ -13,15 +13,9 @@ interface Props {
 
 export const Rubros = async ({ rubroActivo }: Props) => {
 
-  const { data } = await api.get('api/rubros');
+  const rubros = await getRubrosSubRubrosClient();
 
-  if (!data.ok) {
-    console.error(data.msg);
-    return null;
-  };
-
-
-  const rubros = [{ id: 0, nombre: 'TODOS' }, ...data.rubros];
+  if (!rubros) return null;
 
   const rubrosOrdenados = ordenarRubros(rubros);
 

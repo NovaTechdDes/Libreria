@@ -1,20 +1,16 @@
 'use server';
-
-import { createClient } from '../lib/server';
+import { api } from '../service';
 
 export const putDescuentoConfig = async (porcentaje: number, frase: string): Promise<boolean> => {
   try {
-    const supabase = await createClient();
 
-    const { error } = await supabase
-      .from('configuracion')
-      .update({
-        porcentaje_descuento: porcentaje,
-        frase_descuento: frase,
-      })
-      .eq('id', 1);
+    const { data } = await api.put('/api/configuracion/descuento', {
+      porcentaje_descuento: porcentaje,
+      frase_descuento: frase,
+      id: 1
+    })
 
-    if (error) throw error;
+    if(!data.ok) return false;
 
     return true;
   } catch (error) {
@@ -25,19 +21,15 @@ export const putDescuentoConfig = async (porcentaje: number, frase: string): Pro
 
 export const putBannerConfig = async (mensaje: string, fecha_inicio: string, fecha_fin: string, habilitado: boolean): Promise<boolean> => {
   try {
-    const supabase = await createClient();
+    const { data } = await api.put('/api/configuracion/banner',{
+      id: 1,
+      mensaje_informativo: mensaje,
+      fecha_inicio: fecha_inicio,
+      fecha_fin: fecha_fin,
+      carrito_habilitado: habilitado,
+    })
 
-    const { error } = await supabase
-      .from('configuracion')
-      .update({
-        mensaje_informativo: mensaje,
-        fecha_inicio: fecha_inicio,
-        fecha_fin: fecha_fin,
-        carrito_habilitado: habilitado,
-      })
-      .eq('id', 1);
-
-    if (error) throw error;
+    if(!data.ok) return false;
 
     return true;
   } catch (error) {

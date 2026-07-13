@@ -3,6 +3,8 @@ import { SubRubro } from "../interface/SubRubro";
 import { createClient } from "../lib/server"
 
 export const getSubRubros = async(rubroActivo: number) => {
+
+    if(!rubroActivo) return null;
     const supabase = await createClient();
 
     const { data, error } = await supabase

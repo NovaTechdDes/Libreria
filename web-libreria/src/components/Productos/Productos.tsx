@@ -44,7 +44,7 @@ const { productos,  totalPages } = await getProductos(currentPage, search ?? '',
           ))}
         </div>
 
-        <Pagination currentPage={currentPage} totalPages={totalPages} />
+        <Pagination search={search} subRubroActivo={subRubroActivo} rubroActivo={rubroActivo} currentPage={currentPage} totalPages={totalPages} />
       </section>
     </>
   );

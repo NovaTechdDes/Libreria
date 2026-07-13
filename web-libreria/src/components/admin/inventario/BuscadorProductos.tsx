@@ -1,15 +1,23 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export const BuscadorProductos = () => {
+interface Props {
+  rubro?: number | undefined;
+  subrubro?: number | undefined;
+}
+
+export const BuscadorProductos = ({rubro, subrubro}: Props) => {
   const [value, setValue] = useState('');
 
+  console.log(rubro, subrubro);
   const router = useRouter();
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const params = new URLSearchParams();
     params.set('search', value);
     params.set('page', '1');
+    if(rubro) params.set('rubro', rubro.toString());
+    if(subrubro) params.set('subrubro', subrubro.toString());
 
     router.push(`/admin/inventario?${params.toString()}`);
   };

@@ -16,6 +16,8 @@ interface Props {
   totalProductos: number;
   limit: number;
 
+  search: string;
+
   rubros: Rubro[];
   subRubros: SubRubro[];
 
@@ -23,7 +25,7 @@ interface Props {
   subRubroSeleccionado?: number;
 }
 
-export const InventarioContainer = ({ limit, productos, totalPages, currentPage, totalProductos, rubros, subRubros, rubroSeleccionado, subRubroSeleccionado }: Props) => {
+export const InventarioContainer = ({ limit, productos, search, totalPages, currentPage, totalProductos, rubros, subRubros, rubroSeleccionado, subRubroSeleccionado }: Props) => {
   
   const { productoSeleccionado } = useProductoStore();
   const router = useRouter()
@@ -105,8 +107,8 @@ export const InventarioContainer = ({ limit, productos, totalPages, currentPage,
         {/* Main Content - List */}
         <section className="w-full">
           <div className="flex flex-col gap-2">
-            <BuscadorProductos />
-            <InventarioList limit={limit} productos={productos || []} totalPages={totalPages} currentPage={currentPage} totalProductos={totalProductos} />
+            <BuscadorProductos rubro={rubroSeleccionado} subrubro={subRubroSeleccionado} />
+            <InventarioList rubro={rubroSeleccionado}  subrubro={subRubroSeleccionado} search={search} limit={limit} productos={productos || []} totalPages={totalPages} currentPage={currentPage} totalProductos={totalProductos} />
           </div>
         </section>
       </div>

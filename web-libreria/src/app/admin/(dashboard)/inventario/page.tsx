@@ -23,5 +23,5 @@ export default async function InventarioPage({ searchParams }: Props) {
   const rubros = await getRubrosSubRubrosClient()
   const subRubros = await getSubRubros(Number(rubro))
 
-  return <InventarioContainer limit={limit} rubroSeleccionado={rubro} subRubroSeleccionado={subrubro} productos={productos || []} totalPages={totalPages} currentPage={currentPage} totalProductos={total || 0} rubros={rubros ?? []} subRubros={subRubros ?? []} />;
+  return <InventarioContainer search={search} limit={limit} rubroSeleccionado={rubro} subRubroSeleccionado={subrubro} productos={productos || []} totalPages={totalPages} currentPage={currentPage} totalProductos={total || 0} rubros={rubros ?? []} subRubros={subRubros ?? []} />;
 }

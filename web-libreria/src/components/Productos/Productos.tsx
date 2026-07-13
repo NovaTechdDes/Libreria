@@ -16,7 +16,7 @@ interface Props {
 export const Productos = async ({ search, currentPage = 1, subRubroActivo, rubroActivo }: Props) => {
   const { carrito_habilitado, fecha_fin, fecha_inicio, frase_descuento, mensaje_informativo, porcentaje_descuento } = await getConfiguracion();
 
-  const { productos, totalPages } = await getProductos(currentPage, search ?? '', true, subRubroActivo ?? 0, rubroActivo ?? 0);
+  const { productos, totalPages } = await getProductos(currentPage, search ?? '', true, subRubroActivo, rubroActivo);
 
   return (
     <>

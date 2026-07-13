@@ -45,7 +45,7 @@ const getAllColores = async(): Promise<Color[]> => {
     try {
         const { data } = await api.get('api/colores');
         if(!data.ok){
-            console.log(data.msg);
+            
             return [];
         }
         return data.colores;

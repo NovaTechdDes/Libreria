@@ -1,6 +1,6 @@
 import express from "express"
 import cors from "cors";
-import { colores, configuracion, productos, rubrosRoutes, subrubrosRoutes } from "./routes";
+import { colores, configuracion, productos, rubrosRoutes, subrubrosRoutes, varianteProducto } from "./routes";
 
 const app = express();
 
@@ -16,5 +16,6 @@ app.use("/api/configuracion", configuracion);
 app.use("/api/rubros", rubrosRoutes);
 app.use("/api/productos", productos);
 app.use("/api/subrubros", subrubrosRoutes);
+app.use("/api/varianteProducto", varianteProducto);
 
 export default app;

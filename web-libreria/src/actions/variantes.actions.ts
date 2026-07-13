@@ -1,26 +1,18 @@
 'use server'
 
-import { revalidatePath } from "next/cache";
-import { createClient } from "../lib/server";
+import { revalidatePath } from "next/cache"
+import { api } from "../service";
 
 export const postVariante = async(variante: string, productoId: number): Promise<boolean> => {
     try {
 
-        const supabase = await createClient();
-        const { error } = await supabase.from('productos_variantes').insert({
+        await api.post('api/varianteProducto', {
             id_producto: productoId,
             nombre: variante
-        })
+        });
 
-        if(error) throw error;
 
-        const { error:errorUpdate } = await supabase.from('productos').update({
-            tiene_variantes: true
-        }).eq('id_producto', productoId);
-
-        if(errorUpdate) throw errorUpdate;
-
-        revalidatePath(`/admin/inventario`)
+        revalidatePath(`/admin/inventario`);
         return true;
         
     } catch (error) {
@@ -31,12 +23,9 @@ export const postVariante = async(variante: string, productoId: number): Promise
 
 export const deleteVariante = async(idVariante: number): Promise<boolean> => {
     try {
-        const supabase = await createClient();
-        const { error } = await supabase.from('productos_variantes').delete().eq('id', idVariante);
+        const { data } = await api.delete(`api/varianteProducto/${idVariante}`);
+        if(!data.ok) throw new Error(data.msg);
 
-        if(error) throw error;
-
-        
         revalidatePath(`/admin/inventario`)
 
         return true;

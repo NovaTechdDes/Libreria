@@ -5,12 +5,16 @@ import { uploadImages } from '../helper/uploadImages';
 import { Color } from '../interface/Color';
 import { createClient } from '../lib/server';
 import { revalidatePath } from 'next/cache';
+import { api } from '../service';
 
 export const updateVisibilidadProducto = async (activo: boolean, id: number): Promise<boolean> => {
   try {
-    const supabase = await createClient();
-    const { error } = await supabase.from('productos').update({ activo }).eq('id_producto', id);
-    if (error) throw error;
+    const { data } = await api.put('/api/producto/activo', {
+      id_producto: id,
+      activo: activo
+    })
+    
+    if (!data.ok) throw new Error(data.msg);
 
     revalidatePath('/admin/inventario');
     return true;
@@ -20,11 +24,14 @@ export const updateVisibilidadProducto = async (activo: boolean, id: number): Pr
   }
 };
 
-export const updatePrecioVisibleProducto = async (activo: boolean, id: number): Promise<boolean> => {
+export const updatePrecioVisibleProducto = async (visible: boolean, id: number): Promise<boolean> => {
   try {
-    const supabase = await createClient();
-    const { error } = await supabase.from('productos').update({ isvisibleprecio: activo }).eq('id_producto', id);
-    if (error) throw error;
+    const { data } = await api.put('/api/producto/visible-precio', {
+      id_producto: id,
+      visible: visible
+    })
+
+    if (!data.ok) throw new Error(data.msg);
 
     revalidatePath('/admin/inventario');
     return true;
@@ -36,9 +43,12 @@ export const updatePrecioVisibleProducto = async (activo: boolean, id: number): 
 
 export const updateStockVisibleProducto = async (activo: boolean, id: number): Promise<boolean> => {
   try {
-    const supabase = await createClient();
-    const { error } = await supabase.from('productos').update({ isstock: activo }).eq('id_producto', id);
-    if (error) throw error;
+    const { data } = await api.put('/api/producto/stock', {
+      id_producto: id,
+      isStock: activo
+    })
+
+    if (!data.ok) throw new Error(data.msg);
 
     revalidatePath('/admin/inventario');
     return true;
@@ -111,17 +121,12 @@ export const updateProducto = async (colores: Color[], imagenes: ImageItem[], id
 
 export const getProductoById = async(id: number) => {
   try {
-    const supabase = await createClient();
+    const { data } = await api.get(`/api/producto/${id}`);
 
-    const { data, error} = await supabase
-    .from('productos')
-    .select('*, subRubros: fk_producto_subrubro (*), productos_colores (colores(*)), variantes:productos_variantes (*)')
-    .eq('id_producto', id)
-    .single();
+    if (!data.ok) throw new Error(data.msg);
 
-    if(error) throw error;
+    return data.data;
 
-    return data;
   } catch (error) {
     console.error(error);
     return null;

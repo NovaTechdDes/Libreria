@@ -41,7 +41,7 @@ export const getSubrubroPorRubro = async(req: Request, res: Response) => {
             .request()
             .query(`SELECT * FROM subrubros`)
 
-            res.status(200).json({
+            return res.status(200).json({
                 ok: true,
                 subrubros: result.recordset
             });
@@ -58,7 +58,7 @@ export const getSubrubroPorRubro = async(req: Request, res: Response) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             ok: false,
             msg: 'Error al obtener subrubro'
         })

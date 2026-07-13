@@ -28,3 +28,31 @@ export interface Producto {
 
   productos_colores?: Color_Relacion[];
 }
+
+export interface ProductoBackend {
+  id_producto: number;
+  codigo: string;
+
+  descripcion: string;
+  precio: number;
+  cantidad: number;
+  marca: number;
+  id_subrubro: number;
+  imagenes?: string;
+  imagen_url?: string;
+  activo: boolean;
+
+  isstock?: boolean;
+  isvisibleprecio?: boolean;
+
+  subRubros?: {
+    nombre: string;
+    id_subrubro: number;
+  };
+
+  tiene_variantes: boolean;
+
+  variantes?: string;
+
+  productos_colores?: string;
+}

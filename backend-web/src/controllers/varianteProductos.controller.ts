@@ -65,7 +65,7 @@ export const deleteVarianteProducto = async(req: Request, res: Response) => {
         requestVerificacion.input('id', sql.Int, id_producto);
         const tieneVariante = (await requestVerificacion.query(queryVerificacion)).recordset.length;
 
-        console.log(tieneVariante)
+        
 
         if(!tieneVariante){
             const requestProducto = new sql.Request(transaction);

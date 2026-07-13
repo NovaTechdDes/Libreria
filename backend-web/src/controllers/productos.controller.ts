@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { poolPromise } from "../config/db";
-import { RequestError } from "mssql";
+import sql from "mssql";
 
 export const getProductos = async(req: Request, res: Response ) => {
     try {
@@ -105,26 +105,43 @@ export const getProductos = async(req: Request, res: Response ) => {
 
 export const getProductoById = async(req: Request, res: Response) => {
     try {
-        const {id_producto } = req.params;
+        const { id_producto } = req.params;
+
 
         const pool = await poolPromise;
         const request = pool.request();
 
-        let query = `SELECT p.* , s.descripcion as subrubro 
-                    FROM productos p
-                    INNER JOIN subrubros s ON p.id_subrubro = s.id_subrubro
-                    INNER JOIN productos_variantes pv ON p.id_producto = pv.id_producto
-                    INNER JOIN productos_colores pc ON p.id_producto = pc.id_producto
-                    INNER JOIN colores c ON pc.id_color = c.id
-                    WHERE id_producto = @id_producto`;
+        let query = `SELECT p.* , s.nombre as subrubro,
+                    --Relacion productos_colores
+                    ISNULL((
+                        SELECT c.*
+                        FROM productos_colores pc
+                        INNER JOIN colores c ON pc.id_color = c.id
+                        WHERE pc.id_producto = p.id_producto
+                        FOR JSON PATH
+                    ), '[]') as productos_colores,
 
-        request.input('id_producto', id_producto);
+                    -- Relacion productos variantes
+                    ISNULL((
+                        SELECT pv.*
+                        FROM productos_variantes pv
+                        WHERE pv.id_producto = p.id_producto
+                        FOR JSON PATH
+                    ), '[]') as variantes
+
+                    FROM productos p
+                    LEFT JOIN subrubros s ON p.id_subrubro = s.id_subrubro
+                    WHERE p.id_producto = @id_producto`;
+
+        request.input('id_producto', Number(id_producto));
 
         const result = await request.query(query);
 
+        
+
         res.status(200).json({
             ok: true,
-            data: result.recordset
+            data: result.recordset[0] || null
         })
     } catch (error) {
         console.error(error);
@@ -134,8 +151,52 @@ export const getProductoById = async(req: Request, res: Response) => {
             msg: 'Error al obtener producto'
         });
     }
-}
+};
 
+export const putProductoById = async(req: Request, res: Response) => {
+    const pool = await poolPromise
+    const transaction = new sql.Transaction(pool)
+    try {
+        const { id_producto } = req.params;
+        const {colores = [], imagenes} = req.body;
+
+        
+
+
+        await transaction.begin();
+
+        //Eliminar Variantes de colores
+        const requestDeleteColores = new sql.Request(transaction);
+        let queryDeleteColores = `DELETE FROM productos_colores WHERE id_producto = @id_producto`;
+        requestDeleteColores.input('id_producto', Number(id_producto));
+        await requestDeleteColores.query(queryDeleteColores);
+
+
+        //Agregar Variantes de colores
+        let queryVarianteColores = `INSERT INTO productos_colores (id_producto, id_color) VALUES(@id_producto, @id_color)`;
+        
+        for(const color of colores){
+            const requestVarianteColores = new sql.Request(transaction);
+            requestVarianteColores.input('id_producto', Number(id_producto));
+            requestVarianteColores.input('id_color', Number(color.id));
+            await requestVarianteColores.query(queryVarianteColores);
+        };
+
+        await transaction.commit()
+
+        return res.status(200).json({
+            ok: true,
+            msg: 'Producto actualizado'
+        })
+    } catch (error) {
+        await transaction.rollback();
+        console.error(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error al actualizar producto'
+        })
+    };
+};
 
 export const putActivoProducto = async(req: Request, res: Response) => {
     try {
@@ -224,5 +285,18 @@ export const putIsStock = async(req: Request, res: Response) => {
             ok: false,
             msg: 'Error al actualizar producto'
         });
+    }
+};
+
+export const putProducto = async(req: Request, res: Response) => {
+    try {
+        
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error al actualizar producto'
+        })
     }
 }

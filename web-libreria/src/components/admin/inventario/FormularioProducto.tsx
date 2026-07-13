@@ -35,7 +35,6 @@ export const FormularioProducto = () => {
   const { data: producto, isLoading } = useProductoById(productoSeleccionado!);
 
 
-
   const [showColores, setShowColores] = useState(false);
   const [images, setImages] = useState<ImageItem[]>([
     { file: null, preview: null },
@@ -57,12 +56,17 @@ export const FormularioProducto = () => {
   useEffect(() => {
     if (!producto?.id_producto || !producto?.productos_colores) return;
 
-    addColores([...producto?.productos_colores.map((c: {colores: Color}) => c.colores)]);
+    console.log(producto.productos_colores[0])
+
+    addColores([...producto?.productos_colores.map((c: Color) => c)]);
   }, [producto, addColores]);
 
   useEffect(() => {
     if (!producto?.id_producto || !producto?.productos_colores || !producto?.imagenes) return;
 
+    if(typeof producto?.imagenes === 'string'){
+      return ;
+    }
     const imagenesParseadas = JSON.parse(producto.imagenes);
 
     imagenesParseadas?.map((image: string, i: number) => {
@@ -77,7 +81,7 @@ export const FormularioProducto = () => {
   if (!productoSeleccionado) return null;
 
   const handleUpdate = async () => {
-    if (!producto.id_producto) return;
+    if (!producto) return;
 
     const res = await startUpdateProducto.mutateAsync({ colores: coloresSeleccionados, imagenes: images, id: producto.id_producto });
 
@@ -107,10 +111,10 @@ export const FormularioProducto = () => {
     setImages(newImages);
   };
 
-
   const handleAddVariante = async () => {
+    if(!producto) return;
     const {isConfirmed, value} = await Swal.fire({
-      text: `Agregar Variante de ${producto.descripcion}`,
+      text: `Agregar Variante de ${producto?.descripcion}`,
       input: 'text',
       showCancelButton: true,
       confirmButtonText: "Agregar",
@@ -153,12 +157,9 @@ export const FormularioProducto = () => {
     }
   }
 
-  if(isLoading) return (
+  if(isLoading || !producto) return (
     <Loading/>
   )
-
-
-
 
   return (
     <div className="bg-white rounded-[24px] border border-slate-200 shadow-sm p-8 w-full lg:sticky lg:top-8 animate-in fade-in slide-in-from-right-4 duration-500">

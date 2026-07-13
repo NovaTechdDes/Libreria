@@ -14,8 +14,9 @@ interface ProductoCardProps {
 }
 
 export const ProductoCard = ({ producto }: ProductoCardProps) => {
+
   const { agregarProducto, habilitado, inicio, fin } = useCarritoStore();
-  const [colorSeleccionado, setColorSeleccionado] = useState<number>(producto?.productos_colores?.[0]?.colores?.id ?? 0);
+  const [colorSeleccionado, setColorSeleccionado] = useState<number>(producto?.productos_colores?.[0]?.id ?? 0);
   const [varianteSeleccionada, setVarianteSeleccionado] = useState<number | undefined>(undefined)
 
   const isPriceVisible = producto.isvisibleprecio !== false;
@@ -28,9 +29,9 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
   const addCarrito = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!producto || !isStockAvailable) return;
-    const color = producto.productos_colores?.find((color) => color.colores?.id === colorSeleccionado);
+    const color = producto.productos_colores?.find((color) => color?.id === colorSeleccionado);
     const variante = producto.variantes?.find((v) => v.id === varianteSeleccionada);
-    agregarProducto(producto, 1, color?.colores ?? null, variante ?? null);
+    agregarProducto(producto, 1, color ?? null, variante ?? null);
   };
 
   if (!producto.id_producto) return null;
@@ -102,7 +103,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
           <div className="flex flex-wrap gap-3 sm:gap-3 items-center">
             {producto.productos_colores?.map((color, index) => (
               <ButtonSeleccionarColor
-                key={color.colores?.id ?? index}
+                key={color.id ?? index}
                 color={color}
                 producto_id={producto.id_producto}
                 colorSeleccionado={colorSeleccionado}

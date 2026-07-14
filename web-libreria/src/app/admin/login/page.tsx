@@ -7,11 +7,11 @@ import { createClient } from '@/src/lib/client';
 import React, { useEffect, useState } from 'react';
 import { FiArrowLeft, FiArrowRight, FiEye, FiLock, FiMail } from 'react-icons/fi';
 import { CgSpinner } from 'react-icons/cg';
+import { login } from '@/src/actions/auth.actions';
 
 const LoginPage = () => {
   const router = useRouter();
 
-  const supabase = createClient();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -33,12 +33,9 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const data = await login(email, password);
 
-    if (!error) {
+    if (data.ok) {
       if (rememberMe) {
         localStorage.setItem('rememberedUser', email);
       } else {
@@ -48,7 +45,7 @@ const LoginPage = () => {
       router.push('inventario');
     } else {
       setLoading(false);
-      alert('Error al iniciar sesión: ' + error.message);
+      alert('Error al iniciar sesión: ' + data.error);
       return;
     }
   };

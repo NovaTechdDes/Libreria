@@ -1,3 +1,4 @@
+export {default as banner} from './banner.route'
 export {default as colores} from './colores.route'
 export {default as configuracion} from './configuracion.route'
 export {default as rubrosRoutes} from './rubros.route'

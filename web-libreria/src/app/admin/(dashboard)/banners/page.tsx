@@ -1,14 +1,12 @@
 import { BannerCard } from '@/src/components/banners/BannerCard';
 import { BannerForm } from '@/src/components/banners/BannerForm';
 import { BannerFilters } from '@/src/components/banners/BannerFilters';
-import { createClient } from '@/src/lib/server';
+import { getBanners } from '@/src/actions/banner.actions';
 
 const PageBanners = async () => {
-  const supabase = await createClient();
+  const banners = await getBanners();
 
-  const { data: banners, error } = await supabase.from('banners').select('*');
-
-  if (error) {
+  if (!banners) {
     return <p className="text-red-500 text-center mt-8">Error al cargar los banners.</p>;
   }
 

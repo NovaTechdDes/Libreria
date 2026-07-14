@@ -1,38 +1,28 @@
 'use server';
 import { revalidatePath } from 'next/cache';
 import { BannerImage } from '../components/banners/BannerForm';
-import { uploadImageBanner } from '../helper/uploadImages';
 import { Banner } from '../interface/Banner';
-import { createClient } from '../lib/server';
+import { api } from '../service';
 
 export const postBanner = async (banner: Banner, image: BannerImage): Promise<boolean> => {
   try {
-    const supabase = await createClient();
+    const formData = new FormData();
 
-    //1. Cargar Banner en supabase
-    const { data: bannerInsertado, error: errorInsertarBanner } = await supabase
-      .from('banners')
-      .insert({
-        titulo: banner.titulo,
-        subtitulo: banner.subtitulo,
-        activo: banner.activo,
-      })
-      .select()
-      .single();
+    formData.append('titulo', banner.titulo);
+    formData.append('subtitulo', banner.subtitulo);
+    formData.append('activo', banner.activo.toString());
+    formData.append('orden', banner.orden!.toString());
+    formData.append('image', image.file!);
 
-    if (errorInsertarBanner) throw new Error('Error al insertar el banner');
+    const { data } = await api.post('/api/banners', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
 
-    //1. Subir Imagen del banner al storage
-    const urlImagen = await uploadImageBanner(image, bannerInsertado);
-
-    const { error: errorModificarBanner } = await supabase
-      .from('banners')
-      .update({
-        imagen_url: urlImagen,
-      })
-      .eq('id', bannerInsertado.id);
-
-    if (errorModificarBanner) throw new Error('Error al cargar la imagen del banner');
+    if(!data.ok){
+      throw new Error(data.msg);
+    }
 
     revalidatePath('/admin/banners');
 
@@ -45,42 +35,26 @@ export const postBanner = async (banner: Banner, image: BannerImage): Promise<bo
 
 export const putBanner = async (banner: Banner, image: BannerImage): Promise<boolean> => {
   try {
-    const supabase = await createClient();
+    console.log(image)
+    const formData = new FormData();
 
-    //1. Eliminar imagen anterior si existe
-    if (image.url) {
-      await supabase.storage.from('banners').remove([image.url]);
-
-      //2. Cargar nueva imagen
-      const urlImagen = await uploadImageBanner(image, banner);
-
-      //3. Actualizar banner con nueva imagen
-      const { error: errorModificarBanner } = await supabase
-        .from('banners')
-        .update({
-          titulo: banner.titulo,
-          subtitulo: banner.subtitulo,
-          activo: banner.activo,
-          imagen_url: urlImagen,
-        })
-        .eq('id', banner.id);
-
-      if (errorModificarBanner) throw new Error('Error al modificar el banner');
-
-      return true;
+    formData.append('titulo', banner.titulo);
+    formData.append('subtitulo', banner.subtitulo);
+    formData.append('activo', banner.activo.toString());
+    formData.append('orden', String(banner.orden ?? 2));
+    if(image.file){
+      formData.append('image', image.file);
     }
 
-    //4. Actualizar banner sin imagen
-    const { error: errorModificarBanner } = await supabase
-      .from('banners')
-      .update({
-        titulo: banner.titulo,
-        subtitulo: banner.subtitulo,
-        activo: banner.activo,
-      })
-      .eq('id', banner.id);
+    const { data } = await api.put(`/api/banners/${banner.id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
 
-    if (errorModificarBanner) throw new Error('Error al modificar el banner');
+    if(!data.ok){
+      throw new Error(data.msg);
+    }
 
     revalidatePath('/admin/banners');
     return true;
@@ -92,11 +66,13 @@ export const putBanner = async (banner: Banner, image: BannerImage): Promise<boo
 
 export const putStatusBanner = async (id: number, activo: boolean): Promise<boolean> => {
   try {
-    const supabase = await createClient();
+    console.log(id, 'id');
+    console.log(activo, 'activo');
+    const { data } = await api.put(`/api/banners/status/${id}`, {activo});
 
-    const { error: errorModificarBanner } = await supabase.from('banners').update({ activo }).eq('id', id);
-
-    if (errorModificarBanner) throw new Error('Error al modificar el estado del banner');
+    if(!data.ok){
+      throw new Error(data.msg);
+    }
 
     revalidatePath('/admin/banners');
     return true;
@@ -108,25 +84,11 @@ export const putStatusBanner = async (id: number, activo: boolean): Promise<bool
 
 export const deleteBanner = async (id: number) => {
   try {
-    const supabase = await createClient();
+   const { data } = await api.delete(`/api/banners/${id}`);
 
-    //1. Eliminar imagen del banner si existe
-    const { data: banner, error: errorObtenerBanner } = await supabase.from('banners').select('imagen_url').eq('id', id).single();
-
-    if (errorObtenerBanner) throw new Error('Error al obtener el banner');
-
-    if (banner.imagen_url) {
-      // Extraer el nombre del archivo de la URL
-      const nombreArchivo = banner.imagen_url.split('/').pop();
-      if (nombreArchivo) {
-        await supabase.storage.from('banners').remove([`banners/${nombreArchivo}`]);
-      }
-    }
-
-    //2. Eliminar banner
-    const { error: errorEliminarBanner } = await supabase.from('banners').delete().eq('id', id);
-
-    if (errorEliminarBanner) throw new Error('Error al eliminar el banner');
+   if(!data.ok){
+    throw new Error(data.msg)
+   }
 
     revalidatePath('/admin/banners');
 
@@ -134,5 +96,20 @@ export const deleteBanner = async (id: number) => {
   } catch (error) {
     console.error(error);
     return false;
+  }
+};
+
+export const getBanners = async (): Promise<Banner[] | null> => {
+  try {
+    const { data } = await api.get('/api/banners');
+
+    if(data.ok){
+      return data.banners;
+    }
+
+    return null;
+  } catch (error) {
+    console.error(error);
+    return null;
   }
 };

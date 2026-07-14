@@ -33,18 +33,3 @@ export async function uploadImages(imagenes: ImageItem[], productoId: number) {
   return finalURLS;
 }
 
-export async function uploadImageBanner(image: BannerImage, banner: Banner) {
-  const supabase = await createClient();
-
-  if (image.file) {
-    const fileExt = image.file.name.split('.').pop();
-    const fileName = `${banner.id}.${fileExt}`;
-
-    const { error } = await supabase.storage.from('banners').upload(`banners/${fileName}`, image.file);
-
-    if (error) throw new Error('Error al subir la imagen del banner');
-
-    const { data } = await supabase.storage.from('banners').getPublicUrl(`banners/${fileName}`);
-    return data.publicUrl;
-  }
-}

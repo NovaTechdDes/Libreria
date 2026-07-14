@@ -1,6 +1,6 @@
 import express from "express"
 import cors from "cors";
-import { colores, configuracion, productos, rubrosRoutes, subrubrosRoutes, varianteProducto } from "./routes";
+import { banner, colores, configuracion, productos, rubrosRoutes, subrubrosRoutes, varianteProducto } from "./routes";
 
 const app = express();
 
@@ -11,6 +11,7 @@ app.get("/test", (req, res) => {
     res.json({ message: "Conexión exitosa a la API" });
 });
 
+app.use("/api/banners", banner);
 app.use("/api/colores", colores);
 app.use("/api/configuracion", configuracion);
 app.use("/api/rubros", rubrosRoutes);

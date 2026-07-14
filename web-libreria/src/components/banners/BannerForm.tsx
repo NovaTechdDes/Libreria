@@ -87,6 +87,7 @@ export const BannerForm = () => {
       titulo: formData.titulo,
       subtitulo: formData.subtitulo,
       activo: true,
+      orden: 1,
       imagen_url: '',
     };
 

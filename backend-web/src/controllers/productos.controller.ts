@@ -160,9 +160,6 @@ export const putProductoById = async(req: Request, res: Response) => {
         const { id_producto } = req.params;
         const {colores = [], imagenes} = req.body;
 
-        
-
-
         await transaction.begin();
 
         //Eliminar Variantes de colores

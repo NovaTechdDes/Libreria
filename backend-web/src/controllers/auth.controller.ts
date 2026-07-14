@@ -18,8 +18,6 @@ export const login = async(req: Request, res: Response) => {
 
         const usuario = await obtenerUsuarioPorEmail(email);
 
-        console.log(usuario)
-
         if(!usuario){
             return res.status(404).json({
                 ok: false,

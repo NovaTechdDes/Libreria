@@ -3,12 +3,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { createClient } from '@/src/lib/client';
 import { BsFillImageFill, BsFillPaletteFill } from 'react-icons/bs';
 import { FiBox, FiLogOut, FiSettings } from 'react-icons/fi';
 
 export const AsideBar = () => {
-  const supabase = createClient();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -36,12 +34,8 @@ export const AsideBar = () => {
   ];
 
   const handleLogOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error('Error al cerrar sesión:', error);
-    } else {
-      router.push('/admin/login');
-    }
+    document.cookie = "token=; path=/; max-age=0; SameSite=Lax; Secure";
+    router.push('/admin/login');
   };
 
   return (

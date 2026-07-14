@@ -1,8 +1,10 @@
 import { api } from "../service";
 
-export const login = async (email: string, password: string): Promise<{ ok: boolean; data?: any, error?: string }> => {
+export const login = async (email: string, password: string): Promise<{ ok: boolean; token?: string, error?: string }> => {
  try {
     const { data } = await api.post('/api/auth/login', {email, password});
+
+    console.log(data)
 
     if(!data?.ok) {
         return {
@@ -11,17 +13,15 @@ export const login = async (email: string, password: string): Promise<{ ok: bool
         }
     };
 
-    console.log(data)
-
     return {
         ok: true,
-        data
+        token: data.token
     }
  } catch (error) {
     console.error(error);
     return {
         ok: false,
-        data: null
+        token: ''
     }
  }   
 }

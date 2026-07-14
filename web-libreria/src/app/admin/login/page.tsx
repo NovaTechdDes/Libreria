@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/src/lib/client';
 import React, { useEffect, useState } from 'react';
 import { FiArrowLeft, FiArrowRight, FiEye, FiLock, FiMail } from 'react-icons/fi';
 import { CgSpinner } from 'react-icons/cg';
@@ -35,10 +34,13 @@ const LoginPage = () => {
 
     const data = await login(email, password);
 
-    if (data.ok) {
+    if (data.ok && data.token) {
+      
+      document.cookie = `token=${data.token}; path=/; SameSite=Lax;`;
       if (rememberMe) {
         localStorage.setItem('rememberedUser', email);
       } else {
+        console.log("a")
         localStorage.removeItem('rememberedUser');
       }
       setLoading(false);

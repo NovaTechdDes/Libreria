@@ -60,9 +60,26 @@ export const updateStockVisibleProducto = async (activo: boolean, id: number): P
 export const updateProducto = async (colores: Color[], imagenes: ImageItem[], id: number): Promise<boolean> => {
   try {
 
-    await api.put(`/api/productos/${id}`, {
-      colores,
-      imagenes
+    const formData = new FormData();
+
+    const archivosDeImagenes: File[] = imagenes.map((image) => image.file as File);
+
+    const slot: string[] = [];
+    let i = 0;
+    archivosDeImagenes.map((archivo) => {
+      formData.append('imagenes', archivo);
+      slot[i] = archivo ? 'NUEVA' : 'VACIA';
+      i++;
+    });
+
+
+    formData.append('slots', JSON.stringify(slot));
+    formData.append('colores', JSON.stringify(colores));
+
+    await api.put(`/api/productos/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
     });
 
     revalidatePath('/admin/inventario');
@@ -77,7 +94,7 @@ export const getProductoById = async(id: number) => {
   try {
     const { data } = await api.get(`/api/productos/${id}`);
 
-
+    console.log(data)
 
     if (!data.ok) throw new Error(data.msg);
 

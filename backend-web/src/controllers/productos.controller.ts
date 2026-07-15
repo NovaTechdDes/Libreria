@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { poolPromise } from "../config/db";
 import sql from "mssql";
+import { containerClient } from "../config/storage";
+import { procesamientoImagenes } from "../utils/procesamientoImagenes";
 
 export const getProductos = async(req: Request, res: Response ) => {
     try {
@@ -32,7 +34,16 @@ export const getProductos = async(req: Request, res: Response ) => {
                 FROM productos_variantes pv
                 WHERE pv.id_producto = p.id_producto
                 FOR JSON PATH
-            ), '[]') as productos_variantes
+            ), '[]') as productos_variantes,
+
+            --relacion productos imagenes
+            ISNULL((
+                        SELECT pi.nombre_archivo
+                        FROM productos_imagenes pi
+                        WHERE pi.id_producto = p.id_producto
+                        ORDER BY pi.orden ASC
+                        FOR JSON PATH
+                    ), '[]') as url_imagenes
 
             FROM productos p
             INNER JOIN subrubros s ON p.id_subrubro = s.id_subrubro
@@ -83,7 +94,9 @@ export const getProductos = async(req: Request, res: Response ) => {
             ...row,
             subRubros: row.subRubros ? JSON.parse(row.subRubros) : null,
             productos_colores: row.productos_colores ? JSON.parse(row.productos_colores) : [],
-            productos_variantes: row.productos_variantes ? JSON.parse(row.productos_variantes) : []
+            productos_variantes: row.productos_variantes ? JSON.parse(row.productos_variantes) : [],
+            url_imagenes: row.url_imagenes ? JSON.parse(row.url_imagenes) : []
+            
         }));
         const total = result.recordset[0]?.total_count || 0;
         
@@ -127,7 +140,16 @@ export const getProductoById = async(req: Request, res: Response) => {
                         FROM productos_variantes pv
                         WHERE pv.id_producto = p.id_producto
                         FOR JSON PATH
-                    ), '[]') as variantes
+                    ), '[]') as variantes,
+
+                    --relacion productos imagenes
+                    ISNULL((
+                        SELECT pi.nombre_archivo
+                        FROM productos_imagenes pi
+                        WHERE pi.id_producto = p.id_producto
+                        ORDER BY pi.orden ASC
+                        FOR JSON PATH
+                    ), '[]') as url_imagenes
 
                     FROM productos p
                     LEFT JOIN subrubros s ON p.id_subrubro = s.id_subrubro
@@ -154,11 +176,18 @@ export const getProductoById = async(req: Request, res: Response) => {
 };
 
 export const putProductoById = async(req: Request, res: Response) => {
-    const pool = await poolPromise
+    const { id_producto } = req.params;
+    const {colores, slots} = req.body;
+    const archivos = req.files as Express.Multer.File[];
+
+    console.log(req.files)
+
+    const coloresParseados = JSON.parse(colores);
+    const slotsParseados = JSON.parse(slots)
+    
+    const pool = await poolPromise;
     const transaction = new sql.Transaction(pool)
     try {
-        const { id_producto } = req.params;
-        const {colores = [], imagenes} = req.body;
 
         await transaction.begin();
 
@@ -172,13 +201,25 @@ export const putProductoById = async(req: Request, res: Response) => {
         //Agregar Variantes de colores
         let queryVarianteColores = `INSERT INTO productos_colores (id_producto, id_color) VALUES(@id_producto, @id_color)`;
         
-        for(const color of colores){
+        for(const color of coloresParseados){
             const requestVarianteColores = new sql.Request(transaction);
             requestVarianteColores.input('id_producto', Number(id_producto));
             requestVarianteColores.input('id_color', Number(color.id));
             await requestVarianteColores.query(queryVarianteColores);
         };
 
+        //Procesamiento de Imagenes
+        const requestGetProducto = new sql.Request(transaction);
+        requestGetProducto.input('id_producto', Number(id_producto));
+        const resultImagenes  = await requestGetProducto.query(
+            `SELECT id_imagen, nombre_archivo, orden, principal
+             FROM productos_imagenes
+             WHERE id_producto = @id_producto`
+        );
+        const imagenesDB = resultImagenes.recordset;
+
+        await procesamientoImagenes({archivos, imagenesDB, slotsParseados, id_producto: String(id_producto), transaction});
+        
         await transaction.commit()
 
         return res.status(200).json({

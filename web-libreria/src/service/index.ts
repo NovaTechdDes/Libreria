@@ -1,2 +1,2 @@
 export { default as api } from './api.service';
-export { default as colores} from './color.service';
+export * as colores from './color.service';

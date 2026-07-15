@@ -62,21 +62,21 @@ export const FormularioProducto = () => {
   }, [producto, addColores]);
 
   useEffect(() => {
-    if (!producto?.id_producto || !producto?.productos_colores || !producto?.imagenes) return;
+      if (!producto?.id_producto || !producto?.url_imagenes) return;
 
-    if(typeof producto?.imagenes === 'string'){
-      return ;
-    }
-    const imagenesParseadas = JSON.parse(producto.imagenes);
-
-    imagenesParseadas?.map((image: string, i: number) => {
-      setImages((prev) => {
-        const newImages = [...prev];
-        newImages[i] = { file: null, preview: image };
-        return newImages;
+      producto.url_imagenes.forEach((imagen, i)  =>  {
+        if(imagen.nombre_archivo && i < 3) {
+          setImages(prev => {
+            const newImages = [...prev];
+            newImages[i] = {
+              file: null,
+              preview: imagen.nombre_archivo
+            };
+            return newImages;
+          })
+        }
       });
-    });
-  }, [productoSeleccionado]);
+  }, [producto, productoSeleccionado]);
 
   if (!productoSeleccionado) return null;
 

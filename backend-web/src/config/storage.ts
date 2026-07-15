@@ -7,3 +7,7 @@ const blobServiceCliente = BlobServiceClient.fromConnectionString(
 export const containerClient = blobServiceCliente.getContainerClient(
     process.env.AZURE_STORAGE_CONTAINER!
 );
+
+export const containerProductos = blobServiceCliente.getContainerClient(
+    process.env.AZURE_STORAGE_PRODUCTOS!
+)

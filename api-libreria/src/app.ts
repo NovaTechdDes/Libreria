@@ -32,13 +32,13 @@ app.use("/caja", cajaRoutes);
 app.use("/rubro", rubroRoutes);
 
 //sincronizar imagenes una vez al dia
- setTimeout(() => syncImages(), 1000 * 60 * 2); // 2 minutos
+ //setTimeout(() => syncImages(), 1000 * 60 * 2); // 2 minutos
 
 
 //Sincronizar productos con supabase
-setInterval(() => {
+//setInterval(() => {
    syncProducts();
-}, 1000 * 60 * 60);
+//}, 1000 * 60 * 60);
   
 export default app;
 

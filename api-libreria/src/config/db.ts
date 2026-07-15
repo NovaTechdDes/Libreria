@@ -14,5 +14,21 @@ const config = {
   },
 };
 
+const configAzure = {
+  user: process.env.DB_USER_AZURE,
+  password: process.env.DB_PASSWORD_AZURE,
+  server: process.env.DB_HOST_AZURE as string,
+  database: process.env.DB_NAME_AZURE as string,
+  options: {
+    encrypt: true,
+    trustServerCertificate: true,
+  },
+}
+
 export const pool = new sql.ConnectionPool(config);
 export const poolConnect = pool.connect();
+
+export const poolAzure = new sql.ConnectionPool(configAzure);
+export const poolConnectAzure = poolAzure.connect();
+
+

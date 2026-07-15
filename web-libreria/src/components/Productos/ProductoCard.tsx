@@ -7,7 +7,6 @@ import Image from 'next/image';
 import { CgShoppingCart } from 'react-icons/cg';
 import { ButtonSeleccionarColor } from './ButtonSeleccionarColor';
 import { useState } from 'react';
-import { createClient } from '@/src/lib/client';
 
 interface ProductoCardProps {
   producto: Producto;
@@ -23,8 +22,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
   const isStockAvailable = producto.isstock !== false && (producto.cantidad ?? 0) > 0;
 
   
-    const supabase = createClient();
-    const { data: { publicUrl } } = supabase.storage.from('productos/productos').getPublicUrl(producto.imagenes ?? '');
+    
 
   const addCarrito = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -40,9 +38,9 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
     <article className="group flex flex-row sm:flex-col bg-white dark:bg-white/5 rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] dark:hover:bg-white/8 transition-all duration-300 ease-out cursor-pointer border border-gray-100/50 dark:border-white/10 h-full min-h-[140px] sm:min-h-0">
       {/* Área de imagen */}
       <div className="relative w-36 h-36 sm:w-full sm:h-auto sm:aspect-4/5 bg-[#F9F9F7] dark:bg-black/20 overflow-hidden shrink-0">
-        {producto.imagenes && publicUrl ? (
+        {producto.url_imagenes && producto.url_imagenes.length > 0 ? (
           <Image
-            src={publicUrl}
+            src={producto.url_imagenes[0].nombre_archivo}
             alt={producto.descripcion}
             fill
             sizes="(max-width: 640px) 150px, (max-width: 1024px) 33vw, 20vw"

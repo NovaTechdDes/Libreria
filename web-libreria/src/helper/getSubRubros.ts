@@ -11,7 +11,7 @@ export const getSubRubros = async(rubroActivo: number) => {
         return null;
     };
 
-    const subRubros = [{ id_subrubro: 0, nombre: 'TODOS', id_rubro: 0 }, ...data.subrubros] as SubRubro[];
+    const subRubros = [{ id_subrubro: '', nombre: 'TODOS', id_rubro: '' }, ...data.subrubros] as SubRubro[];
 
     return subRubros;
 }

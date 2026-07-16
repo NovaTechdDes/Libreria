@@ -4,8 +4,6 @@ export const login = async (email: string, password: string): Promise<{ ok: bool
  try {
     const { data } = await api.post('/api/auth/login', {email, password});
 
-    console.log(data)
-
     if(!data?.ok) {
         return {
             ok: false,

@@ -180,8 +180,6 @@ export const putProductoById = async(req: Request, res: Response) => {
     const {colores, slots} = req.body;
     const archivos = req.files as Express.Multer.File[];
 
-    console.log(req.files)
-
     const coloresParseados = JSON.parse(colores);
     const slotsParseados = JSON.parse(slots)
     

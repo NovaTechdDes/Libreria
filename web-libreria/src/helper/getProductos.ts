@@ -13,6 +13,7 @@ export async function getProductos(page: number, search: string, activo: boolean
             search,
             activo,
             subRubroActivo,
+            subrubro: subRubroActivo,
             rubro
         }
     });

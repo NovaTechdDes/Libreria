@@ -56,7 +56,6 @@ export const FormularioProducto = () => {
   useEffect(() => {
     if (!producto?.id_producto || !producto?.productos_colores) return;
 
-    console.log(producto.productos_colores[0])
 
     addColores([...producto?.productos_colores.map((c: Color) => c)]);
   }, [producto, addColores]);

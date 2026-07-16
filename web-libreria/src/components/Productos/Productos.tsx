@@ -42,7 +42,7 @@ export const Productos = async ({ search, currentPage = 1, subRubroActivo, rubro
           ))}
         </div>
 
-        <Pagination currentPage={currentPage} totalPages={totalPages} />
+        <Pagination search={search ?? ''} rubroActivo={rubroActivo} subRubroActivo={subRubroActivo} currentPage={currentPage} totalPages={totalPages} />
       </section>
     </>
   );

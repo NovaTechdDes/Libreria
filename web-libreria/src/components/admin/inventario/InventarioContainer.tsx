@@ -106,7 +106,7 @@ export const InventarioContainer = ({ limit, productos, totalPages, currentPage,
         <section className="w-full">
           <div className="flex flex-col gap-2">
             <BuscadorProductos />
-            <InventarioList limit={limit} productos={productos || []} totalPages={totalPages} currentPage={currentPage} totalProductos={totalProductos} />
+            <InventarioList limit={limit} rubro={rubroSeleccionado} subrubro={subRubroSeleccionado}  productos={productos || []} totalPages={totalPages} currentPage={currentPage} totalProductos={totalProductos} />
           </div>
         </section>
       </div>

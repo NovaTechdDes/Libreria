@@ -94,7 +94,6 @@ export const getProductoById = async(id: number) => {
   try {
     const { data } = await api.get(`/api/productos/${id}`);
 
-    console.log(data)
 
     if (!data.ok) throw new Error(data.msg);
 

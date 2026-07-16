@@ -35,7 +35,6 @@ export const postBanner = async (banner: Banner, image: BannerImage): Promise<bo
 
 export const putBanner = async (banner: Banner, image: BannerImage): Promise<boolean> => {
   try {
-    console.log(image)
     const formData = new FormData();
 
     formData.append('titulo', banner.titulo);
@@ -66,8 +65,6 @@ export const putBanner = async (banner: Banner, image: BannerImage): Promise<boo
 
 export const putStatusBanner = async (id: number, activo: boolean): Promise<boolean> => {
   try {
-    console.log(id, 'id');
-    console.log(activo, 'activo');
     const { data } = await api.put(`/api/banners/status/${id}`, {activo});
 
     if(!data.ok){

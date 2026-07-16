@@ -104,15 +104,17 @@ Flags: runhidden waituntilterminated
 
 [Code]
 var
-  SupabasePage: TInputQueryWizardPage;
+  AzurePage: TInputQueryWizardPage;
   DBPage: TInputQueryWizardPage;
   ConfigPage: TInputQueryWizardPage;
 
 procedure InitializeWizard;
 begin
-  SupabasePage := CreateInputQueryPage(wpWelcome, 'Configuración de Base de Datos de supabase', 'Ingrese la url de conexion y la clave de supabase', 'Este valor se guardará en el archivo .env del sistema.');
-  SupabasePage.Add('SUPABASE_URL:', False);
-  SupabasePage.Add('SUPABASE_SERVICE_ROLE_KEY:', False);
+  AzurePage := CreateInputQueryPage(wpWelcome, 'Configuración de Base de Datos de Azure', 'La conexion de Azure', 'Este valor se guardará en el archivo .env del sistema.');
+  AzurePage.Add('DB_HOST_AZURE:', False);
+  AzurePage.Add('DB_USER_AZURE:', False);
+  AzurePage.Add('DB_PASSWORD_AZURE:', False);
+  AzurePage.Add('DB_NAME_AZURE:', False);
 
   DBPage := CreateInputQueryPage(wpWelcome, 'Configuración de Base de Datos', 'Ingrese el nombre de la base de datos', 'Este valor se guardará en el archivo .env del sistema.');
   DBPage.Add('Nombre de la base de datos:', False);
@@ -145,7 +147,9 @@ begin
                 'DB_PASSWORD=' + ConfigPage.Values[1] + #13#10 +
                 'DB_HOST=' + ConfigPage.Values[2] + #13#10 +
                 'DB_PORT=' + ConfigPage.Values[3] + #13#10 +
-                'SUPABASE_URL=' + SupabasePage.Values[0] + #13#10 +
-                'SUPABASE_SERVICE_ROLE_KEY=' + SupabasePage.Values[1] + #13#10;
+                'DB_HOST_AZURE=' + AzurePage.Values[0] + #13#10 +
+                'DB_USER_AZURE=' + AzurePage.Values[1] + #13#10 +
+                'DB_PASSWORD_AZURE=' + AzurePage.Values[2] + #13#10 +
+                'DB_NAME_AZURE=' + AzurePage.Values[3] + #13#10;
   SaveStringToFile(EnvFile, EnvContent, False);
 end;

@@ -11,7 +11,7 @@ export const getRubrosSubRubrosClient = async (): Promise<Rubro[]> => {
     return [];
   }
 
-  const rubros = [{ id: 0, nombre: 'TODOS' }, ...data.rubros];
+  const rubros = [{ id: '', nombre: 'TODOS' }, ...data.rubros];
 
   return rubros;
 }

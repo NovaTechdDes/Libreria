@@ -10,11 +10,20 @@ interface Props {
   currentPage: number;
   totalProductos: number;
   limit: number;
+
+  rubro?: number;
+  subrubro?: number;
+  search?: string;
 }
 
-export const InventarioList = ({ limit, productos, totalPages, currentPage, totalProductos }: Props) => {
+export const InventarioList = ({ limit, productos, totalPages, currentPage, totalProductos, rubro, subrubro, search }: Props) => {
   const router = useRouter();
-  const [numeroProducto, setNumeroProducto] = useState<number>(1)
+  const [numeroProducto, setNumeroProducto] = useState<number>(1);
+
+  let string = '';
+  if(rubro) string += `&rubro=${rubro}`;
+  if(subrubro) string += `&subrubro=${subrubro}`;
+  if(search) string += `&search=${search}`;
 
   const getPaginasVisibles = () => {
     const paginas: (number | string)[] = [];
@@ -53,7 +62,7 @@ export const InventarioList = ({ limit, productos, totalPages, currentPage, tota
 
   const handlePage = () => {
     const page = Math.ceil(numeroProducto / limit);
-    router.push(`/admin/inventario?page=${page}`)
+    router.push(`/admin/inventario?page=${page}` + string)
   }
 
   return (
@@ -96,7 +105,7 @@ export const InventarioList = ({ limit, productos, totalPages, currentPage, tota
         <div className="flex gap-3">
           {currentPage > 1 ? (
             <Link
-              href={`/admin/inventario?page=${currentPage - 1}`}
+              href={`/admin/inventario?page=${currentPage - 1}` + string}
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-[14px] hover:bg-slate-50 transition-all"
             >
               Anterior
@@ -106,7 +115,7 @@ export const InventarioList = ({ limit, productos, totalPages, currentPage, tota
           )}
           {currentPage < totalPages ? (
             <Link
-              href={`/admin/inventario?page=${currentPage + 1}`}
+              href={`/admin/inventario?page=${currentPage + 1}` + string}
               className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#0096B1] text-white font-bold text-[14px] hover:bg-[#008199] transition-all shadow-sm shadow-teal-100"
             >
               Siguiente
@@ -152,7 +161,7 @@ export const InventarioList = ({ limit, productos, totalPages, currentPage, tota
                       ? 'border-[#0096B1] bg-[#0096B1] text-white shadow-sm'
                       : 'border-slate-500 bg-white text-slate-600 hover:bg-slate-300 hover:border-slate-300'
                   }`}
-                  href={`/admin/inventario?page=${pagina}`}
+                  href={`/admin/inventario?page=${pagina}` + string}
                 >
                   {pagina}
                 </Link>

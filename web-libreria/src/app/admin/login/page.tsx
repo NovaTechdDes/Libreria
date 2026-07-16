@@ -40,7 +40,6 @@ const LoginPage = () => {
       if (rememberMe) {
         localStorage.setItem('rememberedUser', email);
       } else {
-        console.log("a")
         localStorage.removeItem('rememberedUser');
       }
       setLoading(false);

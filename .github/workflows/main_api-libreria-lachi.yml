@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - "backend-web/**"
+      - ".github/workflows/**"
   workflow_dispatch:
 
 jobs:

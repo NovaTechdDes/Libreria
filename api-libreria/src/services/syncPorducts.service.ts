@@ -81,34 +81,50 @@ export const syncProducts = async () => {
 
     console.log(`Total de productos: ${productos.length}`)
     
-    for(const producto of productos){
-      const queryProductos = new sql.Request(transaction);
-      queryProductos.input("id_interno", producto.id_articulo);
-      queryProductos.input("codigo", producto.codigo);
-      queryProductos.input("descripcion", producto.descripcion);
-      queryProductos.input("id_subrubro_interno", producto.id_rubro);
-      queryProductos.input("precio", producto.precio);
-      queryProductos.input("cantidad", producto.cantidad);
+    const payload = productos.map((producto) => ({
+      id_interno: producto.id_articulo,
+      codigo: producto.codigo,
+      descripcion: producto.descripcion,
+      id_subrubro_interno: producto.id_rubro,
+      precio: producto.precio,
+      cantidad: producto.cantidad,
+    }));
 
-      await queryProductos.query(`
-        MERGE INTO productos AS target
-        USING (
-            SELECT 
-                @id_interno AS id_interno, 
-                @codigo AS codigo, 
-                @precio AS precio, 
-                @cantidad AS cantidad, 
-                @descripcion AS descripcion, 
-                (SELECT id_subrubro FROM subrubros WHERE id_interno = @id_subrubro_interno) AS id_subrubro
-        ) AS source
-        ON (target.id_interno = source.id_interno)
-        WHEN MATCHED THEN 
-        UPDATE SET target.codigo = source.codigo, target.precio = source.precio, target.cantidad = source.cantidad, target.descripcion = source.descripcion, target.id_subrubro = source.id_subrubro
-        WHEN NOT MATCHED THEN
-          INSERT (id_interno, codigo, precio, cantidad, descripcion, id_subrubro)
-          VALUES (source.id_interno, source.codigo, source.precio, source.cantidad, source.descripcion, source.id_subrubro);
-      `);
-    }
+    const queryProductos = new sql.Request(transaction);
+    queryProductos.input("jsonProductos", sql.NVarChar(sql.MAX), JSON.stringify(payload));
+
+    await queryProductos.query(`
+      MERGE INTO productos AS target
+      USING (
+          SELECT 
+              j.id_interno,
+              j.codigo,
+              j.precio,
+              j.cantidad,
+              j.descripcion,
+              (SELECT id_subrubro FROM subrubros WHERE id_interno = j.id_subrubro_interno) AS id_subrubro
+          FROM OPENJSON(@jsonProductos)
+          WITH (
+              id_interno INT,
+              codigo VARCHAR(100),
+              precio DECIMAL(18, 2),
+              cantidad DECIMAL(18, 2),
+              descripcion VARCHAR(255),
+              id_subrubro_interno INT
+          ) AS j
+      ) AS source
+      ON (target.id_interno = source.id_interno)
+      WHEN MATCHED THEN 
+      UPDATE SET 
+          target.codigo = source.codigo, 
+          target.precio = source.precio, 
+          target.cantidad = source.cantidad, 
+          target.descripcion = source.descripcion, 
+          target.id_subrubro = source.id_subrubro
+      WHEN NOT MATCHED THEN
+        INSERT (id_interno, codigo, precio, cantidad, descripcion, id_subrubro)
+        VALUES (source.id_interno, source.codigo, source.precio, source.cantidad, source.descripcion, source.id_subrubro);
+    `);
 
 
     console.log("Productos sincronizados correctamente");

@@ -1,13 +1,12 @@
 import { Descuento, Informativo } from '@/src/components';
-import { createClient } from '@/src/lib/server';
+import { getConfiguracion } from '@/src/service/configuracion.service';
 import { FiSettings, FiSliders } from 'react-icons/fi';
 
 const page = async () => {
-  const supabase = await createClient();
-  const { data: dataConfiguracion, error } = await supabase.from('configuracion').select('*').single();
+  const { configuracion: dataConfiguracion, ok, msg } = await getConfiguracion();
 
-  if (error) {
-    console.error('Error al obtener la configuración:', error);
+  if (!ok) {
+    console.error(msg);
     return null;
   }
 

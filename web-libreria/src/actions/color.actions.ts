@@ -1,15 +1,13 @@
 'use server';
-import { createClient } from '../lib/server';
 import { revalidatePath } from 'next/cache';
+import { api } from '../service';
 
 export const putColor = async (id: number, color: string, codigo: string): Promise<boolean> => {
   try {
-    const supabase = await createClient();
+    const { data } = await api.put(`api/colores/${id}`, {color, codigo});
 
-    const { error } = await supabase.from('colores').update({ color, codigo }).eq('id', id);
-
-    if (error) {
-      throw error;
+    if(!data.ok) {
+        throw new Error(data.msg);
     }
 
     revalidatePath('/admin/colores');
@@ -23,14 +21,11 @@ export const putColor = async (id: number, color: string, codigo: string): Promi
 
 export const postColor = async (color: string, codigo: string): Promise<boolean> => {
   try {
-    const supabase = await createClient();
+    const { data } = await api.post('api/colores', {color, codigo});
 
-    const { error } = await supabase.from('colores').insert({ color, codigo });
-
-    if (error) {
-      throw error;
+    if(!data.ok) {
+        throw new Error(data.msg);
     }
-
     revalidatePath('/admin/colores');
 
     return true;

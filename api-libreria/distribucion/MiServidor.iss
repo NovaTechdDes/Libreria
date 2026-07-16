@@ -104,15 +104,22 @@ Flags: runhidden waituntilterminated
 
 [Code]
 var
-  SupabasePage: TInputQueryWizardPage;
+  AzurePage: TInputQueryWizardPage;
+  ImagenesAzure: TInputQueryWizardPage;
   DBPage: TInputQueryWizardPage;
   ConfigPage: TInputQueryWizardPage;
 
 procedure InitializeWizard;
 begin
-  SupabasePage := CreateInputQueryPage(wpWelcome, 'Configuración de Base de Datos de supabase', 'Ingrese la url de conexion y la clave de supabase', 'Este valor se guardará en el archivo .env del sistema.');
-  SupabasePage.Add('SUPABASE_URL:', False);
-  SupabasePage.Add('SUPABASE_SERVICE_ROLE_KEY:', False);
+ImagenesAzure := CreateInputQueryPage(wpWelcome, 'Configuración de imagenes de Azure', 'La conexion de Azure', 'Este valor se guardará en el archivo .env del sistema.');
+  ImagenesAzure.Add('Cadena de conexion:', False);
+ ImagenesAzure.Add('Contenedor de imagenes:', False);
+
+  AzurePage := CreateInputQueryPage(wpWelcome, 'Configuración de Base de Datos de Azure', 'La conexion de Azure', 'Este valor se guardará en el archivo .env del sistema.');
+  AzurePage.Add('HOST AZURE:', False);
+  AzurePage.Add('USER AZURE:', False);
+  AzurePage.Add('PASSWORD AZURE:', False);
+  AzurePage.Add('NAME AZURE:', False);
 
   DBPage := CreateInputQueryPage(wpWelcome, 'Configuración de Base de Datos', 'Ingrese el nombre de la base de datos', 'Este valor se guardará en el archivo .env del sistema.');
   DBPage.Add('Nombre de la base de datos:', False);
@@ -141,11 +148,19 @@ begin
   EnvContent := 'DB_NAME=' + DBPage.Values[0] + #13#10 +
                 'SERVIDOR_HOST=' + DBPage.Values[1] + #13#10 +
                 'BASE_URL=' + DBPage.Values[2] + #13#10 +
+
                 'DB_USER=' + ConfigPage.Values[0] + #13#10 +
                 'DB_PASSWORD=' + ConfigPage.Values[1] + #13#10 +
                 'DB_HOST=' + ConfigPage.Values[2] + #13#10 +
                 'DB_PORT=' + ConfigPage.Values[3] + #13#10 +
-                'SUPABASE_URL=' + SupabasePage.Values[0] + #13#10 +
-                'SUPABASE_SERVICE_ROLE_KEY=' + SupabasePage.Values[1] + #13#10;
+
+                'DB_HOST_AZURE=' + AzurePage.Values[0] + #13#10 +
+                'DB_USER_AZURE=' + AzurePage.Values[1] + #13#10 +
+                'DB_PASSWORD_AZURE=' + AzurePage.Values[2] + #13#10 +
+                'DB_NAME_AZURE=' + AzurePage.Values[3] + #13#10 +
+
+                'AZURE_STORAGE_CONNECTION_STRING=' + ImagenesAzure.Values[0] + #13#10 +
+                'AZURE_STORAGE_PRODUCTOS=' + ImagenesAzure.Values[1] + #13#10 ;
+
   SaveStringToFile(EnvFile, EnvContent, False);
 end;

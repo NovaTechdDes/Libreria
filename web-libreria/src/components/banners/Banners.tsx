@@ -1,9 +1,8 @@
-import { createClient } from '@/src/lib/server';
+import { getBanners } from '@/src/actions/banner.actions';
 import { BannerCarousel } from './BannerCarousel';
 
 const Banners = async () => {
-  const supabase = await createClient();
-  const { data: banners } = await supabase.from('banners').select('*').eq('activo', true);
+  const banners = await getBanners();
 
   if (!banners || banners.length === 0) return null;
 

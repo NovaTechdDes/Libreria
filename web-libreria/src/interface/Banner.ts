@@ -4,4 +4,5 @@ export interface Banner {
   subtitulo: string;
   imagen_url: string;
   activo: boolean;
+  orden?: number;
 }

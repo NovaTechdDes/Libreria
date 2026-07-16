@@ -1,17 +1,17 @@
 'use server';
-import { createClient } from '../lib/server';
+import { Rubro } from '../interface/Rubro';
+import { api } from '../service';
 
-export async function getRubrosSubRubrosClient() {
-  const supabase = await createClient();
+export const getRubrosSubRubrosClient = async (): Promise<Rubro[]> => {
 
-  const { data, error } = await supabase.from('rubros').select('*');
+  const { data } = await api.get('api/rubros');
 
-  if (error) {
-    console.error(error);
-    return null;
+  if (!data.ok) {
+    console.error(data.msg);
+    return [];
   }
 
-  const rubros = [{ id: 0, nombre: 'TODOS' }, ...data];
+  const rubros = [{ id: '', nombre: 'TODOS' }, ...data.rubros];
 
   return rubros;
 }

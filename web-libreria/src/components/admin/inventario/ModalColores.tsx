@@ -6,7 +6,7 @@ import type { Color } from '@/src/interface/Color';
 
 import { ModalColoreItem } from './ModalColoreItem';
 import { useProductoStore } from '@/src/store/producto.store';
-import { createClient } from '@/src/lib/client';
+import { getAllColores } from '@/src/service/color.service';
 
 interface Props {
   isOpen: boolean;
@@ -14,7 +14,6 @@ interface Props {
 }
 
 export const ModalColores = ({ isOpen, onClose }: Props) => {
-  const supabase = createClient();
   const { addColores, coloresSeleccionados } = useProductoStore();
 
   const [coloresDB, setColoresDB] = useState<Color[]>([]);
@@ -25,10 +24,8 @@ export const ModalColores = ({ isOpen, onClose }: Props) => {
     if (isOpen) {
       const fetchColores = async () => {
         setLoading(true);
-        const { data } = await supabase.from('colores').select('*');
-        if (data) {
-          setColoresDB(data);
-        }
+        const res = await getAllColores();
+        setColoresDB(res);
         setLoading(false);
       };
       fetchColores();

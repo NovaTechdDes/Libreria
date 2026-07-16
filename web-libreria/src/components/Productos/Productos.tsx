@@ -1,10 +1,10 @@
 import { Producto } from '@/src/interface/Producto';
 import { ProductoCard } from './ProductoCard';
-import { createClient } from '@/src/lib/server';
 import { CartInitializer } from '../carrito/CartInitializer';
 import { BuscadorCarrito } from './BuscadorCarrito';
 import { Pagination } from './Pagination';
 import { getProductos } from '@/src/helper/getProductos';
+import { getConfiguracion } from '@/src/helper/configuracion';
 
 interface Props {
   search?: string;
@@ -14,21 +14,19 @@ interface Props {
 }
 
 export const Productos = async ({ search, currentPage = 1, subRubroActivo, rubroActivo }: Props) => {
-  const supabase = await createClient();
+  const { carrito_habilitado, fecha_fin, fecha_inicio, frase_descuento, mensaje_informativo, porcentaje_descuento } = await getConfiguracion();
 
-  const { data: configuracion } = await supabase.from('configuracion').select('*').single();
-
-const { productos,  totalPages } = await getProductos(currentPage, search ?? '', true ,subRubroActivo ?? 0, rubroActivo ?? 0);
+  const { productos, totalPages } = await getProductos(currentPage, search ?? '', true, subRubroActivo, rubroActivo);
 
   return (
     <>
       <CartInitializer
-        inicio={configuracion?.fecha_inicio}
-        fin={configuracion?.fecha_fin}
-        habilitado={configuracion?.carrito_habilitado}
-        frase={configuracion?.frase_descuento}
-        mensaje={configuracion?.mensaje_informativo}
-        descuento={configuracion?.porcentaje_descuento}
+        inicio={fecha_inicio}
+        fin={fecha_fin}
+        habilitado={carrito_habilitado}
+        frase={frase_descuento}
+        mensaje={mensaje_informativo}
+        descuento={porcentaje_descuento}
       />
       <section className="w-full px-2 sm:px-6 lg:px-8 py-4 sm:py-6 max-w-[98%] sm:max-w-[90%] mx-auto">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 mb-4 sm:mb-6">
@@ -44,7 +42,11 @@ const { productos,  totalPages } = await getProductos(currentPage, search ?? '',
           ))}
         </div>
 
+<<<<<<< HEAD
         <Pagination search={search} subRubroActivo={subRubroActivo} rubroActivo={rubroActivo} currentPage={currentPage} totalPages={totalPages} />
+=======
+        <Pagination search={search ?? ''} rubroActivo={rubroActivo} subRubroActivo={subRubroActivo} currentPage={currentPage} totalPages={totalPages} />
+>>>>>>> dev
       </section>
     </>
   );

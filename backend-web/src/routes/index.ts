@@ -1,0 +1,8 @@
+export {default as banner} from './banner.route'
+export {default as colores} from './colores.route'
+export {default as configuracion} from './configuracion.route'
+export {default as rubrosRoutes} from './rubros.route'
+export {default as productos} from './producto.route'
+export {default as subrubrosRoutes} from './subRubros.route'
+export { default as varianteProducto} from './varianteProducto.route'
+export { default as auth } from './auth.route'

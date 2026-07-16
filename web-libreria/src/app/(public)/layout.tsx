@@ -1,20 +1,14 @@
 import { Footer, Header } from '@/src/components';
-import { createClient } from '@/src/lib/server';
+import { getConfiguracion } from '@/src/helper/configuracion';
 import React from 'react';
 
 const PublicLayout = async ({ children }: { children: React.ReactNode }) => {
-  const supabase = await createClient();
 
-  const { data: configuracion, error } = await supabase.from('configuracion').select('*').single();
-
-  if (error) {
-    console.error('Error al obtener la configuración:', error);
-    return null;
-  }
+  const { carrito_habilitado, mensaje_informativo } = await getConfiguracion();
 
   return (
     <div className="flex flex-col min-h-screen">
-      {configuracion.mensaje_informativo && (
+      {mensaje_informativo && (
         <div className="w-full bg-linear-to-r from-secondary via-primary to-secondary py-2 px-4 md:px-6 flex items-center justify-center text-center text-[11px] sm:text-xs md:text-sm font-semibold text-white shadow-lg overflow-hidden relative group">
           {/* Shimmer Effect */}
           <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
@@ -28,7 +22,7 @@ const PublicLayout = async ({ children }: { children: React.ReactNode }) => {
             </span>
             
             <span className="leading-tight line-clamp-2 md:line-clamp-none md:whitespace-normal text-balance">
-              {configuracion.mensaje_informativo}
+              {mensaje_informativo}
             </span>
 
             <span className="shrink-0 flex relative h-1.5 w-1.5 md:h-2 md:w-2">
@@ -38,7 +32,7 @@ const PublicLayout = async ({ children }: { children: React.ReactNode }) => {
           </span>
         </div>
       )}
-      <Header habilitado={configuracion.carrito_habilitado} />
+      <Header habilitado={carrito_habilitado} />
       <main className="flex flex-1 ">{children}</main>
       <Footer />
     </div>

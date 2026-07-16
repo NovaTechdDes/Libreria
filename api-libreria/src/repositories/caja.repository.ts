@@ -78,7 +78,7 @@ export async function postCloseCaja() {
 
   const query = `
   INSERT INTO caja (id_tipo, fecha, hora, concepto, tipo_mov, debe, haber, tipo_importe)
-  SELECT 9, @fecha, GETDATE(), 'Cierre caja: ' + tipo_importe, 'Egreso', -1 * saldo, NULL, tipo_importe
+  SELECT 9, @fecha, GETDATE(), 'Cierre de caja: ' + tipo_importe, 'Egreso', -1 * saldo, 0, tipo_importe
   FROM (SELECT tipo_importe, SUM(ISNULL(debe,0)) - SUM(ISNULL(haber,0)) AS saldo
     FROM caja
     WHERE fecha = @fecha GROUP BY tipo_importe) AS subquery

@@ -10,14 +10,26 @@ interface Props {
   currentPage: number;
   totalProductos: number;
   limit: number;
+<<<<<<< HEAD
   rubro: number | undefined;
   subrubro: number | undefined;
   search: string | undefined;
+=======
+
+  rubro?: number;
+  subrubro?: number;
+  search?: string;
+>>>>>>> dev
 }
 
 export const InventarioList = ({ limit, productos, totalPages, currentPage, totalProductos, rubro, subrubro, search }: Props) => {
   const router = useRouter();
-  const [numeroProducto, setNumeroProducto] = useState<number>(1)
+  const [numeroProducto, setNumeroProducto] = useState<number>(1);
+
+  let string = '';
+  if(rubro) string += `&rubro=${rubro}`;
+  if(subrubro) string += `&subrubro=${subrubro}`;
+  if(search) string += `&search=${search}`;
 
   let string = '';
   if(rubro) string += `&rubro=${rubro}`;
@@ -61,7 +73,7 @@ export const InventarioList = ({ limit, productos, totalPages, currentPage, tota
 
   const handlePage = () => {
     const page = Math.ceil(numeroProducto / limit);
-    router.push(`/admin/inventario?page=${page}`)
+    router.push(`/admin/inventario?page=${page}` + string)
   }
 
   return (

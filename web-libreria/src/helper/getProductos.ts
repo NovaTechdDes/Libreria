@@ -1,38 +1,30 @@
-import { createClient } from "@/src/lib/server";
+
+import { api } from "../service";
 
 const PAGE_SIZE = 50;
 
 export async function getProductos(page: number, search: string, activo: boolean = true, subRubroActivo?: number, rubro?: number){
+
     
-    const supabase = await createClient();
-    const from = (page - 1) * PAGE_SIZE;
-    const to = from + PAGE_SIZE - 1;
+    
+    const { data } = await api.get('/api/productos', {
+        params: {
+            page,
+            search,
+            activo,
+            subRubroActivo,
+            subrubro: subRubroActivo,
+            rubro
+        }
+    });
 
-    let query = supabase.from('productos').select('*, subRubros: fk_producto_subrubro!inner(*), productos_colores (colores(*)), variantes:productos_variantes(*)', {count: 'exact'}).range(from, to).order('descripcion', {ascending: true});
 
-    if(search){
-        query = query.or(`descripcion.ilike.%${search}%,codigo.ilike.%${search}%`);
-    }
-
-    if(subRubroActivo){
-        query = query.eq('id_subrubro', subRubroActivo);
-    }
-
-    if(rubro){
-        query = query.eq('fk_producto_subrubro.id_rubro', rubro);
-    }
-
-    if(activo){
-        query = query.eq('activo', activo)
-    }
-
-    const { data, count, error } = await query
-
-    if(error) throw error;
+    if(!data.ok) throw new Error(data.msg);
 
     return {
-        productos: data,
-        total: count ?? 0,
-        totalPages: Math.ceil((count ?? 0) / PAGE_SIZE)
+        productos: data.data,
+        total: data.total,
+        totalPages: Math.ceil(data.total / PAGE_SIZE)
     }
 }
+

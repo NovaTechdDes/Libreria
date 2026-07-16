@@ -1,23 +1,23 @@
 'use server'
 import { SubRubro } from "../interface/SubRubro";
-import { createClient } from "../lib/server"
+import { api } from "../service";
 
 export const getSubRubros = async(rubroActivo: number) => {
+<<<<<<< HEAD
 
     if(!rubroActivo) return null;
     const supabase = await createClient();
+=======
+    
+    const { data } = await api.get(`api/subrubros/rubro/${rubroActivo}`);
+>>>>>>> dev
 
-    const { data, error } = await supabase
-    .from('subrubros')
-    .select('*')
-    .eq('id_rubro', rubroActivo).order('nombre');
-
-    if(error){
-        console.error(error);
+    if(!data.ok){
+        console.error(data.msg);
         return null;
     };
 
-    const subRubros = [{ id_subrubro: 0, nombre: 'TODOS', id_rubro: 0 }, ...data] as SubRubro[];
+    const subRubros = [{ id_subrubro: '', nombre: 'TODOS', id_rubro: '' }, ...data.subrubros] as SubRubro[];
 
     return subRubros;
 }

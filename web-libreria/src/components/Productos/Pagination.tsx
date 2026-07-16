@@ -5,42 +5,24 @@ import Link from "next/link";
 interface Props {
     currentPage: number;
     totalPages: number;
-<<<<<<< HEAD
-    search?: string;
-    rubroActivo?: number;
-    subRubroActivo?: number;
-
-}
-
-export const Pagination = ({currentPage, totalPages, search, rubroActivo, subRubroActivo}: Props) => {
-=======
     rubroActivo?: number;
     subRubroActivo?: number;
     search?: string;
 }
 
 export const Pagination = ({currentPage, totalPages, rubroActivo, subRubroActivo, search}: Props) => {
->>>>>>> dev
   const pages: number[] = [];
 
   // Manejo de rangos para evitar 0
 
     const start = Math.max(currentPage - 2, 1);
     const end = Math.min(currentPage + 2, totalPages);
-<<<<<<< HEAD
-
-=======
     
->>>>>>> dev
     let string = '';
     if(search) string += `&search=${search}`;
     if(rubroActivo) string += `&rubro=${rubroActivo}`;
     if(subRubroActivo) string += `&subrubro=${subRubroActivo}`;
-<<<<<<< HEAD
-
-=======
     
->>>>>>> dev
   for (let i = start; i <= end; i++) {
     pages.push(i);
   }

@@ -67,16 +67,17 @@ export const useCarritoStore = create<CarritoStore>()(
                 && p.color?.id === color?.id
                 && p.variante?.id === variante?.id ? { ...p, cantidad: p.cantidad + cantidad } : p));
 
-            const subtotal = state.productos.reduce((acc, p) => acc + (p.producto.isvisibleprecio ? p.producto.precio : 0) * p.cantidad, 0);
+            const subtotal = nuevosProductos.reduce((acc, p) => acc + (p.producto.isvisibleprecio ? p.producto.precio : 0) * p.cantidad, 0);
             const total = subtotal - (subtotal * state.descuento) / 100;
 
             return { productos: nuevosProductos, total, subtotal };
           }
 
-          const subtotal = state.productos.reduce((acc, p) => acc + p.producto.precio * p.cantidad, 0);
+          const nuevosProductos = [...state.productos, { producto, cantidad, color, variante }];
+          const subtotal = nuevosProductos.reduce((acc, p) => acc + (p.producto.isvisibleprecio ? p.producto.precio : 0) * p.cantidad, 0);
           const total = subtotal - (subtotal * state.descuento) / 100;
 
-          return { productos: [...state.productos, { producto, cantidad, color, variante }], total, subtotal };
+          return { productos: nuevosProductos, total, subtotal };
         }),
 
       actualizarCantidad: (id: number, cantidad: number) =>
@@ -107,7 +108,7 @@ export const useCarritoStore = create<CarritoStore>()(
       descuento: 0,
       setDescuento: (descuento: number) =>
         set((state) => {
-          const subtotal = state.productos.reduce((acc, p) => acc + p.producto.precio * p.cantidad, 0);
+          const subtotal = state.productos.reduce((acc, p) => acc + (p.producto.isvisibleprecio ? p.producto.precio : 0) * p.cantidad, 0);
           const total = subtotal - (subtotal * descuento) / 100;
           return { descuento, total, subtotal };
         }),

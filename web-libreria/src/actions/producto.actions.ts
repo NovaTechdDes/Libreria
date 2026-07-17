@@ -47,7 +47,6 @@ export const updateStockVisibleProducto = async (activo: boolean, id: number): P
       isStock: activo
     });
 
-    console.log(data)
 
     if (!data.ok) throw new Error(data.msg);
 

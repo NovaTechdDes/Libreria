@@ -296,7 +296,7 @@ export const FormularioProducto = () => {
           <div className='flex flex-wrap items-center gap-3 border rounded-lg border-gray-200 max-h-50 mt-5 overflow-y-auto p-3'>
             {producto.tiene_variantes ? (
               <div className='space-y-2 w-full'>
-                {producto?.variantes?.map((variante: productos_variantes) => <VarianteItem handleDeleteVariante={handleDeleteVariante} key={variante.id} variante={variante}/>)}
+                {producto?.productos_variantes?.map((variante: productos_variantes) => <VarianteItem handleDeleteVariante={handleDeleteVariante} key={variante.id} variante={variante}/>)}
               </div>
             ) : (
               <p>Producto sin variantes</p>

@@ -1,6 +1,6 @@
 import { Producto } from "../types/Producto";
 
-interface ProductoSupabase {
+interface ProductoAzure {
   descripcion: string;
   id_subrubro: number;
   codigo: string;
@@ -11,7 +11,7 @@ interface ProductoSupabase {
   id_interno: number;
 }
 
-export const mapProductos = (productos: Producto[]): ProductoSupabase[] => {
+export const mapProductos = (productos: Producto[]): ProductoAzure[] => {
   
   return productos.map((producto) => ({
     descripcion: producto.descripcion?.trim()?.toUpperCase() || "",

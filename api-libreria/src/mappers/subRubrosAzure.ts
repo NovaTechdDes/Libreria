@@ -4,13 +4,13 @@ export interface SubRubro {
     nom_rubro: string;
 }
 
-export interface SubRubroSupabase {
+export interface SubRubroAzure {
     id_interno: number;
     nombre: string;
     id_rubro: number;
 }
 
-export const mapSubRubrosSupabase = (subrubros: SubRubro[]): SubRubroSupabase[] => {
+export const mapSubRubrosAzure = (subrubros: SubRubro[]): SubRubroAzure[] => {
     return subrubros.map(subrubro => ({
         id_subrubro: subrubro.id_rubro,
         id_interno: subrubro.id_rubro,

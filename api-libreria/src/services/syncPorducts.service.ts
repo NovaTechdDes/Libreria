@@ -1,11 +1,10 @@
 import { obtenerRubros } from "./rubro.service";
-
-import { mapRubrosSupabase } from "../mappers/rubrosSupaase";
-import { mapSubRubrosSupabase } from "../mappers/subRubrosSupabase";
 import { obtenerProductosPorRubro } from "./productos.service";
-import { mapProductos } from "../mappers/mapProductos";
 import { poolAzure, poolConnectAzure } from "../config/db";
 import sql from "mssql";
+import { mapRubrosAzure } from "../mappers/rubrosAzure";
+import { mapSubRubrosAzure } from "../mappers/subRubrosAzure";
+
 
 const rubrosSync = process.env.RUBROS?.split(",") || [];
 
@@ -22,7 +21,7 @@ export const syncProducts = async () => {
 
     const rubros = await obtenerRubros();
 
-    const rubrosMap = mapRubrosSupabase(rubros.rubros);
+    const rubrosMap = mapRubrosAzure(rubros.rubros);
 
     for (const rubro of rubrosMap) {
       const queryRubros = new sql.Request(transaction);
@@ -40,7 +39,7 @@ export const syncProducts = async () => {
       `);
     }
 
-    const subRubrosMap = mapSubRubrosSupabase(rubros.subrubros);
+    const subRubrosMap = mapSubRubrosAzure(rubros.subrubros);
 
     for (const subRubro of subRubrosMap) {
   

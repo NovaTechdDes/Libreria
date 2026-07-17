@@ -8,6 +8,8 @@ export const getProductos = async(req: Request, res: Response ) => {
     try {
         const {rubro, subrubro, page = 1, limit = 50, activo = 1, search = ''} = req.query;
 
+        console.log("Activo", activo)
+
 
         const pool = await poolPromise
         const request = pool.request();
@@ -50,11 +52,10 @@ export const getProductos = async(req: Request, res: Response ) => {
             WHERE 1=1
         `;
 
-     if (activo) {
-        
-            query += ` AND p.activo = @activo`;
-            request.input('activo', 1);
-        };
+     if (activo && String(activo) !== 'false') {
+        query += ` AND p.activo = @activo`;
+        request.input('activo', 1);
+    }
 
         if (subrubro) {
             query += ` AND p.id_subrubro = @subrubro`;
@@ -236,7 +237,7 @@ export const putProductoById = async(req: Request, res: Response) => {
 
 export const putActivoProducto = async(req: Request, res: Response) => {
     try {
-        const { id_producto, activo } = req.params;
+        const { id_producto, activo } = req.body;
 
         const pool = await poolPromise
         const request = pool.request();
@@ -267,12 +268,13 @@ export const putActivoProducto = async(req: Request, res: Response) => {
 export const putVisiblePrecio = async(req: Request, res: Response) => {
     try {
         const { id_producto, visible } = req.body;
+        console.log(id_producto)
 
         const pool = await poolPromise;
         const request = pool.request();
 
         let query = `UPDATE productos 
-                        SET visible = @visible
+                        SET isvisibleprecio = @visible
                         WHERE id_producto = @id_producto`;
 
         request.input('id_producto', id_producto);

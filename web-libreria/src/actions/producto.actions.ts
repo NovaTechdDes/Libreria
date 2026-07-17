@@ -8,9 +8,9 @@ import { mapProducto } from '../mappers/producto.mapper';
 
 export const updateVisibilidadProducto = async (activo: boolean, id: number): Promise<boolean> => {
   try {
-    const { data } = await api.put('/api/producto/activo', {
+    const { data } = await api.put('/api/productos/activo', {
       id_producto: id,
-      activo: activo
+      activo
     })
     
     if (!data.ok) throw new Error(data.msg);
@@ -25,7 +25,7 @@ export const updateVisibilidadProducto = async (activo: boolean, id: number): Pr
 
 export const updatePrecioVisibleProducto = async (visible: boolean, id: number): Promise<boolean> => {
   try {
-    const { data } = await api.put('/api/producto/visible-precio', {
+    const { data } = await api.put('/api/productos/visible-precio', {
       id_producto: id,
       visible: visible
     })
@@ -42,10 +42,12 @@ export const updatePrecioVisibleProducto = async (visible: boolean, id: number):
 
 export const updateStockVisibleProducto = async (activo: boolean, id: number): Promise<boolean> => {
   try {
-    const { data } = await api.put('/api/producto/stock', {
+    const { data } = await api.put('/api/productos/stock', {
       id_producto: id,
       isStock: activo
-    })
+    });
+
+    console.log(data)
 
     if (!data.ok) throw new Error(data.msg);
 
@@ -103,4 +105,4 @@ export const getProductoById = async(id: number) => {
     console.error(error);
     return null;
   }
-}
+};

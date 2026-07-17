@@ -9,7 +9,6 @@ interface Props {
 export const BuscadorProductos = ({rubro, subrubro}: Props) => {
   const [value, setValue] = useState('');
 
-  console.log(rubro, subrubro);
   const router = useRouter();
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

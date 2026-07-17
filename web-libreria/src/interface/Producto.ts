@@ -25,11 +25,13 @@ export interface Producto {
 
   tiene_variantes: boolean;
 
-  variantes?: productos_variantes[]
+  productos_variantes?: productos_variantes[]
 
   productos_colores?: Color_Relacion[];
 
   url_imagenes?: Imagenes[]
+
+  
 }
 
 export interface ProductoBackend {
@@ -55,7 +57,7 @@ export interface ProductoBackend {
 
   tiene_variantes: boolean;
 
-  variantes?: string;
+  productos_variantes?: string;
 
   productos_colores?: string;
 

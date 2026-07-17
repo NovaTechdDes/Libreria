@@ -28,7 +28,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
     e.stopPropagation();
     if (!producto || !isStockAvailable) return;
     const color = producto.productos_colores?.find((color) => color?.id === colorSeleccionado);
-    const variante = producto.variantes?.find((v) => v.id === varianteSeleccionada);
+    const variante = producto.productos_variantes?.find((v) => v.id === varianteSeleccionada);
     agregarProducto(producto, 1, color ?? null, variante ?? null);
   };
 
@@ -123,7 +123,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
               className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px] font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 cursor-pointer appearance-none pr-8"
             >
               <option value="" className="text-slate-400">Seleccionar Variante</option>
-              {producto.variantes?.map((variante) => (
+              {producto.productos_variantes?.map((variante) => (
                 <option key={variante.id} value={variante.id} className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">
                   {variante.nombre}
                 </option>

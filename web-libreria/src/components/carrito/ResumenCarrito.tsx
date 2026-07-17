@@ -35,8 +35,9 @@ export const ResumenCarrito = () => {
     const productsList = productos
       .map((p) => {
         const colorInfo = p.color ? ` (Color: *${p.color.color}*)` : '';
+        const varianteInfo = p.variante ? ` (Variante: *${p.variante.nombre}*)` : '';
         const priceInfo = p.producto.isvisibleprecio ? '' : ' _(Precio a consultar)_';
-        return `• *${p.cantidad}x* ${p.producto.descripcion}${colorInfo}${priceInfo}`;
+        return `• *${p.cantidad}x* ${p.producto.descripcion}${colorInfo}${varianteInfo}${priceInfo}`;
       })
       .join('\n');
 
@@ -58,7 +59,7 @@ export const ResumenCarrito = () => {
       hasHiddenPrices ? '⚠️ *Nota:* Algunos productos requieren consulta de precio y no están sumados al total.\n' : '',
       notas ? `📝 *NOTAS:* ${notas}\n` : '',
       '------------------------------',
-      `💰 *TOTAL: ${totalFormateado}*`,
+      `*TOTAL: ${totalFormateado}*`,
       '------------------------------',
     ].join('\n');
 

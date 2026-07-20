@@ -1,7 +1,7 @@
 import { Producto } from '@/src/interface/Producto';
 import { InventarioItem } from './InventarioItem';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface Props {
@@ -19,6 +19,13 @@ interface Props {
 export const InventarioList = ({ limit, productos, totalPages, currentPage, totalProductos, rubro, subrubro, search }: Props) => {
   const router = useRouter();
   const [numeroProducto, setNumeroProducto] = useState<number>(1);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = 0;
+    }
+  }, [currentPage]);
 
   let string = '';
   if(rubro) string += `&rubro=${rubro}`;
@@ -67,7 +74,7 @@ export const InventarioList = ({ limit, productos, totalPages, currentPage, tota
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mt-1">
-      <div className="overflow-x-auto overflow-y-scroll max-h-[50vh]">
+      <div ref={containerRef} className="overflow-x-auto overflow-y-scroll max-h-[50vh]">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-50/50 border-b border-slate-100">

@@ -6,9 +6,7 @@ import { procesamientoImagenes } from "../utils/procesamientoImagenes";
 
 export const getProductos = async(req: Request, res: Response ) => {
     try {
-        const {rubro, subrubro, page = 1, limit = 50, activo = 1, search = ''} = req.query;
-
-        console.log("Activo", activo)
+        const {rubro, subrubro, page = 1, limit = 50, activo = 1, search = '', desactivados = 'true'} = req.query;
 
 
         const pool = await poolPromise
@@ -49,8 +47,10 @@ export const getProductos = async(req: Request, res: Response ) => {
 
             FROM productos p
             INNER JOIN subrubros s ON p.id_subrubro = s.id_subrubro
-            WHERE 1=1
+            WHERE p.activoBackend=@activoBackend
         `;
+
+        request.input('activoBackend', desactivados === 'false' ? 0 : 1);
 
      if (activo && String(activo) !== 'false') {
         query += ` AND p.activo = @activo`;

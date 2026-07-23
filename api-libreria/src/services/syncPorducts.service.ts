@@ -92,7 +92,12 @@ export const syncProducts = async () => {
     const queryProductos = new sql.Request(transaction);
     queryProductos.input("jsonProductos", sql.NVarChar(sql.MAX), JSON.stringify(payload));
 
+    const subRubrosList = subRubrosIds.length > 0 ? subRubrosIds.join(",") : "NULL";
+
     await queryProductos.query(`
+      WITH SubrubrosSincronizados AS (
+      SELECT id_subrubro FROM subrubros WHERE id_interno In (${subRubrosList})
+      )
       MERGE INTO productos AS target
       USING (
           SELECT 
@@ -119,10 +124,17 @@ export const syncProducts = async () => {
           target.precio = source.precio, 
           target.cantidad = source.cantidad, 
           target.descripcion = source.descripcion, 
-          target.id_subrubro = source.id_subrubro
-      WHEN NOT MATCHED THEN
-        INSERT (id_interno, codigo, precio, cantidad, descripcion, id_subrubro)
-        VALUES (source.id_interno, source.codigo, source.precio, source.cantidad, source.descripcion, source.id_subrubro);
+          target.id_subrubro = source.id_subrubro,
+          target.activo = 1
+      --2. si no existe en Azure: lo insertamos como activo
+      WHEN NOT MATCHED BY TARGET THEN
+        INSERT (id_interno, codigo, precio, cantidad, descripcion, id_subrubro, activo)
+        VALUES (source.id_interno, source.codigo, source.precio, source.cantidad, source.descripcion, source.id_subrubro, 1)
+      -- 3. Si existe en Azure en estos subrubros pero no vino en los activos locales: Desactivar
+      WHEN NOT MATCHED BY SOURCE
+        AND target.id_subrubro IN (SELECT id FROM subrubrosSincronizados) THEN
+        UPDATE SET target.activo = 0
+      
     `);
 
 

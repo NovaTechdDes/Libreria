@@ -3,9 +3,9 @@ import { api } from "../service";
 
 const PAGE_SIZE = 50;
 
-export async function getProductos(page: number, search: string, activo: boolean = true, subRubroActivo?: number, rubro?: number){
+export async function getProductos(page: number, search: string, activo: boolean = true, subRubroActivo?: number, rubro?: number, desactivados?: string){
 
-    
+    console.log(Boolean(desactivados))
     
     const { data } = await api.get('/api/productos', {
         params: {
@@ -14,7 +14,8 @@ export async function getProductos(page: number, search: string, activo: boolean
             activo,
             subRubroActivo,
             subrubro: subRubroActivo,
-            rubro
+            rubro,
+            desactivados: !Boolean(desactivados)
         }
     });
 

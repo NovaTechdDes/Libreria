@@ -70,26 +70,20 @@ export const putColor = async(req: Request, res: Response) => {
 
 export const getColores = async(req: Request, res: Response) => {
     try {
-        const {from, to, search} = req.query; 
+        const {search} = req.query; 
 
         const pool = await poolPromise;
 
-        const offset = from ? Number(from) : 0;
-        const limit = to ? Number(to) : 10;
         const searchQuery = search ? String(search) : '%';
 
         const result = await pool.request()
         .input('search', searchQuery)
-        .input('offset', offset)
-        .input('limit', limit)
         .query(`
             SELECT *,
                 COUNT(*) OVER() AS total
             FROM colores
             WHERE color LIKE @search
             ORDER BY color
-            OFFSET @offset ROWS
-            FETCH NEXT @limit ROWS ONLY
         `);
 
         res.status(200).json({

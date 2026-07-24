@@ -51,18 +51,21 @@ export const deleteVarianteProducto = async(req: Request, res: Response) => {
     const transaction = new sql.Transaction(pool);
 
     try {
-        const { id_producto } = req.params;
+        const { id_variante } = req.params;
+        const { id_producto } = req.query;
+
+        console.log(id_variante, id_producto)
 
         await transaction.begin();
 
         const requestVariante = new sql.Request(transaction);
-        let queryVariante = `DELETE FROM productos_variantes WHERE id_producto = @id`;
-        requestVariante.input('id', sql.Int, id_producto);
+        let queryVariante = `DELETE FROM productos_variantes WHERE id = @id`;
+        requestVariante.input('id', sql.Int, id_variante);
         await requestVariante.query(queryVariante);
 
         const requestVerificacion = new sql.Request(transaction);
-        let queryVerificacion = `SELECT id_producto FROM productos_variantes WHERE id_producto = @id`;
-        requestVerificacion.input('id', sql.Int, id_producto);
+        let queryVerificacion = `SELECT id_producto FROM productos_variantes WHERE id_producto = @id_producto`;
+        requestVerificacion.input('id_producto', sql.Int, id_producto);
         const tieneVariante = (await requestVerificacion.query(queryVerificacion)).recordset.length;
 
         

@@ -6,7 +6,7 @@ const router = Router();
 
 
 router.post("/", postVarianteProducto);
-router.post("/:id", deleteVarianteProducto);
+router.delete("/:id_variante", deleteVarianteProducto);
 
 
 export default router;

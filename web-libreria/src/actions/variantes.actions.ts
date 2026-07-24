@@ -21,9 +21,9 @@ export const postVariante = async(variante: string, productoId: number): Promise
     }
 }
 
-export const deleteVariante = async(idVariante: number): Promise<boolean> => {
+export const deleteVariante = async(idVariante: number, id_producto: number): Promise<boolean> => {
     try {
-        const { data } = await api.delete(`api/varianteProducto/${idVariante}`);
+        const { data } = await api.delete(`api/varianteProducto/${idVariante}`, { params: { id_producto }});
         if(!data.ok) throw new Error(data.msg);
 
         revalidatePath(`/admin/inventario`)

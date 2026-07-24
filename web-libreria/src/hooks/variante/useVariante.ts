@@ -19,8 +19,8 @@ export const useDeleteVariante = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: ({idVariante, productoId}: {idVariante: number, productoId: number}) => deleteVariante(idVariante),
+        mutationFn: ({idVariante, id_producto}: {idVariante: number, id_producto: number}) => deleteVariante(idVariante, id_producto),
         onSuccess: ( data, variables ) => 
-            queryClient.invalidateQueries({queryKey: ['producto', variables.productoId]})
+            queryClient.invalidateQueries({queryKey: ['producto', variables.id_producto]})
     })
 }

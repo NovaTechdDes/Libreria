@@ -9,16 +9,10 @@ interface returnProps {
     totalPages: number
 }
 
-const getColores = async(page: number, search: string): Promise<returnProps> => {
-
-    const from = (page - 1 ) * PAGE_SIZE;
-    const to = from + PAGE_SIZE - 1;
-
+const getColores = async(search: string): Promise<returnProps> => {
 
     const { data } = await api.get('api/colores', {
         params: {
-            from,
-            to,
             search
         }
     });

@@ -5,15 +5,14 @@ import { IoAddOutline } from 'react-icons/io5';
 
 interface Props {
   searchParams: {
-    page: string;
     search: string;
   };
 }
 
 const ColoresPage = async ({ searchParams }: Props) => {
-  const { page, search } = await searchParams;
+  const { search } = await searchParams;
   
-  const { colores, totalPages } = await getColores(Number(page) || 1, search || '');
+  const { colores, } = await getColores(search || '');
   
   return (
     <div className="p-8 max-w-7xl mx-auto">
@@ -32,7 +31,7 @@ const ColoresPage = async ({ searchParams }: Props) => {
         </div>
       </header>
 
-      <ColoresContainer coloresIniciales={colores || []} totalPages={totalPages} currentPage={Number(page) || 1} />
+      <ColoresContainer coloresIniciales={colores || []}  />
     </div>
   );
 };

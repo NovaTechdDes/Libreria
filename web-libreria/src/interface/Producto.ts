@@ -1,6 +1,6 @@
 import { Color_Relacion } from './Color';
 import { Imagenes } from './Imagenes';
-import { productos_variantes } from './Variantes';
+
 
 export interface Producto {
   id_producto: number;
@@ -25,7 +25,7 @@ export interface Producto {
 
   tiene_variantes: boolean;
 
-  productos_variantes?: productos_variantes[]
+  variantes?: string;
 
   productos_colores?: Color_Relacion[];
 

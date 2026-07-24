@@ -56,7 +56,7 @@ export const ModalColores = ({ isOpen, onClose }: Props) => {
       <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose} />
 
       {/* Modal Content */}
-      <div className="relative bg-white w-full max-w-lg rounded-[32px] shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-10 duration-500">
+      <div className="relative bg-white w-full max-w-lg rounded-4xl shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-10 duration-500">
         {/* Header */}
         <div className="px-8 pt-8 pb-6 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -75,7 +75,7 @@ export const ModalColores = ({ isOpen, onClose }: Props) => {
 
         {/* Body */}
         <div className="px-8 pb-8">
-          <div className="bg-slate-50 rounded-[24px] p-6 min-h-[300px] max-h-[400px] overflow-y-auto custom-scrollbar border border-slate-400">
+          <div className="bg-slate-50 rounded-3xl p-6 min-h-75 max-h-100 overflow-y-auto custom-scrollbar border border-slate-400">
             {loading ? (
               <div className="h-full flex flex-col items-center justify-center text-slate-400 gap-3">
                 <FiLoader className="w-8 h-8 animate-spin text-[#0096B1]" />

@@ -34,7 +34,6 @@ export const FormularioProducto = () => {
 
   const { data: producto, isLoading } = useProductoById(productoSeleccionado!);
 
-
   const [showColores, setShowColores] = useState(false);
   const [images, setImages] = useState<ImageItem[]>([
     { file: null, preview: null },
@@ -42,14 +41,13 @@ export const FormularioProducto = () => {
     { file: null, preview: null },
   ]);
 
-
   //Primer Imagen
-
   const inputRef = useRef<HTMLInputElement>(null);
-
   const inputRef2 = useRef<HTMLInputElement>(null);
-
   const inputRef3 = useRef<HTMLInputElement>(null);
+
+  const variantes = JSON.parse(producto?.variantes ?? "[]")
+
 
   const handleModal = () => setShowColores(!showColores);
 
@@ -145,7 +143,7 @@ export const FormularioProducto = () => {
     });
 
     if(isConfirmed){
-      const res = await deleteVariante.mutateAsync({idVariante: id, productoId: productoSeleccionado});
+      const res = await deleteVariante.mutateAsync({idVariante: id, id_producto: productoSeleccionado});
 
       if(res) {
         mensaje('Variante eliminada correctamente', 'success')
@@ -161,7 +159,7 @@ export const FormularioProducto = () => {
   )
 
   return (
-    <div className="bg-white rounded-[24px] border border-slate-200 shadow-sm p-8 w-full lg:sticky lg:top-8 animate-in fade-in slide-in-from-right-4 duration-500">
+    <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-8 w-full lg:sticky lg:top-8 animate-in fade-in slide-in-from-right-4 duration-500">
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
         <div className="bg-[#0096B1] p-2.5 rounded-xl text-white shadow-lg shadow-teal-100">
@@ -187,7 +185,7 @@ export const FormularioProducto = () => {
             {/* Principal */}
             <div
               onClick={() => inputRef.current?.click()}
-              className="w-[85px] h-[85px] border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center bg-slate-50 group cursor-pointer hover:border-teal-500/50 hover:bg-teal-50/30 transition-all"
+              className="w-21.25 h-21.25 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center bg-slate-50 group cursor-pointer hover:border-teal-500/50 hover:bg-teal-50/30 transition-all"
             >
               {images[0].preview ? (
                 <div className="relative w-full h-full group/image">
@@ -214,7 +212,7 @@ export const FormularioProducto = () => {
             {/* Secondary 1 */}
             <div
               onClick={() => inputRef2.current?.click()}
-              className="w-[85px] h-[85px] border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center bg-slate-50 group cursor-pointer hover:border-teal-500/50 hover:bg-teal-50/30 transition-all"
+              className="w-21.25 h-21.25 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center bg-slate-50 group cursor-pointer hover:border-teal-500/50 hover:bg-teal-50/30 transition-all"
             >
               {images[1].preview ? (
                 <div className="relative w-full h-full group/image">
@@ -241,7 +239,7 @@ export const FormularioProducto = () => {
             {/* Secondary 2 */}
             <div
               onClick={() => inputRef3.current?.click()}
-              className="w-[85px] h-[85px] border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center bg-slate-50 group cursor-pointer hover:border-teal-500/50 hover:bg-teal-50/30 transition-all"
+              className="w-21.25 h-21.25 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center bg-slate-50 group cursor-pointer hover:border-teal-500/50 hover:bg-teal-50/30 transition-all"
             >
               {images[2].preview ? (
                 <div className="relative w-full h-full group/image">
@@ -294,9 +292,9 @@ export const FormularioProducto = () => {
           </button>
           </div>
           <div className='flex flex-wrap items-center gap-3 border rounded-lg border-gray-200 max-h-50 mt-5 overflow-y-auto p-3'>
-            {producto.tiene_variantes ? (
+            {variantes ? (
               <div className='space-y-2 w-full'>
-                {producto?.productos_variantes?.map((variante: productos_variantes) => <VarianteItem handleDeleteVariante={handleDeleteVariante} key={variante.id} variante={variante}/>)}
+                {variantes.map((variante: productos_variantes) => <VarianteItem handleDeleteVariante={handleDeleteVariante} key={variante.id} variante={variante}/>)}
               </div>
             ) : (
               <p>Producto sin variantes</p>

@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { CgShoppingCart } from 'react-icons/cg';
 import { ButtonSeleccionarColor } from './ButtonSeleccionarColor';
 import { useState } from 'react';
+import { productos_variantes } from '@/src/interface/Variantes';
 
 interface ProductoCardProps {
   producto: Producto;
@@ -21,21 +22,21 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
   const isPriceVisible = producto.isvisibleprecio !== false;
   const isStockAvailable = producto.isstock !== false && (producto.cantidad ?? 0) > 0;
 
-  
+  const variantes: productos_variantes[] = producto.variantes ?? [];
     
 
   const addCarrito = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!producto || !isStockAvailable) return;
     const color = producto.productos_colores?.find((color) => color?.id === colorSeleccionado);
-    const variante = producto.productos_variantes?.find((v) => v.id === varianteSeleccionada);
+    const variante = variantes.find((v) => v.id === varianteSeleccionada);
     agregarProducto(producto, 1, color ?? null, variante ?? null);
   };
 
   if (!producto.id_producto) return null;
 
   return (
-    <article className="group flex flex-row sm:flex-col bg-white dark:bg-white/5 rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] dark:hover:bg-white/8 transition-all duration-300 ease-out cursor-pointer border border-gray-100/50 dark:border-white/10 h-full min-h-[140px] sm:min-h-0">
+    <article className="group flex flex-row sm:flex-col bg-white dark:bg-white/5 rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] dark:hover:bg-white/8 transition-all duration-300 ease-out cursor-pointer border border-gray-100/50 dark:border-white/10 h-full min-h-35 sm:min-h-0">
       {/* Área de imagen */}
       <div className="relative w-36 h-36 sm:w-full sm:h-auto sm:aspect-4/5 bg-[#F9F9F7] dark:bg-black/20 overflow-hidden shrink-0">
         {producto.url_imagenes && producto.url_imagenes.length > 0 ? (
@@ -96,7 +97,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
       <div className="flex flex-col flex-1 p-3 sm:p-4 gap-1.5 sm:gap-2">
         {/* Nombre y Colores */}
         <div className="space-y-1 sm:space-y-1.5">
-          <h3 className="text-[13px] sm:text-[15px] font-semibold text-gray-800 dark:text-white leading-tight line-clamp-2 min-h-0 sm:min-h-[40px]">{producto.descripcion}</h3>
+          <h3 className="text-[13px] sm:text-[15px] font-semibold text-gray-800 dark:text-white leading-tight line-clamp-2 min-h-0 sm:min-h-10">{producto.descripcion}</h3>
 
           <div className="flex flex-wrap gap-3 sm:gap-3 items-center">
             {producto.productos_colores?.map((color, index) => (
@@ -123,7 +124,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
               className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px] font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 cursor-pointer appearance-none pr-8"
             >
               <option value="" className="text-slate-400">Seleccionar Variante</option>
-              {producto.productos_variantes?.map((variante) => (
+              {variantes.map((variante) => (
                 <option key={variante.id} value={variante.id} className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">
                   {variante.nombre}
                 </option>

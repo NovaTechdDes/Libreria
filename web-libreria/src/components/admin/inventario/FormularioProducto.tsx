@@ -46,7 +46,7 @@ export const FormularioProducto = () => {
   const inputRef2 = useRef<HTMLInputElement>(null);
   const inputRef3 = useRef<HTMLInputElement>(null);
 
-  const variantes = JSON.parse(producto?.variantes ?? "[]")
+  const variantes = producto?.variantes
 
 
   const handleModal = () => setShowColores(!showColores);

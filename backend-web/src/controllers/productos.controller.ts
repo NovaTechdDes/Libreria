@@ -34,7 +34,7 @@ export const getProductos = async(req: Request, res: Response ) => {
                 FROM productos_variantes pv
                 WHERE pv.id_producto = p.id_producto
                 FOR JSON PATH
-            ), '[]') as productos_variantes,
+            ), '[]') as variantes,
 
             --relacion productos imagenes
             ISNULL((
@@ -94,9 +94,7 @@ export const getProductos = async(req: Request, res: Response ) => {
         const data = result.recordset.map(row => ({
             ...row,
             subRubros: row.subRubros ? JSON.parse(row.subRubros) : null,
-            productos_colores: row.productos_colores ? JSON.parse(row.productos_colores) : [],
-            productos_variantes: row.productos_variantes ? JSON.parse(row.productos_variantes) : [],
-            url_imagenes: row.url_imagenes ? JSON.parse(row.url_imagenes) : []
+            
             
         }));
         const total = result.recordset[0]?.total_count || 0;

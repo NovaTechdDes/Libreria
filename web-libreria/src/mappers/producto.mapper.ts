@@ -1,6 +1,11 @@
 import { Producto, ProductoBackend } from "../interface/Producto";
 
+export const mapsProductos = (productos: ProductoBackend[]) : Producto[] => {
+    return productos.map((producto) => mapProducto(producto));
+}
+
 export const mapProducto = (producto: ProductoBackend): Producto => {
+
     return {
         ...producto,
         url_imagenes: JSON.parse(producto.url_imagenes || '[]'),

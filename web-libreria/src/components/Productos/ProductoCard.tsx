@@ -8,6 +8,7 @@ import { CgShoppingCart } from 'react-icons/cg';
 import { ButtonSeleccionarColor } from './ButtonSeleccionarColor';
 import { useState } from 'react';
 import { productos_variantes } from '@/src/interface/Variantes';
+import { mensaje } from '@/src/helper';
 
 interface ProductoCardProps {
   producto: Producto;
@@ -31,6 +32,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
     const color = producto.productos_colores?.find((color) => color?.id === colorSeleccionado);
     const variante = variantes.find((v) => v.id === varianteSeleccionada);
     agregarProducto(producto, 1, color ?? null, variante ?? null);
+    mensaje('Producto agregado al carrito', 'success')
   };
 
   if (!producto.id_producto) return null;

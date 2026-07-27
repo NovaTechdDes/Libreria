@@ -5,6 +5,7 @@ import { BuscadorCarrito } from './BuscadorCarrito';
 import { Pagination } from './Pagination';
 import { getProductos } from '@/src/helper/getProductos';
 import { getConfiguracion } from '@/src/helper/configuracion';
+import { mapsProductos } from '@/src/mappers/producto.mapper';
 
 interface Props {
   search?: string;
@@ -17,6 +18,8 @@ export const Productos = async ({ search, currentPage = 1, subRubroActivo, rubro
   const { carrito_habilitado, fecha_fin, fecha_inicio, frase_descuento, mensaje_informativo, porcentaje_descuento } = await getConfiguracion();
 
   const { productos, totalPages } = await getProductos(currentPage, search ?? '', true, subRubroActivo, rubroActivo);
+
+  const productosMapeados = mapsProductos(productos)
 
   return (
     <>
@@ -37,7 +40,7 @@ export const Productos = async ({ search, currentPage = 1, subRubroActivo, rubro
 
         {/* mapeo de productos */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-5 lg:gap-6">
-          {productos?.map((producto: Producto) => (
+          {productosMapeados?.map((producto: Producto) => (
             <ProductoCard key={producto.id_producto} producto={producto} />
           ))}
         </div>

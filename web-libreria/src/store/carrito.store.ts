@@ -91,7 +91,17 @@ export const useCarritoStore = create<CarritoStore>()(
 
       removerProducto: (id: number, variante: productos_variantes | null) =>
         set((state) => {
-          const nuevosProductos = state.productos.filter((p) => p.producto.id_producto !== id && p.variante?.id !== variante?.id);
+          console.log(state.productos)
+
+          const nuevosProductos = state.productos.filter((p) => {
+            const mismaVariante = (p.variante?.id ?? null) === (variante?.id ?? null);
+            const mismoProducto = p.producto.id_producto === id;
+            
+            return !mismoProducto || !mismaVariante;
+          });
+
+          console.log(nuevosProductos)
+
           const subtotal = nuevosProductos.reduce((acc, p) => acc + (p.producto.isvisibleprecio ? p.producto.precio : 0) * p.cantidad, 0);
           const total = subtotal - (subtotal * state.descuento) / 100;
 

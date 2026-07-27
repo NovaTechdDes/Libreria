@@ -29,7 +29,7 @@ export default async function InventarioPage({ searchParams }: Props) {
   const { productos, total, totalPages } = await getProductos(
     currentPage,
     search ?? '',
-    !mostrarDesactivados,
+    false,
     subRubroId,
     rubroId,
     desactivados

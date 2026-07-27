@@ -2,6 +2,7 @@ import { InventarioContainer } from '@/src/components/admin/inventario/Inventari
 import { getProductos } from '@/src/helper/getProductos';
 import { getRubrosSubRubrosClient } from '@/src/helper/getRubrosSubRubros';
 import { getSubRubros } from '@/src/helper/getSubRubros';
+import { mapsProductos } from '@/src/mappers/producto.mapper';
 
 
 interface Props {
@@ -36,6 +37,8 @@ export default async function InventarioPage({ searchParams }: Props) {
   const rubros = await getRubrosSubRubrosClient();
   const subRubros = await getSubRubros(rubroId ?? 0);
 
+  const productosMapeados = mapsProductos(productos)
+
   return (
     <InventarioContainer
       search={search ?? ''}
@@ -43,7 +46,7 @@ export default async function InventarioPage({ searchParams }: Props) {
       rubroSeleccionado={rubroId}
       subRubroSeleccionado={subRubroId}
       mostrarDesactivados={mostrarDesactivados}
-      productos={productos || []}
+      productos={productosMapeados || []}
       totalPages={totalPages || 1}
       currentPage={currentPage}
       totalProductos={total || 0}

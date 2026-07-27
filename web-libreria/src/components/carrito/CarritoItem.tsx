@@ -13,14 +13,14 @@ export const CarritoItem = ({ producto }: Props) => {
   const { actualizarCantidad, removerProducto } = useCarritoStore();
 
   const handleIncrement = () => {
-    actualizarCantidad(producto.producto.id_producto!, producto.cantidad + 1);
+    actualizarCantidad(producto.producto.id_producto!, producto.cantidad + 1, producto.variante);
   };
 
   const handleDecrement = () => {
     if (producto.cantidad > 1) {
-      actualizarCantidad(producto.producto.id_producto!, producto.cantidad - 1);
+      actualizarCantidad(producto.producto.id_producto!, producto.cantidad - 1, producto.variante);
     } else {
-      removerProducto(producto.producto.id_producto!);
+      removerProducto(producto.producto.id_producto!, producto.variante);
     }
   };
 

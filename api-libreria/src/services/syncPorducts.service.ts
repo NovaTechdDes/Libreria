@@ -132,7 +132,7 @@ export const syncProducts = async () => {
         VALUES (source.id_interno, source.codigo, source.precio, source.cantidad, source.descripcion, source.id_subrubro, 1)
       -- 3. Si existe en Azure en estos subrubros pero no vino en los activos locales: Desactivar
       WHEN NOT MATCHED BY SOURCE
-        AND target.id_subrubro IN (SELECT id FROM subrubrosSincronizados) THEN
+        AND target.id_subrubro IN (SELECT id_subrubro FROM subrubrosSincronizados) THEN
         UPDATE SET target.activoBackend = 0;
       
     `);

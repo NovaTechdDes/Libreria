@@ -9,9 +9,9 @@ const AboutPage = () => {
   return (
     <main className="flex-1 bg-background transition-colors duration-300">
       {/* Hero Section */}
-      <section className="relative min-h-[600px] flex items-center overflow-hidden">
+      <section className="relative min-h-150 flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <Image className="w-full h-full object-cover" src="/FondoNosotros.png" alt="Librería Lachi Interior" width={2000} height={1200} priority />
+          <Image className="w-full h-full object-cover" src="/Nostros.jpeg" alt="Librería Lachi Interior" width={2000} height={1200} priority />
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
 

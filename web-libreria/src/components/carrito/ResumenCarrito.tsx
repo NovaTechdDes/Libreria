@@ -4,14 +4,17 @@ import { getConfiguracion } from '@/src/helper/configuracion';
 import { useCarritoStore } from '@/src/store/carrito.store';
 import { useEffect, useState } from 'react';
 import { FiSend } from 'react-icons/fi';
+import Swal from 'sweetalert2';
 
 export const ResumenCarrito = () => {
   const { total, subtotal, productos, setHabilitado, setDescuento, setFrase, descuento, frase } = useCarritoStore();
 
-  const [nombre, setNombre] = useState('');
-  const [whatsapp, setWhatsapp] = useState('');
-  const [notas, setNotas] = useState('');
+  const [nombre, setNombre] = useState<string>('');
+  const [whatsapp, setWhatsapp] = useState<string>('');
+  const [notas, setNotas] = useState<string>('');
   const [envio, setEnvio] = useState<boolean>(false);
+  const [pago, setPago] = useState<'Efectivo' | 'Transferencia'>('Efectivo');
+  const [direccion, setDireccion] = useState<string>('');
 
   const cargarConfiguracion = async () => {
     const { carrito_habilitado, frase_descuento, porcentaje_descuento } = await getConfiguracion();
@@ -24,9 +27,23 @@ export const ResumenCarrito = () => {
     cargarConfiguracion();
   }, []);
 
-  const handleSendWhatsApp = () => {
+  const handleSendWhatsApp = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!nombre.trim()) {
-      alert('Por favor, ingresa tu nombre para continuar.');
+      await Swal.fire({
+        icon: 'warning',
+        title: 'Por favor, ingresa tu nombre para continuar.',
+        confirmButtonText: 'Aceptar',
+      });
+      return;
+    }
+
+    if (envio && !direccion.trim()) {
+      await Swal.fire({
+        icon: 'warning',
+        title: 'Por favor, ingresa tu dirección para continuar.',
+        confirmButtonText: 'Aceptar',
+      });
       return;
     }
 
@@ -51,7 +68,8 @@ export const ResumenCarrito = () => {
       '------------------------------',
       `- *Cliente:* ${nombre}`,
       `- *WhatsApp:* ${whatsapp || 'No especificado'}`,
-      `- *Entrega:* ${envio ? 'Envío a domicilio' : 'Retiro en tienda'}`,
+      `- *Forma de pago:* ${pago}`,
+      `- *Entrega:* ${envio ? `Envío a domicilio (${direccion})` : 'Retiro en tienda'}`,
       '',
       '- *PRODUCTOS:*',
       productsList,
@@ -140,6 +158,22 @@ export const ResumenCarrito = () => {
         </div>
 
         <div className="flex flex-col gap-1.5">
+          <label htmlFor="pago" className="text-slate-900 text-sm font-bold block">
+            Forma de Pago
+          </label>
+          <select
+            name="pago"
+            id="pago"
+            value={pago}
+            onChange={(e) => setPago(e.target.value as 'Efectivo' | 'Transferencia')}
+            className="w-full bg-white border border-slate-500 rounded-xl px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all shadow-sm"
+          >
+            <option value="Efectivo">Efectivo</option>
+            <option value="Transferencia">Transferencia</option>
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-1.5">
           <label htmlFor="envio" className="text-slate-900 text-sm font-bold block">
             Modalidad de envío
           </label>
@@ -154,6 +188,21 @@ export const ResumenCarrito = () => {
             <option value="true">Envío a domicilio</option>
           </select>
         </div>
+
+        { envio === true && <div className="space-y-1.5">
+          <label htmlFor="direccion" className="text-slate-900 text-sm font-bold block">
+            Dirección de envío
+          </label>
+          <input
+            type="text"
+            name="direccion"
+            id="direccion"
+            value={direccion}
+            onChange={(e) => setDireccion(e.target.value)}
+            placeholder="Ej: Calle Falsa 1234"
+            className="w-full bg-white border border-slate-500 rounded-xl px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all shadow-sm"
+          />
+        </div>}
 
         {/* Botón de Acción */}
         <button

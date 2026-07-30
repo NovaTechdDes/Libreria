@@ -38,6 +38,7 @@ export interface CarritoStore {
   actualizarCantidad: (id: number, cantidad: number, variante: productos_variantes | null) => void;
   removerProducto: (id: number, variante: productos_variantes | null) => void;
 
+  vaciarCarrito: () => void;
   guardadoEn?: number;
 }
 
@@ -91,7 +92,6 @@ export const useCarritoStore = create<CarritoStore>()(
 
       removerProducto: (id: number, variante: productos_variantes | null) =>
         set((state) => {
-          console.log(state.productos)
 
           const nuevosProductos = state.productos.filter((p) => {
             const mismaVariante = (p.variante?.id ?? null) === (variante?.id ?? null);
@@ -124,6 +124,8 @@ export const useCarritoStore = create<CarritoStore>()(
 
       frase: '',
       setFrase: (frase: string) => set({ frase }),
+
+      vaciarCarrito: () => set({ productos: [], total: 0, subtotal: 0 }),
     }),
   {
     name: 'carrito.storage',

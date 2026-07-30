@@ -7,7 +7,7 @@ import { FiSend } from 'react-icons/fi';
 import Swal from 'sweetalert2';
 
 export const ResumenCarrito = () => {
-  const { total, subtotal, productos, setHabilitado, setDescuento, setFrase, descuento, frase } = useCarritoStore();
+  const { total, subtotal, productos, setHabilitado, setDescuento, setFrase, descuento, frase, vaciarCarrito } = useCarritoStore();
 
   const [nombre, setNombre] = useState<string>('');
   const [whatsapp, setWhatsapp] = useState<string>('');
@@ -58,6 +58,11 @@ export const ResumenCarrito = () => {
       })
       .join('\n');
 
+    const subtotalFormateado = subtotal.toLocaleString('es-AR', {
+      style: 'currency',
+      currency: 'ARS',
+    });
+
     const totalFormateado = total.toLocaleString('es-AR', {
       style: 'currency',
       currency: 'ARS',
@@ -77,14 +82,32 @@ export const ResumenCarrito = () => {
       hasHiddenPrices ? '⚠️ *Nota:* Algunos productos requieren consulta de precio y no están sumados al total.\n' : '',
       notas ? `📝 *NOTAS:* ${notas}\n` : '',
       '------------------------------',
+      frase && descuento ? `- *Subtotal:* ${subtotalFormateado}` : '',
+      frase && descuento ? `- *Descuento (${frase}):* -${descuento}%` : '',
       `*TOTAL: ${totalFormateado}*`,
       '------------------------------',
-    ].join('\n');
+    ].filter(Boolean).join('\n');
 
     const phoneNumber = '5493456414401';
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(mensajeWhatsApp)}`;
 
     window.open(url, '_blank');
+
+    vaciarCarrito();
+    setNombre('');
+    setWhatsapp('');
+    setNotas('');
+    setDireccion('');
+    setEnvio(false);
+    setPago('Efectivo');
+
+    await Swal.fire({
+      icon: 'success',
+      title: '¡Pedido enviado!',
+      text: 'Te redirigimos a WhatsApp para finalizar tu compra.',
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: '#10b981',
+    });
   };
 
   return (
@@ -120,7 +143,7 @@ export const ResumenCarrito = () => {
       </div>
 
       {/* Formulario */}
-      <form className="space-y-4 pt-2">
+      <form onSubmit={handleSendWhatsApp} className="space-y-4 pt-2">
         <div className="space-y-1.5">
           <label className="text-slate-900 text-sm font-bold block">Nombre Completo</label>
           <input
@@ -206,7 +229,7 @@ export const ResumenCarrito = () => {
 
         {/* Botón de Acción */}
         <button
-          onClick={handleSendWhatsApp}
+          type="submit"
           className="w-full bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5"
         >
           <FiSend className="w-5 h-5 fill-current" />

@@ -100,7 +100,7 @@ export const useCarritoStore = create<CarritoStore>()(
             return !mismoProducto || !mismaVariante;
           });
 
-          console.log(nuevosProductos)
+          
 
           const subtotal = nuevosProductos.reduce((acc, p) => acc + (p.producto.isvisibleprecio ? p.producto.precio : 0) * p.cantidad, 0);
           const total = subtotal - (subtotal * state.descuento) / 100;

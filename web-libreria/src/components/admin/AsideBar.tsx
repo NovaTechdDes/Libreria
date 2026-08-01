@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { BsFillImageFill, BsFillPaletteFill } from 'react-icons/bs';
-import { FiBox, FiLogOut, FiSettings } from 'react-icons/fi';
+import { FiBox, FiLogOut, FiSettings, FiTrendingUp } from 'react-icons/fi';
 
 export const AsideBar = () => {
   const pathname = usePathname();
@@ -31,15 +31,20 @@ export const AsideBar = () => {
       icon: FiSettings,
       href: '/admin/configuracion',
     },
+    {
+      label: 'Metricas',
+      icon: FiTrendingUp,
+      href: '/admin/metricas',
+    },
   ];
 
   const handleLogOut = async () => {
-    document.cookie = "token=; path=/; max-age=0; SameSite=Lax; Secure";
+    document.cookie = 'token=; path=/; max-age=0; SameSite=Lax; Secure';
     router.push('/admin/login');
   };
 
   return (
-    <aside className="w-[240px] h-screen bg-white border-r border-slate-400 flex flex-col py-8 shadow-[1px_0_10px_rgba(0,0,0,0.02)]">
+    <aside className="w-60] h-screen bg-white border-r border-slate-400 flex flex-col py-8 shadow-[1px_0_10px_rgba(0,0,0,0.02)]">
       {/* Navegación Principal */}
       <div className="flex flex-col items-center gap-2 px-4">
         <Image className="rounded-full" src="/Icon.png" alt="Logo" width={50} height={50} />

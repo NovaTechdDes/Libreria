@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import { FiTrendingUp, FiCalendar, FiChevronDown } from 'react-icons/fi';
-import { DateRange, getDateRange } from '@/src/helper/date-range';
+import { DateRange } from '@/src/helper/date-range';
 import { BsPeople } from 'react-icons/bs';
 import { useMetrica } from '@/src/hooks/metrica/useMetrica';
 import { Loading } from '@/src/components/ui/Loading';
+import { useProductosMasVistos } from '@/src/hooks/producto_visto/useProductoVisto';
 
 interface FilterOption {
   id: DateRange;
@@ -25,6 +26,7 @@ const MetricasPage = () => {
   const [activeRange, setActiveRange] = useState<DateRange>('today');
 
   const { data: metricas, isLoading } = useMetrica(activeRange);
+  const { data: productosVistos, isLoading: isLoadingProductosVistos } = useProductosMasVistos(new Date());
 
   const { data: visit } = metricas || {};
 
@@ -96,6 +98,18 @@ const MetricasPage = () => {
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Tabla de productos más vistos */}
+      <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h3 className="text-lg font-bold text-slate-900">Productos más vistos</h3>
+            <p className="text-sm text-slate-500">Resumen de productos más vistos</p>
+          </div>
+        </div>
+
+        
       </div>
     </div>
   );

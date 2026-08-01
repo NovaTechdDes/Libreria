@@ -5,4 +5,5 @@ export {default as rubrosRoutes} from './rubros.route'
 export {default as productos} from './producto.route'
 export {default as subrubrosRoutes} from './subRubros.route'
 export { default as varianteProducto} from './varianteProducto.route'
-export { default as auth } from './auth.route'
+export { default as auth } from './auth.route';
+export { default as productosVistos } from './productos_vistos.route';

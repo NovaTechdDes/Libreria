@@ -9,6 +9,8 @@ import { ButtonSeleccionarColor } from './ButtonSeleccionarColor';
 import { useState } from 'react';
 import { productos_variantes } from '@/src/interface/Variantes';
 import { mensaje } from '@/src/helper';
+import { useRegistrarProductoVisto } from '@/src/hooks/producto_visto/useProductoVisto';
+import { getOrCreateSessionId } from '@/src/helper/session';
 
 interface ProductoCardProps {
   producto: Producto;
@@ -17,9 +19,10 @@ interface ProductoCardProps {
 export const ProductoCard = ({ producto }: ProductoCardProps) => {
 
   const { agregarProducto, habilitado, inicio, fin } = useCarritoStore();
+  const { mutate: registrarVisto } = useRegistrarProductoVisto();
+
   const [colorSeleccionado, setColorSeleccionado] = useState<number>(producto?.productos_colores?.[0]?.id ?? 0);
   const [varianteSeleccionada, setVarianteSeleccionado] = useState<number | undefined>(undefined)
-
   const isPriceVisible = producto.isvisibleprecio !== false;
   const isStockAvailable = producto.isstock !== false && (producto.cantidad ?? 0) > 0;
 
@@ -28,7 +31,18 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
 
   const addCarrito = (e: React.MouseEvent) => {
     e.stopPropagation();
+
     if (!producto || !isStockAvailable) return;
+
+    // 1.Disparo en segundo plano
+    registrarVisto({
+      producto_id: producto.id_producto,
+      fecha: new Date(),
+      session_id: getOrCreateSessionId(),
+    }, {
+      onError: (err) => console.error('Error silencioso al registrar visto: ', err),
+    });
+
     const color = producto.productos_colores?.find((color) => color?.id === colorSeleccionado);
     const variante = variantes.find((v) => v.id === varianteSeleccionada);
     agregarProducto(producto, 1, color ?? null, variante ?? null);

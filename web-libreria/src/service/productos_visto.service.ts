@@ -1,7 +1,7 @@
-import { Producto_Visto } from '../interface/Producto_Visto';
+import { Producto_Visto, Producto_VistoBackEnd } from '../interface/Producto_Visto';
 import api from './api.service';
 
-export const getProductosMasVistos = async (fecha: Date): Promise<Producto_Visto[]> => {
+export const getProductosMasVistos = async (fecha: Date): Promise<Producto_VistoBackEnd[]> => {
   try {
     const { data } = await api.get('api/productos_vistos', {
         params: {

@@ -7,6 +7,7 @@ import { BsPeople } from 'react-icons/bs';
 import { useMetrica } from '@/src/hooks/metrica/useMetrica';
 import { Loading } from '@/src/components/ui/Loading';
 import { useProductosMasVistos } from '@/src/hooks/producto_visto/useProductoVisto';
+import { ProductoVistosItem } from '@/src/components/productoVistos/ProductoVistosItem';
 
 interface FilterOption {
   id: DateRange;
@@ -107,6 +108,30 @@ const MetricasPage = () => {
             <h3 className="text-lg font-bold text-slate-900">Productos más vistos</h3>
             <p className="text-sm text-slate-500">Resumen de productos más vistos</p>
           </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          {isLoadingProductosVistos ? (
+            <Loading />
+          ) : !productosVistos || productosVistos.length === 0 ? (
+            <p className="text-sm text-slate-400 py-6 text-center">No hay productos vistos registrados en este período.</p>
+          ) : (
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-slate-50/70 border-b border-slate-200/80 text-[12px] font-bold text-slate-400 uppercase tracking-wider">
+                  <th className="px-4 py-3">Producto</th>
+                  <th className="px-4 py-3">Stock</th>
+                  <th className="px-4 py-3">Precio</th>
+                  <th className="px-4 py-3 text-right">Vistas</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {productosVistos.map((elem) => (
+                  <ProductoVistosItem key={elem.id_producto} elem={elem} />
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
 
         

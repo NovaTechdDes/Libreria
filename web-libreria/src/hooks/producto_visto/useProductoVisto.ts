@@ -3,8 +3,11 @@ import { getProductosMasVistos, postProductosVistos } from '@/src/service/produc
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const useProductosMasVistos = (fecha: Date) => {
+  const fechaKey = typeof fecha === 'string' 
+    ? fecha 
+    : fecha.toISOString().split('T')[0];
   return useQuery({
-    queryKey: ['productos-vistos', fecha],
+    queryKey: ['productos-vistos', fechaKey],
     queryFn: () => getProductosMasVistos(fecha),
     enabled: !!fecha,
     staleTime: 1000 * 60 * 5, // 5 Minutos

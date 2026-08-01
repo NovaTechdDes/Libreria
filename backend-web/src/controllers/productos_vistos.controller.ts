@@ -18,11 +18,27 @@ export const getProductosVistos = async(req: Request, res: Response) => {
         const result = await pool.request()
             .input('fecha', fecha)
             .query(`
-                SELECT p.id_producto, p.descripcion, COUNT(pv.id) AS total_vistas
+                SELECT
+                    p.id_producto,
+                    p.descripcion,
+                    p.precio,
+                    p.cantidad,
+                    (
+                        SELECT TOP 1 pi.nombre_archivo
+                        FROM productos_imagenes pi
+                        WHERE pi.id_producto = p.id_producto
+                        ORDER BY pi.orden ASC
+                    ) AS url_imagen,
+                    COUNT(*) AS vistas
                 FROM productos_vistos pv
-                INNER JOIN productos p ON pv.producto_id = p.id_producto
-                GROUP BY p.id_producto, p.descripcion
-                ORDER BY total_vistas DESC
+                INNER JOIN productos p
+                    ON pv.producto_id = p.id_producto
+                GROUP BY
+                    p.id_producto,
+                    p.descripcion,
+                    p.precio,
+                    p.cantidad
+                ORDER BY vistas DESC;
 
             `)
 

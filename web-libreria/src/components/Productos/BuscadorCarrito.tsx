@@ -31,7 +31,11 @@ export const BuscadorCarrito = () => {
       onSubmit={handleSearch}
       className="w-full flex items-center bg-white rounded-2xl border border-gray-200/80 hover:border-primary/60 transition-all duration-200 focus-within:border-primary focus-within:shadow-[0_0_0_3px_rgba(248,113,113,0.1)] px-4 py-2.5"
     >
-      <CgSearch className="text-gray-400 mr-3 text-xl" />
+      
+        <button type='submit' aria-label='Buscar' className='focus:outline-none'>
+          <CgSearch  className="cursor-pointer text-gray-400 mr-3 text-xl" />
+        </button>
+      
       <input
         type="text"
         value={value}

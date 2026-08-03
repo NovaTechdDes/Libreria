@@ -6,16 +6,12 @@ const ordenRubros = [
     'LIBRERIA',
     'JUGUETERIA',
     'MARROQUINERIA',
-    'REGALERIA',
-    'BAZAR',
     'BEAUTY-BELLEZA',
     'PERFUMERIA',
-    'BIJOUTERIE',
     'INFLABLE',
-    'INVIERNO',
-    'NAVIDAD',
     'PELUCHES',
     'PROMOCIONES OFERTAS'
+    
 ]
 
 

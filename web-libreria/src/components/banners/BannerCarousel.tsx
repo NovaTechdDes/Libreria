@@ -31,16 +31,18 @@ export const BannerCarousel = ({ banners }: Props) => {
   if (!banners.length) return null;
 
   return (
-    <div className="relative w-full h-50 md:h-87.5 overflow-hidden shadow-xl group" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
+    <div className="relative w-full overflow-hidden shadow-xl group" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
       {/* Slides */}
       {banners.map((banner, index) => (
         <div
           key={banner.id}
-          className={`absolute inset-0 transition-all duration-1000 ease-in-out transform ${index === current ? 'opacity-100 scale-100' : 'opacity-0 scale-110 pointer-events-none'}`}
+          className={`transition-all duration-1000 ease-in-out transform ${
+            index === current ? 'opacity-100 scale-100 relative' : 'opacity-0 scale-110 absolute inset-0 pointer-events-none'
+          }`}
         >
           {/* Overlay gradiente */}
           <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent z-10" />
-          <Image src={banner.imagen_url || ''} alt={banner.titulo || 'Banner'} width={1920} height={1080} className="object-cover w-full h-full" priority={index === 0} />
+          <img src={banner.imagen_url || ''} alt={banner.titulo || 'Banner'} className="w-full h-auto block" />
 
           {/* Contenido del Banner */}
           <div className="absolute bottom-6 left-6 md:left-12 z-20 bg-black/50 rounded-lg p-2 text-white max-w-2xl">

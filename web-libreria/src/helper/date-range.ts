@@ -4,12 +4,15 @@ export function getDateRange(range: DateRange) {
   const now = new Date();
 
   let from = new Date();
-  const to = new Date();
+  // Vercel Web Analytics agrupa por días completos UTC. 
+  // Para incluir el día de hoy hasta el final, el 'until' debe ser el comienzo del día de mañana.
+  const to = new Date(now);
+  to.setDate(to.getDate() + 1);
+  to.setHours(0, 0, 0, 0);
 
   switch (range) {
     case "today":
       from.setHours(0, 0, 0, 0);
-      to.setHours(23, 59, 59, 999);
       break;
 
     case "week":
@@ -37,8 +40,8 @@ export function getDateRange(range: DateRange) {
       break;
   }
 
-    return {
-        from: from.toISOString(),
-        to: to.toISOString(),
-    }
-}
+  return {
+    from: from.toISOString(),
+    to: to.toISOString(),
+  };
+}

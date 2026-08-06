@@ -12,9 +12,7 @@ export const Footer = () => {
             <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
               Librería <span className="text-teal-600 dark:text-primary">Lachi</span>
             </h2>
-            <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
-              Tu compañera ideal en cada etapa escolar y creativa. Calidad, variedad y la mejor atención personalizada.
-            </p>
+            <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Tu compañera ideal en cada etapa escolar y creativa. Calidad, variedad y la mejor atención personalizada.</p>
             <div className="flex gap-3 pt-2">
               <a
                 href="https://www.instagram.com/librerialachi?igsh=eWE2MjU1Y3cyeWhl"
@@ -100,16 +98,15 @@ export const Footer = () => {
 
         {/* Bottom */}
         <div className="border-t border-slate-200 dark:border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-slate-400 dark:text-slate-500 text-xs font-medium text-center md:text-left">
-            © {new Date().getFullYear()} Librería & Juguetería Lachi. Todos los derechos reservados.
-          </p>
+          <p className="text-slate-400 dark:text-slate-500 text-xs font-medium text-center md:text-left">© {new Date().getFullYear()} Librería & Juguetería Lachi. Todos los derechos reservados.</p>
           <div className="flex items-center gap-2">
             <span className="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest">Desarrollado por</span>
-            <span className="text-slate-900 dark:text-white font-bold text-xs">NovaTech</span>
+            <Link href="https://www.novatechdesarrollos.com.ar/" target="_blanck">
+              <span className="text-slate-900 dark:text-white font-bold text-xs">NovaTech</span>
+            </Link>
           </div>
         </div>
       </div>
     </footer>
   );
 };
-

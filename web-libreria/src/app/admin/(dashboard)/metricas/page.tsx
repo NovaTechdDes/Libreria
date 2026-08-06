@@ -1,6 +1,6 @@
 'use client';
 
-import {  useState } from 'react';
+import { useState } from 'react';
 import { FiTrendingUp, FiCalendar, FiChevronDown } from 'react-icons/fi';
 import { DateRange } from '@/src/helper/date-range';
 import { BsPeople } from 'react-icons/bs';
@@ -27,6 +27,7 @@ const MetricasPage = () => {
   const [activeRange, setActiveRange] = useState<DateRange>('today');
 
   const { data: metricas, isLoading } = useMetrica(activeRange);
+  console.log(metricas);
   const { data: productosVistos, isLoading: isLoadingProductosVistos } = useProductosMasVistos(new Date());
 
   const { data: visit } = metricas || {};
@@ -126,15 +127,13 @@ const MetricasPage = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {productosVistos.map((elem) => (
-                  <ProductoVistosItem key={elem.id_producto} elem={elem} />
+                {productosVistos.map((elem, index) => (
+                  <ProductoVistosItem key={elem.id_producto} elem={elem} index={index} />
                 ))}
               </tbody>
             </table>
           )}
         </div>
-
-        
       </div>
     </div>
   );

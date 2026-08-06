@@ -1,14 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { DateRange, getDateRange } from "../../helper/date-range";
+import { DateRange } from "../../helper/date-range";
 import axios from "axios";
 
 
 export const useMetrica = (range: DateRange) => {
 
-    
   return useQuery({
     queryKey: ['metricas', range],
     queryFn: async () => {
+      
+      console.log("a")
+      
       const { data } = await axios.get('/api/analytics', {
         params: { range },
       });

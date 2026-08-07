@@ -3,45 +3,80 @@ export type DateRange = "today" | "week" | "30days" | "month" | "year" | "custom
 export function getDateRange(range: DateRange) {
   const now = new Date();
 
-  let from = new Date();
-  // Vercel Web Analytics agrupa por días completos UTC. 
-  // Para incluir el día de hoy hasta el final, el 'until' debe ser el comienzo del día de mañana.
-  const to = new Date(now);
-  to.setDate(to.getDate() + 1);
-  to.setHours(0, 0, 0, 0);
+  let currentFrom = new Date();
+  const currentTo = new Date(now);
+
+  currentTo.setDate(currentTo.getDate() + 1);
+  currentTo.setHours(0, 0, 0, 0);
+
+  let previousFrom = new Date();
+  let previousTo = new Date();
+
 
   switch (range) {
     case "today":
-      from.setHours(0, 0, 0, 0);
+      currentFrom.setHours(0, 0, 0, 0);
+      
+      previousFrom = new Date(currentFrom);
+      previousFrom.setDate(previousFrom.getDate() - 1);
+
+      previousTo = new Date(currentFrom);
       break;
 
     case "week":
-      from.setDate(now.getDate() - 6);
-      from.setHours(0, 0, 0, 0);
+      currentFrom.setDate(now.getDate() - 6);
+      currentFrom.setHours(0, 0, 0, 0);
+
+      previousFrom = new Date(currentFrom);
+      previousFrom.setDate(previousFrom.getDate() - 7);
+
+      previousTo = new Date(currentFrom);
       break;
 
     case "30days":
-      from.setDate(now.getDate() - 29);
-      from.setHours(0, 0, 0, 0);
+      currentFrom.setDate(now.getDate() - 29);
+      currentFrom.setHours(0, 0, 0, 0);
+
+       previousFrom = new Date(currentFrom);
+      previousFrom.setDate(previousFrom.getDate() - 30);
+
+      previousTo = new Date(currentFrom);
       break;
 
     case "month":
-      from = new Date(now.getFullYear(), now.getMonth(), 1);
+      currentFrom = new Date(now.getFullYear(), now.getMonth(), 1);
+
+      previousFrom = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      previousTo = new Date(now.getFullYear(), now.getMonth(), 1);
       break;
 
     case "year":
-      from = new Date(now.getFullYear(), 0, 1);
+      currentFrom = new Date(now.getFullYear(), 0, 1);
+
+      previousFrom = new Date(now.getFullYear() - 1, 0, 1);
+      previousTo = new Date(now.getFullYear(), 0, 1);
       break;
 
     case "custom":
-      // Por defecto los últimos 30 días si es personalizado
-      from.setDate(now.getDate() - 29);
-      from.setHours(0, 0, 0, 0);
+      currentFrom.setDate(now.getDate() - 29);
+      currentFrom.setHours(0, 0, 0, 0);
+
+      previousFrom = new Date(currentFrom);
+      previousFrom.setDate(previousFrom.getDate() - 30);
+
+      previousTo = new Date(currentFrom);
       break;
   }
 
   return {
-    from: from.toISOString(),
-    to: to.toISOString(),
+    current: {
+      from: currentFrom.toISOString(),
+      to: currentTo.toISOString(),
+    },
+    
+    previous: {
+      from: previousFrom.toISOString(),
+      to: previousTo.toISOString(),
+    },
   };
-}
+}

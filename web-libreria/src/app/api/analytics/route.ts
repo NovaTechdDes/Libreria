@@ -8,81 +8,41 @@ const PROJECT_ID = process.env.VERCEL_PROJECT_ID!;
 const TEAM_ID = process.env.VERCEL_TEAM_ID!;
 
 
+async function fetchVisitsCount(since: string, until: string) {
+  try {
+    const { data } = await vercelApi.get("query/web-analytics/visits/count", {
+      params: {
+        projectId: PROJECT_ID,
+        teamId: TEAM_ID,
+        since,
+        until,
+      },
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    });
+    return data?.data ?? { visitors: 0, pageviews: 0 };
+  } catch {
+    return { visitors: 0, pageviews: 0 };
+  }
+}
+
 export async function GET(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
     const range = (searchParams.get("range") as any) || "today";
 
-    const { from, to } = getDateRange(range);
+    const ranges = getDateRange(range);
 
-    // Si es "today", hacemos una única consulta directa
-    if (range === "today") {
-      const { data } = await vercelApi.get(`query/web-analytics/visits/count`, {
-        params: {
-          projectId: PROJECT_ID,
-          teamId: TEAM_ID,
-          since: from,
-          until: to,
-        },
-        headers: {
-          Authorization: `Bearer ${TOKEN}`,
-        },
-      });
-
-      return NextResponse.json(data);
-    }
-
-    // Para rangos de varios días (semana, 30 días, etc.),
-    // dividimos el rango día por día y consultamos en paralelo
-    const startDate = new Date(from);
-    const endDate = new Date(to);
-    
-    const dayRanges: { since: string; until: string }[] = [];
-    const current = new Date(startDate);
-
-    while (current < endDate) {
-      const dayStart = new Date(current);
-      const dayEnd = new Date(current);
-      dayEnd.setDate(dayEnd.getDate() + 1);
-
-      dayRanges.push({
-        since: dayStart.toISOString(),
-        until: dayEnd.toISOString(),
-      });
-
-      current.setDate(current.getDate() + 1);
-    }
-
-    // Consultar todos los días en paralelo con el endpoint funcional 'visits/count'
-    const results = await Promise.all(
-      dayRanges.map(async (dRange) => {
-        try {
-          const res = await vercelApi.get(`query/web-analytics/visits/count`, {
-            params: {
-              projectId: PROJECT_ID,
-              teamId: TEAM_ID,
-              since: dRange.since,
-              until: dRange.until,
-            },
-            headers: {
-              Authorization: `Bearer ${TOKEN}`,
-            },
-          });
-          return res.data?.data ?? { visitors: 0, pageviews: 0 };
-        } catch {
-          return { visitors: 0, pageviews: 0 };
-        }
-      })
-    );
-
-    const totalVisitors = results.reduce((sum, item) => sum + (item.visitors || 0), 0);
-    const totalPageviews = results.reduce((sum, item) => sum + (item.pageviews || 0), 0);
+    const [currentData, previousData] = await Promise.all([
+      fetchVisitsCount(ranges.current.from, ranges.current.to),
+      fetchVisitsCount(ranges.previous.from, ranges.previous.to),
+    ]);
 
     return NextResponse.json({
-      data: {
-        visitors: totalVisitors,
-        pageviews: totalPageviews,
-      },
+      data: currentData,
+      current: currentData,
+      previous: previousData,
     });
 
   } catch (error) {

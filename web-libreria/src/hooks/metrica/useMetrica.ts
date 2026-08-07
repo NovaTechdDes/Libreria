@@ -8,9 +8,6 @@ export const useMetrica = (range: DateRange) => {
   return useQuery({
     queryKey: ['metricas', range],
     queryFn: async () => {
-      
-      console.log("a")
-      
       const { data } = await axios.get('/api/analytics', {
         params: { range },
       });

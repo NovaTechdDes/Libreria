@@ -23,14 +23,40 @@ const FILTER_OPTIONS: FilterOption[] = [
   { id: 'custom', label: 'Personalizado' },
 ];
 
+const PREVIOUS_LABELS: Record<DateRange, string> = {
+  today: 'vs. ayer',
+  week: 'vs. 7 días anteriores',
+  '30days': 'vs. 30 días anteriores',
+  month: 'vs. mes anterior',
+  year: 'vs. año anterior',
+  custom: 'vs. período anterior',
+};
+
 const MetricasPage = () => {
   const [activeRange, setActiveRange] = useState<DateRange>('today');
 
   const { data: metricas, isLoading } = useMetrica(activeRange);
-  console.log(metricas);
   const { data: productosVistos, isLoading: isLoadingProductosVistos } = useProductosMasVistos(new Date());
 
-  const { data: visit } = metricas || {};
+  const currentVisitors = metricas?.current?.visitors ?? metricas?.data?.visitors ?? 0;
+  const previousVisitors = metricas?.previous?.visitors ?? 0;
+
+  const calculateComparison = (current: number, previous: number) => {
+    if (previous === 0) {
+      if (current > 0) return { percent: 100, isUp: true, isNeutral: false };
+      return { percent: 0, isUp: true, isNeutral: true };
+    }
+    const diff = ((current - previous) / previous) * 100;
+    const rounded = Math.abs(Math.round(diff * 10) / 10);
+    return {
+      percent: rounded,
+      isUp: diff > 0,
+      isNeutral: diff === 0,
+    };
+  };
+
+  const { percent, isUp, isNeutral } = calculateComparison(currentVisitors, previousVisitors);
+  const previousLabel = PREVIOUS_LABELS[activeRange];
 
   const handleRangeChange = (range: DateRange) => {
     setActiveRange(range);
@@ -93,10 +119,12 @@ const MetricasPage = () => {
           {/* Información y Datos */}
           <div className="space-y-0.5">
             <p className="text-sm font-medium text-slate-600">Visitantes únicos</p>
-            <h3 className="text-3xl font-extrabold text-slate-900 tracking-tight">{visit?.visitors}</h3>
+            <h3 className="text-3xl font-extrabold text-slate-900 tracking-tight">{currentVisitors}</h3>
             <p className="text-xs sm:text-sm font-medium flex items-center gap-1 mt-1">
-              <span className="text-emerald-500 font-semibold">↑ 18.3%</span>
-              <span className="text-slate-400">vs. abril</span>
+              <span className={`font-semibold ${isNeutral ? 'text-slate-400' : isUp ? 'text-emerald-500' : 'text-rose-500'}`}>
+                {isNeutral ? `0%` : isUp ? `↑ ${percent}%` : `↓ ${percent}%`}
+              </span>
+              <span className="text-slate-400">{previousLabel}</span>
             </p>
           </div>
         </div>

@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { Providers } from './provider';
-import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/next';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: '--font-plus-jakarta-sans',
@@ -15,8 +16,8 @@ export const metadata: Metadata = {
   title: 'Libreria Lachi',
   description: 'Carrito Online para la carga de pedidos de juguetes y libreria lachi',
   icons: {
-    icon: "/favicon.webp"
-  }
+    icon: '/favicon.webp',
+  },
 };
 
 export default function RootLayout({
@@ -29,6 +30,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col w-full">
         <Providers>{children}</Providers>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

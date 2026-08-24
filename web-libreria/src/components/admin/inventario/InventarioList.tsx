@@ -1,3 +1,5 @@
+'use client';
+
 import { Producto } from '@/src/interface/Producto';
 import { InventarioItem } from './InventarioItem';
 import Link from 'next/link';
@@ -28,9 +30,9 @@ export const InventarioList = ({ limit, productos, totalPages, currentPage, tota
   }, [currentPage]);
 
   let string = '';
-  if(rubro) string += `&rubro=${rubro}`;
-  if(subrubro) string += `&subrubro=${subrubro}`;
-  if(search) string += `&search=${search}`;
+  if (rubro) string += `&rubro=${rubro}`;
+  if (subrubro) string += `&subrubro=${subrubro}`;
+  if (search) string += `&search=${search}`;
 
   const getPaginasVisibles = () => {
     const paginas: (number | string)[] = [];
@@ -69,8 +71,8 @@ export const InventarioList = ({ limit, productos, totalPages, currentPage, tota
 
   const handlePage = () => {
     const page = Math.ceil(numeroProducto / limit);
-    router.push(`/admin/inventario?page=${page}` + string)
-  }
+    router.push(`/admin/inventario?page=${page}` + string);
+  };
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mt-1">
@@ -98,14 +100,14 @@ export const InventarioList = ({ limit, productos, totalPages, currentPage, tota
       <div className="px-6 py-5 border-t border-slate-100 flex items-center justify-between bg-white">
         {productos.length > 0 && (
           <p className="text-xs md:text-[14px] font-medium text-slate-500 gap-2 flex  ">
-            Mostrando 
-            <span className="text-slate-900">{productos.length}</span> 
-            de 
-            <span className="text-slate-900">{totalProductos}</span> 
+            Mostrando
+            <span className="text-slate-900">{productos.length}</span>
+            de
+            <span className="text-slate-900">{totalProductos}</span>
             productos desde
-            <span className='text-slate-900'>{currentPage * limit - limit + 1}</span>
+            <span className="text-slate-900">{currentPage * limit - limit + 1}</span>
             hasta
-            <span className='text-slate-900'>{(currentPage * limit - limit) + productos.length}</span>
+            <span className="text-slate-900">{currentPage * limit - limit + productos.length}</span>
           </p>
         )}
 
@@ -133,19 +135,21 @@ export const InventarioList = ({ limit, productos, totalPages, currentPage, tota
         </div>
       </div>
 
-
-      <div className='w-full flex flex-col sm:flex-row gap-4 items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50/20'>
-        <div className='flex gap-3 items-center text-sm text-slate-500 font-medium'>
+      <div className="w-full flex flex-col sm:flex-row gap-4 items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50/20">
+        <div className="flex gap-3 items-center text-sm text-slate-500 font-medium">
           <span>Ir al producto N°</span>
-          <input 
-            type="number" 
+          <input
+            type="number"
             value={numeroProducto}
             onChange={(e) => setNumeroProducto(Number(e.target.value))}
-            min={1} 
-            max={totalProductos} 
-            className='border border-slate-500 focus:border-[#0096B1] focus:ring-2 focus:ring-[#0096B1]/20 rounded-xl w-20 py-1.5 text-center text-slate-800 font-bold outline-none transition-all bg-white text-sm' 
+            min={1}
+            max={totalProductos}
+            className="border border-slate-500 focus:border-[#0096B1] focus:ring-2 focus:ring-[#0096B1]/20 rounded-xl w-20 py-1.5 text-center text-slate-800 font-bold outline-none transition-all bg-white text-sm"
           />
-          <button onClick={handlePage} className='px-4 py-2 rounded-xl bg-[#0096B1] text-white font-bold text-[13px] hover:bg-[#008199] active:scale-95 transition-all shadow-sm hover:shadow-md cursor-pointer'>
+          <button
+            onClick={handlePage}
+            className="px-4 py-2 rounded-xl bg-[#0096B1] text-white font-bold text-[13px] hover:bg-[#008199] active:scale-95 transition-all shadow-sm hover:shadow-md cursor-pointer"
+          >
             Ir
           </button>
         </div>
@@ -164,9 +168,7 @@ export const InventarioList = ({ limit, productos, totalPages, currentPage, tota
                 <Link
                   key={pagina}
                   className={`px-3 py-1.5 rounded-xl border text-sm font-semibold transition-all cursor-pointer ${
-                    currentPage === pagina
-                      ? 'border-[#0096B1] bg-[#0096B1] text-white shadow-sm'
-                      : 'border-slate-500 bg-white text-slate-600 hover:bg-slate-300 hover:border-slate-300'
+                    currentPage === pagina ? 'border-[#0096B1] bg-[#0096B1] text-white shadow-sm' : 'border-slate-500 bg-white text-slate-600 hover:bg-slate-300 hover:border-slate-300'
                   }`}
                   href={`/admin/inventario?page=${pagina}` + string}
                 >

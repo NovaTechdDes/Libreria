@@ -153,13 +153,24 @@ export const ProductoCard = ({ producto, mostrar_precios }: ProductoCardProps) =
 
         {/* Precio y CTA Móvil */}
         <div className="mt-auto pt-1 sm:pt-2 flex flex-col gap-2 sm:gap-3">
-          <div className="flex items-center min-h-[28px]">
+          <div className="flex items-center min-h-7">
             {isPriceVisible && producto.precio != null ? (
-              <div className="flex items-baseline gap-1">
-                <span className="text-[15px] sm:text-lg font-bold text-gray-900 dark:text-white">
-                  ${Number(producto.precio).toLocaleString('es-AR')}
-                </span>
-                <span className="text-[9px] sm:text-[10px] text-gray-400 dark:text-slate-400 font-medium">c/u</span>
+              <div className="flex flex-col gap-0.5">
+                {producto.descuento && producto.descuento > 0 ? (
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-xs sm:text-[13px] font-medium text-slate-400 dark:text-slate-500 line-through">${Number(producto.precio).toLocaleString('es-AR')}</span>
+                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] sm:text-[11px] font-extrabold bg-rose-500/10 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-200/60 dark:border-rose-800/40">
+                      -{producto.descuento}%
+                    </span>
+                  </div>
+                ) : null}
+
+                <div className="flex items-baseline gap-1">
+                  <span className="text-[16px] sm:text-[19px] font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    ${Number(producto.precio_final ?? producto.precio).toLocaleString('es-AR')}
+                  </span>
+                  <span className="text-[9px] sm:text-[10px] text-slate-400 font-medium">c/u</span>
+                </div>
               </div>
             ) : (
               <span className="inline-flex items-center text-[11px] sm:text-xs font-semibold text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-950/40 px-2 py-0.5 rounded-md border border-teal-200/60 dark:border-teal-800/40">

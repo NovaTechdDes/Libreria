@@ -14,8 +14,9 @@ export const getProductos = async(req: Request, res: Response ) => {
 
          let query = `
             SELECT p.*,
+            ROUND(p.precio * (1 - (ISNULL(r.descuento, 0) / 100)), 2) as precio_final,
+            ISNULL(r.descuento, 0) AS descuento,
             COUNT(*) OVER() as total_count,
-
             -- Relacion con subrubro (1 a 1) usando FROM para evitar error de sintaxis en SQL Server
             (SELECT s2.* FROM subrubros s2 WHERE s2.id_subrubro = p.id_subrubro FOR JSON PATH, WITHOUT_ARRAY_WRAPPER) as subRubros,
 
@@ -47,6 +48,7 @@ export const getProductos = async(req: Request, res: Response ) => {
 
             FROM productos p
             INNER JOIN subrubros s ON p.id_subrubro = s.id_subrubro
+            LEFT JOIN rubros r ON s.id_rubro = r.id
             WHERE p.activoBackend=@activoBackend
         `;
 
@@ -123,7 +125,10 @@ export const getProductoById = async(req: Request, res: Response) => {
         const pool = await poolPromise;
         const request = pool.request();
 
-        let query = `SELECT p.* , s.nombre as subrubro,
+        let query = `SELECT p.*,
+         ISNULL(r.descuento, 0) AS descuento,
+         ROUND(p.precio * (1 - (ISNULL(r.descuento, 0) / 100)), 2) as precio_final,
+         s.nombre as subrubro,
                     --Relacion productos_colores
                     ISNULL((
                         SELECT c.*
@@ -152,13 +157,14 @@ export const getProductoById = async(req: Request, res: Response) => {
 
                     FROM productos p
                     LEFT JOIN subrubros s ON p.id_subrubro = s.id_subrubro
+                    LEFT JOIN rubros r ON s.id_rubro = r.id
                     WHERE p.id_producto = @id_producto`;
 
         request.input('id_producto', Number(id_producto));
 
         const result = await request.query(query);
 
-        
+        console.log(result.recordset[0])
 
         res.status(200).json({
             ok: true,

@@ -9,6 +9,8 @@ export interface Producto {
 
   descripcion: string;
   precio: number;
+  precio_final: number;
+  descuento: number;
   cantidad: number;
   marca: number;
   id_subrubro: number;
@@ -41,6 +43,8 @@ export interface ProductoBackend {
 
   descripcion: string;
   precio: number;
+  precio_final: number;
+  descuento: number;
   cantidad: number;
   marca: number;
   id_subrubro: number;

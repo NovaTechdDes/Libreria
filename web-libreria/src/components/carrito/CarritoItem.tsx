@@ -63,9 +63,27 @@ export const CarritoItem = ({ producto }: Props) => {
 
       {/* Precio y Cantidad */}
       <div className="flex flex-col items-end gap-3">
-        <p className="text-teal-600 text-xl font-extrabold tracking-tight">
-          {mostrarPrecio ? (producto.producto.isvisibleprecio ? `$${(producto.producto.precio || 0).toLocaleString('es-AR')}` : 'Consulta el precio') : 'Consulta el precio'}
-        </p>
+        {mostrarPrecio && producto.producto.isvisibleprecio ? (
+          <div className="flex flex-col items-end gap-0.5">
+            {producto.producto.descuento && producto.producto.descuento > 0 ? (
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs text-slate-400 font-medium line-through">
+                  ${(producto.producto.precio || 0).toLocaleString('es-AR')}
+                </span>
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-rose-50 text-rose-600 border border-rose-200">
+                  -{producto.producto.descuento}%
+                </span>
+              </div>
+            ) : null}
+            <p className="text-teal-600 text-xl font-extrabold tracking-tight">
+              ${(producto.producto.precio_final ?? producto.producto.precio ?? 0).toLocaleString('es-AR')}
+            </p>
+          </div>
+        ) : (
+          <span className="inline-flex items-center text-xs font-semibold text-teal-700 bg-teal-50 px-2 py-1 rounded-md border border-teal-200">
+            Consultar precio
+          </span>
+        )}
 
         <div className="flex items-center bg-white border border-slate-200 rounded-lg p-1 shadow-sm">
           <button

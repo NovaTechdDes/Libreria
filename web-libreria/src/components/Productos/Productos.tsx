@@ -21,8 +21,6 @@ export const Productos = async ({ search, currentPage = 1, subRubroActivo, rubro
 
   const productosMapeados = mapsProductos(productos);
 
-  console.log(productos);
-
   return (
     <>
       <CartInitializer

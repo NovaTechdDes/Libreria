@@ -164,7 +164,6 @@ export const getProductoById = async(req: Request, res: Response) => {
 
         const result = await request.query(query);
 
-        console.log(result.recordset[0])
 
         res.status(200).json({
             ok: true,

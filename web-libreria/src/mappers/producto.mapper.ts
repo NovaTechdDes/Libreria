@@ -5,7 +5,6 @@ export const mapsProductos = (productos: ProductoBackend[]) : Producto[] => {
 }
 
 export const mapProducto = (producto: ProductoBackend): Producto => {
-    console.log(producto)
     return {
         ...producto,
         url_imagenes: JSON.parse(producto.url_imagenes || '[]'),

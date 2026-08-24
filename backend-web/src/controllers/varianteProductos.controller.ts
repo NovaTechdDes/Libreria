@@ -54,7 +54,6 @@ export const deleteVarianteProducto = async(req: Request, res: Response) => {
         const { id_variante } = req.params;
         const { id_producto } = req.query;
 
-        console.log(id_variante, id_producto)
 
         await transaction.begin();
 

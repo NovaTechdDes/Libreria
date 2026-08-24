@@ -94,7 +94,6 @@ export const putMostrarPreciosConfig = async(req: Request, res: Response) => {
         const {id, mostrar_precios} = req.body;
         const pool = await poolPromise;
 
-        console.log(id)
 
         const result = await pool.request()
         .input('id', id)

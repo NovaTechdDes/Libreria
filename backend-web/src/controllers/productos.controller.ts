@@ -266,7 +266,6 @@ export const putActivoProducto = async(req: Request, res: Response) => {
 export const putVisiblePrecio = async(req: Request, res: Response) => {
     try {
         const { id_producto, visible } = req.body;
-        console.log(id_producto)
 
         const pool = await poolPromise;
         const request = pool.request();

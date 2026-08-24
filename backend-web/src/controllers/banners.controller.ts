@@ -7,11 +7,18 @@ import { BlockBlobClient } from "@azure/storage-blob";
 
 export const getBanners = async(req: Request, res: Response) => {
     try {
+        const { activo } = req.query;
         const pool = await poolPromise;
 
-        const result = await pool.request().query(`
-            SELECT * FROM banners 
-        `)
+        const solosActivos = activo === 'true' ? true : false;
+
+        let query = `SELECT * FROM banners `
+
+        if(solosActivos){
+            query += ` WHERE activo = 1`
+        }
+
+        const result = await pool.request().query(query)
         
 
         res.status(200).json({

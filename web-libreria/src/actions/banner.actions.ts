@@ -96,9 +96,13 @@ export const deleteBanner = async (id: number) => {
   }
 };
 
-export const getBanners = async (): Promise<Banner[] | null> => {
+export const getBanners = async (activo: boolean = false): Promise<Banner[] | null> => {
   try {
-    const { data } = await api.get('/api/banners');
+    const { data } = await api.get('/api/banners', {
+      params: {
+        activo
+      }
+    });
 
     if(data.ok){
       return data.banners;

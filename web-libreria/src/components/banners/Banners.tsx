@@ -2,7 +2,7 @@ import { getBanners } from '@/src/actions/banner.actions';
 import { BannerCarousel } from './BannerCarousel';
 
 const Banners = async () => {
-  const banners = await getBanners();
+  const banners = await getBanners(true);
 
   if (!banners || banners.length === 0) return null;
 

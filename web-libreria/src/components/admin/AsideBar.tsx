@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { BiCategory } from 'react-icons/bi';
 import { BsFillImageFill, BsFillPaletteFill } from 'react-icons/bs';
 import { FiBox, FiLogOut, FiSettings, FiTrendingUp } from 'react-icons/fi';
 
@@ -25,6 +26,11 @@ export const AsideBar = () => {
       label: 'Gestión de Colores',
       icon: BsFillPaletteFill,
       href: '/admin/colores',
+    },
+    {
+      label: 'Rubros',
+      icon: BiCategory,
+      href: '/admin/rubros',
     },
     {
       label: 'Configuración',

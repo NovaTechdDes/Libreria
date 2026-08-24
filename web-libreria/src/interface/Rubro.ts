@@ -3,6 +3,6 @@
 export interface Rubro {
   id: number;
   nombre: string;
-
-  subrubros: string
+  subrubros?: string;
+  descuento?: number;
 }

@@ -9,6 +9,9 @@ import { Rubro } from '@/src/interface/Rubro';
 import { useRouter } from 'next/navigation';
 import { SubRubro } from '@/src/interface/SubRubro';
 import { FiEye, FiEyeOff, FiFolder, FiGrid, FiPackage, FiRotateCcw } from 'react-icons/fi';
+import { useMutateConfiguracion } from '@/src/hooks/configuracion/useMutateConfiguracion';
+import { useState } from 'react';
+import { mensaje } from '@/src/helper';
 
 interface Props {
   productos: Producto[];
@@ -25,6 +28,7 @@ interface Props {
   rubroSeleccionado?: number;
   subRubroSeleccionado?: number;
   mostrarDesactivados?: boolean;
+  mostrarPrecios?: boolean;
 }
 
 export const InventarioContainer = ({
@@ -39,9 +43,13 @@ export const InventarioContainer = ({
   rubroSeleccionado,
   subRubroSeleccionado,
   mostrarDesactivados = false,
+  mostrarPrecios = true,
 }: Props) => {
   const { productoSeleccionado } = useProductoStore();
   const router = useRouter();
+  const { startPutMostrarPreciosConfig } = useMutateConfiguracion();
+
+  const [showPrecios, setShowPrecios] = useState(mostrarPrecios);
 
   const handleRubro = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const val = e.target.value;
@@ -79,13 +87,22 @@ export const InventarioContainer = ({
     router.push(`/admin/inventario?${params.toString()}`);
   };
 
+  const handleMostrarPrecios = async () => {
+    const res = await startPutMostrarPreciosConfig.mutateAsync(!showPrecios);
+    if (res) {
+      mensaje('Se han actualizado las vistas de los precios', 'success');
+      setShowPrecios((prev: boolean) => !prev);
+      router.refresh();
+    } else {
+      mensaje('No se pudieron actualizar las vistas de los precios', 'error');
+    }
+  };
+
   const handleClearAllFilters = () => {
     router.push('/admin/inventario');
   };
 
-  const hasActiveFilters = Boolean(
-    rubroSeleccionado || subRubroSeleccionado || mostrarDesactivados || search
-  );
+  const hasActiveFilters = Boolean(rubroSeleccionado || subRubroSeleccionado || mostrarDesactivados || search);
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 p-6 w-full items-start">
@@ -105,11 +122,39 @@ export const InventarioContainer = ({
                     {totalProductos} {totalProductos === 1 ? 'producto' : 'productos'}
                   </span>
                 </div>
-                <p className="text-slate-500 text-xs md:text-sm mt-0.5 font-medium">
-                  Gestiona el catálogo, stock, precios y visibilidad de tus productos.
-                </p>
+                <p className="text-slate-500 text-xs md:text-sm mt-0.5 font-medium">Gestiona el catálogo, stock, precios y visibilidad de tus productos.</p>
               </div>
             </div>
+
+            {/* Mostrar Precios globales */}
+            <button
+              type="button"
+              onClick={handleMostrarPrecios}
+              disabled={startPutMostrarPreciosConfig.isPending}
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold transition-all border ${
+                startPutMostrarPreciosConfig.isPending ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'
+              } ${
+                showPrecios
+                  ? 'bg-amber-50/90 text-amber-900 border-amber-200 shadow-xs hover:bg-amber-100/80 ring-2 ring-amber-500/10'
+                  : 'bg-slate-50 text-slate-600 border-slate-200/80 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+              title="Activa o desactiva la visibilidad de los precios en toda la tienda pública"
+            >
+              <div className={`w-8 h-4.5 rounded-full transition-colors relative flex items-center px-0.5 ${showPrecios ? 'bg-amber-500' : 'bg-slate-300'}`}>
+                <div className={`w-3.5 h-3.5 rounded-full bg-white shadow-xs transform transition-transform ${showPrecios ? 'translate-x-3.5' : 'translate-x-0'}`} />
+              </div>
+              {showPrecios ? (
+                <span className="flex items-center gap-1.5 font-semibold">
+                  <FiEye className="w-4 h-4 text-amber-600" />
+                  {startPutMostrarPreciosConfig.isPending ? 'Actualizando...' : 'Productos con precios'}
+                </span>
+              ) : (
+                <span className="flex items-center gap-1.5 font-semibold">
+                  <FiEyeOff className="w-4 h-4 text-slate-400" />
+                  {startPutMostrarPreciosConfig.isPending ? 'Actualizando...' : 'Productos sin precios'}
+                </span>
+              )}
+            </button>
 
             {/* Switch interactivo personalizado para "Productos Desactivados" */}
             <button
@@ -122,12 +167,8 @@ export const InventarioContainer = ({
               }`}
               title="Filtrar estado de productos"
             >
-              <div className={`w-8 h-4.5 rounded-full transition-colors relative flex items-center px-0.5 ${
-                mostrarDesactivados ? 'bg-amber-500' : 'bg-slate-300'
-              }`}>
-                <div className={`w-3.5 h-3.5 rounded-full bg-white shadow-xs transform transition-transform ${
-                  mostrarDesactivados ? 'translate-x-3.5' : 'translate-x-0'
-                }`} />
+              <div className={`w-8 h-4.5 rounded-full transition-colors relative flex items-center px-0.5 ${mostrarDesactivados ? 'bg-amber-500' : 'bg-slate-300'}`}>
+                <div className={`w-3.5 h-3.5 rounded-full bg-white shadow-xs transform transition-transform ${mostrarDesactivados ? 'translate-x-3.5' : 'translate-x-0'}`} />
               </div>
               {mostrarDesactivados ? (
                 <span className="flex items-center gap-1.5 font-semibold">

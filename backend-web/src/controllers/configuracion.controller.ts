@@ -87,3 +87,35 @@ export const getConfig = async(req: Request, res: Response) => {
         });
     }
 };
+
+
+export const putMostrarPreciosConfig = async(req: Request, res: Response) => {
+    try {
+        const {id, mostrar_precios} = req.body;
+        const pool = await poolPromise;
+
+        console.log(id)
+
+        const result = await pool.request()
+        .input('id', id)
+        .input('mostrar_precios', mostrar_precios)
+        .query(`
+            UPDATE configuracion SET 
+            mostrar_precios = @mostrar_precios
+            WHERE id = @id
+
+            SELECT * FROM configuracion WHERE id = 1
+        `)
+
+        res.status(201).json({
+            ok: true,
+            configuracion: result.recordset[0]
+        })
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error al modificar los precios'
+        })
+    }
+}

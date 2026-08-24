@@ -1,4 +1,4 @@
-import { putBannerConfig, putDescuentoConfig } from '@/src/actions/configuracion.actions';
+import { putBannerConfig, putDescuentoConfig, putMostrarPreciosConfig } from '@/src/actions/configuracion.actions';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useMutateConfiguracion = () => {
@@ -22,8 +22,20 @@ export const useMutateConfiguracion = () => {
     },
   });
 
+  const startPutMostrarPreciosConfig = useMutation({
+    mutationFn: async (mostrar_precios: boolean) => {
+      return await putMostrarPreciosConfig(mostrar_precios);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['configuracion'] });
+    },
+  });
+
   return {
     startPutDescuento,
     startPutBannerConfig,
+    startPutMostrarPreciosConfig
   };
 };
+
+

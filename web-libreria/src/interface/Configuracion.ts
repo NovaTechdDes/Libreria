@@ -8,4 +8,6 @@ export interface Configuracion {
   carrito_habilitado: boolean;
   fecha_inicio: string;
   fecha_fin: string;
+
+  mostrar_precios: boolean
 }

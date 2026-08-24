@@ -7,7 +7,7 @@ import { FiSend } from 'react-icons/fi';
 import Swal from 'sweetalert2';
 
 export const ResumenCarrito = () => {
-  const { total, subtotal, productos, setHabilitado, setDescuento, setFrase, descuento, frase, vaciarCarrito } = useCarritoStore();
+  const { total, subtotal, productos, setHabilitado, setDescuento, setFrase, descuento, frase, vaciarCarrito, mostrarPrecio } = useCarritoStore();
 
   const [nombre, setNombre] = useState<string>('');
   const [whatsapp, setWhatsapp] = useState<string>('');
@@ -15,6 +15,8 @@ export const ResumenCarrito = () => {
   const [envio, setEnvio] = useState<boolean>(false);
   const [pago, setPago] = useState<'Efectivo' | 'Transferencia'>('Efectivo');
   const [direccion, setDireccion] = useState<string>('');
+
+  const hasHiddenPrices = !mostrarPrecio || productos.some((p) => !p.producto.isvisibleprecio);
 
   const cargarConfiguracion = async () => {
     const { carrito_habilitado, frase_descuento, porcentaje_descuento } = await getConfiguracion();
@@ -47,13 +49,11 @@ export const ResumenCarrito = () => {
       return;
     }
 
-    const hasHiddenPrices = productos.some((p) => !p.producto.isvisibleprecio);
-
     const productsList = productos
       .map((p) => {
         const colorInfo = p.color ? ` (Color: *${p.color.color}*)` : '';
         const varianteInfo = p.variante ? ` (Variante: *${p.variante.nombre}*)` : '';
-        const priceInfo = p.producto.isvisibleprecio ? '' : ' _(Precio a consultar)_';
+        const priceInfo = mostrarPrecio && p.producto.isvisibleprecio ? '' : ' _(Precio a consultar)_';
         return `• *${p.cantidad}x* ${p.producto.descripcion}${colorInfo}${varianteInfo}${priceInfo}`;
       })
       .join('\n');
@@ -68,6 +68,16 @@ export const ResumenCarrito = () => {
       currency: 'ARS',
     });
 
+    const notaPrecios = !mostrarPrecio
+      ? '⚠️ *Nota:* Todos los precios serán confirmados por WhatsApp.\n'
+      : hasHiddenPrices
+      ? '⚠️ *Nota:* Algunos productos requieren consulta de precio y no están sumados al total.\n'
+      : '';
+
+    const lineaSubtotal = mostrarPrecio && frase && descuento ? `- *Subtotal:* ${subtotalFormateado}` : '';
+    const lineaDescuento = mostrarPrecio && frase && descuento ? `- *Descuento (${frase}):* -${descuento}%` : '';
+    const lineaTotal = mostrarPrecio ? `*TOTAL: ${totalFormateado}*` : '*TOTAL:* _A consultar / confirmar por WhatsApp_';
+
     const mensajeWhatsApp = [
       '- *NUEVO PEDIDO - LIBRERIA Y JUGUETERIA LACHI*',
       '------------------------------',
@@ -79,14 +89,16 @@ export const ResumenCarrito = () => {
       '- *PRODUCTOS:*',
       productsList,
       '',
-      hasHiddenPrices ? '⚠️ *Nota:* Algunos productos requieren consulta de precio y no están sumados al total.\n' : '',
+      notaPrecios,
       notas ? `📝 *NOTAS:* ${notas}\n` : '',
       '------------------------------',
-      frase && descuento ? `- *Subtotal:* ${subtotalFormateado}` : '',
-      frase && descuento ? `- *Descuento (${frase}):* -${descuento}%` : '',
-      `*TOTAL: ${totalFormateado}*`,
+      lineaSubtotal,
+      lineaDescuento,
+      lineaTotal,
       '------------------------------',
-    ].filter(Boolean).join('\n');
+    ]
+      .filter(Boolean)
+      .join('\n');
 
     const phoneNumber = '5493456414401';
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(mensajeWhatsApp)}`;
@@ -118,26 +130,39 @@ export const ResumenCarrito = () => {
 
       {/* Precios */}
       <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <span className="text-slate-500 font-medium">Subtotal</span>
-          <span className="text-slate-900 font-bold">${subtotal.toLocaleString('es-AR')}</span>
-        </div>
+        {mostrarPrecio ? (
+          <>
+            <div className="flex justify-between items-center">
+              <span className="text-slate-500 font-medium">Subtotal</span>
+              <span className="text-slate-900 font-bold">${subtotal.toLocaleString('es-AR')}</span>
+            </div>
 
-        {frase && descuento && (
-          <div className="flex justify-between items-center">
-            <span className="text-slate-500 font-medium">{frase}</span>
-            <span className="text-slate-900 font-bold">{descuento}%</span>
+            {frase && descuento && (
+              <div className="flex justify-between items-center">
+                <span className="text-slate-500 font-medium">{frase}</span>
+                <span className="text-slate-900 font-bold">{descuento}%</span>
+              </div>
+            )}
+
+            <div className="flex justify-between items-center py-2">
+              <span className="text-slate-900 text-xl font-bold">Total</span>
+              <span className="text-teal-600 text-2xl font-extrabold tracking-tight">${total.toLocaleString('es-AR')}</span>
+            </div>
+          </>
+        ) : (
+          <div className="flex justify-between items-center py-2">
+            <span className="text-slate-900 text-lg font-bold">Total</span>
+            <span className="text-teal-600 text-sm font-bold bg-teal-50 px-3 py-1 rounded-lg border border-teal-100">
+              A consultar por WhatsApp
+            </span>
           </div>
         )}
 
-        <div className="flex justify-between items-center py-2">
-          <span className="text-slate-900 text-xl font-bold">Total</span>
-          <span className="text-teal-600 text-2xl font-extrabold tracking-tight">${total.toLocaleString('es-AR')}</span>
-        </div>
-
-        {productos.some((p) => !p.producto.isvisibleprecio) && (
+        {hasHiddenPrices && (
           <p className="text-amber-600 text-[10px] font-medium bg-amber-50 p-2 rounded-lg border border-amber-100 italic">
-            * Algunos productos no tienen precio visible y se consultarán por WhatsApp. No están incluidos en el total.
+            {!mostrarPrecio
+              ? '* Los precios se confirmarán por WhatsApp.'
+              : '* Algunos productos no tienen precio visible y se consultarán por WhatsApp. No están incluidos en el total.'}
           </p>
         )}
       </div>
@@ -212,20 +237,22 @@ export const ResumenCarrito = () => {
           </select>
         </div>
 
-        { envio === true && <div className="space-y-1.5">
-          <label htmlFor="direccion" className="text-slate-900 text-sm font-bold block">
-            Dirección de envío
-          </label>
-          <input
-            type="text"
-            name="direccion"
-            id="direccion"
-            value={direccion}
-            onChange={(e) => setDireccion(e.target.value)}
-            placeholder="Ej: Calle Falsa 1234"
-            className="w-full bg-white border border-slate-500 rounded-xl px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all shadow-sm"
-          />
-        </div>}
+        {envio === true && (
+          <div className="space-y-1.5">
+            <label htmlFor="direccion" className="text-slate-900 text-sm font-bold block">
+              Dirección de envío
+            </label>
+            <input
+              type="text"
+              name="direccion"
+              id="direccion"
+              value={direccion}
+              onChange={(e) => setDireccion(e.target.value)}
+              placeholder="Ej: Calle Falsa 1234"
+              className="w-full bg-white border border-slate-500 rounded-xl px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all shadow-sm"
+            />
+          </div>
+        )}
 
         {/* Botón de Acción */}
         <button

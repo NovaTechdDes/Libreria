@@ -3,7 +3,7 @@ import { getProductos } from '@/src/helper/getProductos';
 import { getRubrosSubRubrosClient } from '@/src/helper/getRubrosSubRubros';
 import { getSubRubros } from '@/src/helper/getSubRubros';
 import { mapsProductos } from '@/src/mappers/producto.mapper';
-
+import { getConfiguracion } from '@/src/service/configuracion.service';
 
 interface Props {
   searchParams: Promise<{
@@ -19,25 +19,19 @@ interface Props {
 export default async function InventarioPage({ searchParams }: Props) {
   const { page, search, rubro, subrubro, desactivados } = await searchParams;
 
+  const { configuracion: dataConfiguracion } = await getConfiguracion();
+
   const currentPage = Number(page) || 1;
   const limit = 50;
   const rubroId = rubro ? Number(rubro) : undefined;
   const subRubroId = subrubro ? Number(subrubro) : undefined;
   const mostrarDesactivados = desactivados === 'true';
-  
 
-  const { productos, total, totalPages } = await getProductos(
-    currentPage,
-    search ?? '',
-    false,
-    subRubroId,
-    rubroId,
-    desactivados
-  );
+  const { productos, total, totalPages } = await getProductos(currentPage, search ?? '', false, subRubroId, rubroId, desactivados);
   const rubros = await getRubrosSubRubrosClient();
   const subRubros = await getSubRubros(rubroId ?? 0);
 
-  const productosMapeados = mapsProductos(productos)
+  const productosMapeados = mapsProductos(productos);
 
   return (
     <InventarioContainer
@@ -52,6 +46,7 @@ export default async function InventarioPage({ searchParams }: Props) {
       totalProductos={total || 0}
       rubros={rubros ?? []}
       subRubros={subRubros ?? []}
+      mostrarPrecios={dataConfiguracion.mostrar_precios}
     />
   );
 }

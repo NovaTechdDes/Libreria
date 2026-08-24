@@ -21,6 +21,7 @@ export const getConfiguracion = async(): Promise<ReturnConfiguracion> => {
                     carrito_habilitado: true,
                     fecha_inicio: new Date().toISOString(),
                     fecha_fin: new Date().toISOString(),
+                    mostrar_precios: true,
                 },
                 msg: data.msg
             }
@@ -42,6 +43,7 @@ export const getConfiguracion = async(): Promise<ReturnConfiguracion> => {
                 carrito_habilitado: true,
                 fecha_inicio: new Date().toISOString(),
                 fecha_fin: new Date().toISOString(),
+                mostrar_precios: true,
             }
         }
     }

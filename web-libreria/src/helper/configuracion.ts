@@ -8,9 +8,9 @@ export async function getConfiguracion(): Promise<Configuracion> {
     if (!ok) {
       throw new Error(msg || 'Error al obtener la configuración desde el servicio');
     }
-    const { carrito_habilitado, fecha_fin, fecha_inicio, frase_descuento, id, mensaje_informativo, porcentaje_descuento } = configuracion;
+    const { carrito_habilitado, fecha_fin, fecha_inicio, frase_descuento, id, mensaje_informativo, porcentaje_descuento, mostrar_precios } = configuracion;
 
-    return {id, frase_descuento, porcentaje_descuento, mensaje_informativo, carrito_habilitado, fecha_inicio, fecha_fin};
+    return {id, frase_descuento, porcentaje_descuento, mensaje_informativo, carrito_habilitado, fecha_inicio, fecha_fin, mostrar_precios};
   } catch (error) {
     console.error(error);
     return {
@@ -21,6 +21,7 @@ export async function getConfiguracion(): Promise<Configuracion> {
       carrito_habilitado: true,
       fecha_inicio: new Date().toISOString(),
       fecha_fin: new Date().toISOString(),
+      mostrar_precios: false,
     };
   }
 }

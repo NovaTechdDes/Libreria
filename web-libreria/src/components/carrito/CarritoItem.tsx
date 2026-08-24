@@ -1,4 +1,3 @@
-
 import { ProductosCarrito, useCarritoStore } from '@/src/store/carrito.store';
 import Image from 'next/image';
 import { FiMinus, FiPlus, FiTrash2 } from 'react-icons/fi';
@@ -8,9 +7,7 @@ interface Props {
 }
 
 export const CarritoItem = ({ producto }: Props) => {
-    
-  
-  const { actualizarCantidad, removerProducto } = useCarritoStore();
+  const { actualizarCantidad, removerProducto, mostrarPrecio } = useCarritoStore();
 
   const handleIncrement = () => {
     actualizarCantidad(producto.producto.id_producto!, producto.cantidad + 1, producto.variante);
@@ -67,7 +64,7 @@ export const CarritoItem = ({ producto }: Props) => {
       {/* Precio y Cantidad */}
       <div className="flex flex-col items-end gap-3">
         <p className="text-teal-600 text-xl font-extrabold tracking-tight">
-          {producto.producto.isvisibleprecio ? `$${(producto.producto.precio || 0).toLocaleString('es-AR')}` : 'Consulta el precio'}
+          {mostrarPrecio ? (producto.producto.isvisibleprecio ? `$${(producto.producto.precio || 0).toLocaleString('es-AR')}` : 'Consulta el precio') : 'Consulta el precio'}
         </p>
 
         <div className="flex items-center bg-white border border-slate-200 rounded-lg p-1 shadow-sm">

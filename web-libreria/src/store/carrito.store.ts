@@ -28,6 +28,9 @@ export interface CarritoStore {
   frase: string;
   setFrase: (frase: string) => void;
 
+  mostrarPrecio: boolean;
+  setMostrarPrecio: (mostrarPrecio: boolean) => void;
+
   inicio: string;
   fin: string;
   setInicio: (inicio: string) => void;
@@ -113,6 +116,9 @@ export const useCarritoStore = create<CarritoStore>()(
 
       mensaje: '',
       setMensaje: (mensaje: string) => set({ mensaje }),
+
+      mostrarPrecio: true,
+      setMostrarPrecio: (mostrarPrecio: boolean) => set({ mostrarPrecio }),
 
       descuento: 0,
       setDescuento: (descuento: number) =>

@@ -14,20 +14,19 @@ import { getOrCreateSessionId } from '@/src/helper/session';
 
 interface ProductoCardProps {
   producto: Producto;
+  mostrar_precios: boolean;
 }
 
-export const ProductoCard = ({ producto }: ProductoCardProps) => {
-
+export const ProductoCard = ({ producto, mostrar_precios }: ProductoCardProps) => {
   const { agregarProducto, habilitado, inicio, fin } = useCarritoStore();
   const { mutate: registrarVisto } = useRegistrarProductoVisto();
 
   const [colorSeleccionado, setColorSeleccionado] = useState<number>(producto?.productos_colores?.[0]?.id ?? 0);
-  const [varianteSeleccionada, setVarianteSeleccionado] = useState<number | undefined>(undefined)
-  const isPriceVisible = producto.isvisibleprecio !== false;
+  const [varianteSeleccionada, setVarianteSeleccionado] = useState<number | undefined>(undefined);
+  const isPriceVisible = mostrar_precios && producto.isvisibleprecio !== false;
   const isStockAvailable = producto.isstock !== false && (producto.cantidad ?? 0) > 0;
 
   const variantes: productos_variantes[] = producto.variantes ?? [];
-    
 
   const addCarrito = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -35,18 +34,21 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
     if (!producto || !isStockAvailable) return;
 
     // 1.Disparo en segundo plano
-    registrarVisto({
-      producto_id: producto.id_producto,
-      fecha: new Date(),
-      session_id: getOrCreateSessionId(),
-    }, {
-      onError: (err) => console.error('Error silencioso al registrar visto: ', err),
-    });
+    registrarVisto(
+      {
+        producto_id: producto.id_producto,
+        fecha: new Date(),
+        session_id: getOrCreateSessionId(),
+      },
+      {
+        onError: (err) => console.error('Error silencioso al registrar visto: ', err),
+      }
+    );
 
     const color = producto.productos_colores?.find((color) => color?.id === colorSeleccionado);
     const variante = variantes.find((v) => v.id === varianteSeleccionada);
     agregarProducto(producto, 1, color ?? null, variante ?? null);
-    mensaje('Producto agregado al carrito', 'success')
+    mensaje('Producto agregado al carrito', 'success');
   };
 
   if (!producto.id_producto) return null;
@@ -117,13 +119,7 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
 
           <div className="flex flex-wrap gap-3 sm:gap-3 items-center">
             {producto.productos_colores?.map((color, index) => (
-              <ButtonSeleccionarColor
-                key={color.id ?? index}
-                color={color}
-                producto_id={producto.id_producto}
-                colorSeleccionado={colorSeleccionado}
-                setColorSeleccionado={setColorSeleccionado}
-              />
+              <ButtonSeleccionarColor key={color.id ?? index} color={color} producto_id={producto.id_producto} colorSeleccionado={colorSeleccionado} setColorSeleccionado={setColorSeleccionado} />
             ))}
           </div>
         </div>
@@ -136,10 +132,11 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
               id="variante"
               value={varianteSeleccionada}
               onChange={(e) => setVarianteSeleccionado(Number(e.target.value))}
-
               className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px] font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 cursor-pointer appearance-none pr-8"
             >
-              <option value="" className="text-slate-400">Seleccionar Variante</option>
+              <option value="" className="text-slate-400">
+                Seleccionar Variante
+              </option>
               {variantes.map((variante) => (
                 <option key={variante.id} value={variante.id} className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">
                   {variante.nombre}
@@ -156,11 +153,19 @@ export const ProductoCard = ({ producto }: ProductoCardProps) => {
 
         {/* Precio y CTA Móvil */}
         <div className="mt-auto pt-1 sm:pt-2 flex flex-col gap-2 sm:gap-3">
-          <div className="flex items-baseline gap-1">
-            <span className="text-[15px] sm:text-lg font-bold text-gray-900 dark:text-white">
-              {isPriceVisible && producto.precio != null ? `$${Number(producto.precio).toLocaleString('es-AR')}` : 'Consultar'}
-            </span>
-            {isPriceVisible && producto.precio != null && <span className="text-[9px] sm:text-[10px] text-gray-400 dark:text-slate-400 font-medium">c/u</span>}
+          <div className="flex items-center min-h-[28px]">
+            {isPriceVisible && producto.precio != null ? (
+              <div className="flex items-baseline gap-1">
+                <span className="text-[15px] sm:text-lg font-bold text-gray-900 dark:text-white">
+                  ${Number(producto.precio).toLocaleString('es-AR')}
+                </span>
+                <span className="text-[9px] sm:text-[10px] text-gray-400 dark:text-slate-400 font-medium">c/u</span>
+              </div>
+            ) : (
+              <span className="inline-flex items-center text-[11px] sm:text-xs font-semibold text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-950/40 px-2 py-0.5 rounded-md border border-teal-200/60 dark:border-teal-800/40">
+                Consultar precio
+              </span>
+            )}
           </div>
 
           {/* Botón Móvil */}

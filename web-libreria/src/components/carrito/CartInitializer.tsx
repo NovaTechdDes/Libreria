@@ -9,10 +9,11 @@ interface Props {
   mensaje: string;
   inicio: string;
   fin: string;
+  mostrar_precios: boolean;
 }
 
-export const CartInitializer = ({ habilitado, frase, descuento, mensaje, inicio, fin }: Props) => {
-  const { setHabilitado, setMensaje, setDescuento, setFrase, setInicio, setFin } = useCarritoStore();
+export const CartInitializer = ({ habilitado, frase, descuento, mensaje, inicio, fin, mostrar_precios }: Props) => {
+  const { setHabilitado, setMensaje, setDescuento, setFrase, setInicio, setFin, setMostrarPrecio } = useCarritoStore();
 
   useEffect(() => {
     setHabilitado(habilitado);
@@ -21,7 +22,8 @@ export const CartInitializer = ({ habilitado, frase, descuento, mensaje, inicio,
     setFrase(frase || '');
     setInicio(inicio || '');
     setFin(fin || '');
-  }, [habilitado, frase, descuento, setHabilitado, setMensaje, setDescuento, setFrase, mensaje, inicio, fin, setInicio, setFin]);
+    setMostrarPrecio(mostrar_precios);
+  }, [habilitado, frase, descuento, setHabilitado, setMensaje, setMostrarPrecio, setDescuento, setFrase, mensaje, inicio, fin, setInicio, setFin, mostrar_precios]);
 
   return null;
 };

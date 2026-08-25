@@ -63,14 +63,20 @@ export const updateProducto = async (colores: Color[], imagenes: ImageItem[], id
 
     const formData = new FormData();
 
-    const archivosDeImagenes: File[] = imagenes.map((image) => image.file as File);
 
     const slot: string[] = [];
-    let i = 0;
-    archivosDeImagenes.map((archivo) => {
-      formData.append('imagenes', archivo);
-      slot[i] = archivo ? 'NUEVA' : 'VACIA';
-      i++;
+
+    imagenes.forEach((image) => {
+      if(image.file){
+        formData.append('imagenes', image.file);
+        slot.push('NUEVA');
+      }else if (image.preview){
+        formData.append('imagenes', new Blob());
+        slot.push('MANTENER');
+      }else{
+        formData.append('imagenes', new Blob());
+        slot.push('VACIA');
+      }
     });
 
 

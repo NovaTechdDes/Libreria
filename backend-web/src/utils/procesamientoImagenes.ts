@@ -23,8 +23,8 @@ export const procesamientoImagenes = async({archivos, imagenesDB, slotsParseados
             const slot = slotsParseados[i];
 
 
-            //Buscamos si aya existe un registro guardao en la base de datos
-            const imagenAnterior = imagenesDB.find((img: any) => img.orden === i);
+            //Buscamos si ya existe un registro guardado en la base de datos
+            const imagenAnterior = imagenesDB.find((img: any) => img.orden - 1 === i);
             const principal = i === 0 ? 1 : 0;
 
             if(slot === 'NUEVA'){
@@ -56,7 +56,6 @@ export const procesamientoImagenes = async({archivos, imagenesDB, slotsParseados
                     });
 
                     const nuevaUrl = blockBlobCliente.url;
-                    indexArchivo++;
 
                     //C. Si la fila ya existia en la db, la actualizamos. Si no, insertamos una fila
                     const requestUpsert = new sql.Request(transaction);
@@ -101,6 +100,7 @@ export const procesamientoImagenes = async({archivos, imagenesDB, slotsParseados
                     `);
                 }
             }
+            indexArchivo++
         }
         
         

@@ -18,15 +18,18 @@ interface ProductoCardProps {
 }
 
 export const ProductoCard = ({ producto, mostrar_precios }: ProductoCardProps) => {
+  
   const { agregarProducto, habilitado, inicio, fin } = useCarritoStore();
   const { mutate: registrarVisto } = useRegistrarProductoVisto();
 
   const [colorSeleccionado, setColorSeleccionado] = useState<number>(producto?.productos_colores?.[0]?.id ?? 0);
   const [varianteSeleccionada, setVarianteSeleccionado] = useState<number | undefined>(undefined);
+  const [imagenActual, setImagenActual] = useState(0);
   const isPriceVisible = mostrar_precios && producto.isvisibleprecio !== false;
   const isStockAvailable = producto.isstock !== false && (producto.cantidad ?? 0) > 0;
 
   const variantes: productos_variantes[] = producto.variantes ?? [];
+  const imagenes = producto.url_imagenes ?? [];
 
   const addCarrito = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -51,6 +54,16 @@ export const ProductoCard = ({ producto, mostrar_precios }: ProductoCardProps) =
     mensaje('Producto agregado al carrito', 'success');
   };
 
+  const anteriorImagen = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setImagenActual((prev) => (prev === 0 ? imagenes.length - 1 : prev - 1))
+  };
+
+  const siguienteImagen = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setImagenActual((prev) => (prev === imagenes.length - 1 ? 0 : prev + 1))
+  };
+
   if (!producto.id_producto) return null;
 
   return (
@@ -59,7 +72,7 @@ export const ProductoCard = ({ producto, mostrar_precios }: ProductoCardProps) =
       <div className="relative w-36 h-36 sm:w-full sm:h-auto sm:aspect-4/5 bg-[#F9F9F7] dark:bg-black/20 overflow-hidden shrink-0">
         {producto.url_imagenes && producto.url_imagenes.length > 0 ? (
           <Image
-            src={producto.url_imagenes[0].nombre_archivo}
+            src={imagenes[imagenActual].nombre_archivo}
             alt={producto.descripcion}
             fill
             sizes="(max-width: 640px) 150px, (max-width: 1024px) 33vw, 20vw"
@@ -74,6 +87,31 @@ export const ProductoCard = ({ producto, mostrar_precios }: ProductoCardProps) =
             </svg>
             <span className="text-[8px] font-medium uppercase tracking-wider">Sin imagen</span>
           </div>
+        )}
+        {/* // Flechas de navegacion */}
+        {imagenes.length > 1 && (
+          <>
+            {/* Flecha Izquierda */}
+            <button
+              onClick={anteriorImagen}
+              className="absolute z-10 left-1 top-1/2 -translate-y-1/2 z-10 bg-black/40 hover:bg-black/70 text-white rounded-full p-1 transition-all opacity-0 group-hover:opacity-100"
+              aria-label="Imagen anterior"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            {/* Flecha Derecha */}
+            <button
+              onClick={siguienteImagen}
+              className="absolute z-10 right-1 top-1/2 -translate-y-1/2 z-10 bg-black/40 hover:bg-black/70 text-white rounded-full p-1 transition-all opacity-0 group-hover:opacity-100"
+              aria-label="Siguiente imagen"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </>
         )}
 
         {/* Stock Badge - Top Right */}

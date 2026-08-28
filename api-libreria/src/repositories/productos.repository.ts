@@ -25,8 +25,11 @@ export async function getProductos(
     joinClause = `INNER JOIN rubros r ON a.id_rubro = r.id_rubro`;
     query += ` AND r.id_rubro_g = @id_rubro`;
   }
+  
   if (search) {
-    query += ` AND (a.descripcion LIKE @search OR CAST(a.codigo AS VARCHAR) LIKE @search)`;
+    query += ` AND (a.descripcion LIKE @search 
+    OR CAST(a.codigo AS VARCHAR) LIKE @search 
+    OR CAST(a.id_articulo AS VARCHAR) LIKE @search)`;
   }
 
   const request = pool
@@ -52,7 +55,7 @@ export async function getProductos(
     FROM api_articuloss a
     ${joinClause}
     ${query}
-    ORDER BY a.codigo DESC
+    ORDER BY a.descripcion DESC
     `);
 
   const productosConImagen = await Promise.all(

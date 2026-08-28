@@ -3,7 +3,6 @@ import { Producto } from '@/interface';
 import { useProductoStore } from '@/store';
 import { useGlobalStore } from '@/store/globalStore';
 import { Image } from 'expo-image';
-import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 interface Props {
@@ -29,15 +28,6 @@ export default function ProductItem({ item, setIsUserModalVisible }: Props) {
     setIsUserModalVisible(true);
     seleccionarProducto(item);
   };
-
-  if (
-    buscador !== '' &&
-    !item?.descripcion?.toLowerCase().includes(buscador.toLowerCase()) &&
-    !item?.categoria?.toLowerCase().includes(buscador.toLowerCase()) &&
-    !item?.marca?.toLowerCase().includes(buscador.toLowerCase()) &&
-    !item?.codigo?.toString().toLowerCase().includes(buscador.toLowerCase())
-  )
-    return null;
 
   return (
     <View className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-4">

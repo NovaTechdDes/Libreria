@@ -14,9 +14,9 @@ import { useProductoStore } from '@/store';
 import { useGlobalStore } from '@/store/globalStore';
 import { mensaje } from '@/utils/mensaje';
 import { Ionicons } from '@expo/vector-icons';
-import { useCameraPermissions } from 'expo-camera';
 import { useCallback, useMemo, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, KeyboardAvoidingView, Linking, Platform, RefreshControl, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
+import { useCameraPermissions } from 'expo-camera';
+import { ActivityIndicator, Alert, FlatList, KeyboardAvoidingView, Linking, Modal, Platform, RefreshControl, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
@@ -106,9 +106,6 @@ export default function HomeScreen() {
   const showRubros = isLoadingRubros || rubrosConTodos.length > 0;
   const showSubRubros = isLoadingRubros || subRubrosConTodos.length > 0;
 
-  if (isScanning) {
-    return <CameraScan onClose={() => setIsScanning(false)} />;
-  }
 
   return (
     <KeyboardAvoidingView keyboardVerticalOffset={100} style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 bg-gray-100 dark:bg-slate-950 p-4">
@@ -187,6 +184,14 @@ export default function HomeScreen() {
         }}
         onConfirm={handleGetUser}
       />
+      <Modal
+        visible={isScanning}
+        animationType="slide"
+        onRequestClose={() => setIsScanning(false)}
+        statusBarTranslucent
+      >
+        <CameraScan onClose={() => setIsScanning(false)} />
+      </Modal>
     </KeyboardAvoidingView>
   );
 }

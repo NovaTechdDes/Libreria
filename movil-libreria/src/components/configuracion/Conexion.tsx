@@ -8,16 +8,16 @@ import { mensaje } from '@/utils/mensaje';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useQueryClient } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, TextInput, View } from 'react-native';
 
 export default function Conexion() {
-  const { servidor } = useGlobalStore();
+  const { servidor, usuario } = useGlobalStore();
   const queryClient = useQueryClient();
   const { isDark, colors } = useAppTheme();
 
-  const { refetch: refetchProductos } = useProductos('', servidor);
-  const { refetch: refetchVales } = useVales(servidor);
+  const { refetch: refetchProductos } = useProductos('', servidor, null, null);
+  const { refetch: refetchVales } = useVales(servidor, usuario);
   const { refetch: refetchCaja } = useCaja(servidor);
 
   const [loading, setLoading] = useState(false);

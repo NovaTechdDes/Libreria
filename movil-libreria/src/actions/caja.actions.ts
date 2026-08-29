@@ -1,22 +1,18 @@
+import { apiRequest } from '@/api/apiClient';
 import { mapCaja } from '@/mappers/caja.mappers';
-import { getUrl } from '@/utils/getURL';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 
 export const getMovCajas = async (servidor: boolean) => {
   try {
-    let URL = '';
+    const { data } = await apiRequest(servidor, {
+      url: '/caja',
+      method: 'GET',
+      params: {
+        servidor,
+      },
+    });
 
-    if (servidor) {
-      URL = `https://${(await AsyncStorage.getItem('url_remoto')) ?? ''}`;
-    } else {
-      URL = `http://${await getUrl()}`;
-    }
-
-    const { data } = await axios.get(`${URL}/caja`);
-
-    if (data.ok) {
-      return data.data.map(mapCaja);
+    if (data) {
+      return data.map(mapCaja);
     }
     return [];
   } catch (error) {
@@ -27,18 +23,16 @@ export const getMovCajas = async (servidor: boolean) => {
 
 export const getVales = async (servidor: boolean, usuario: string) => {
   try {
-    let URL = '';
+    const { data } = await apiRequest(servidor, {
+      url: '/caja/vales',
+      method: 'GET',
+      params: {
+        servidor,
+      },
+    });
 
-    if (servidor) {
-      URL = `https://${(await AsyncStorage.getItem('url_remoto')) ?? ''}`;
-    } else {
-      URL = `http://${await getUrl()}`;
-    }
-
-    const { data } = await axios.get(`${URL}/caja/vales`);
-
-    if (data.ok) {
-      return data.data;
+    if (data) {
+      return data;
     }
     return [];
   } catch (error) {
@@ -49,23 +43,13 @@ export const getVales = async (servidor: boolean, usuario: string) => {
 
 export const startCierreCaja = async (servidor: boolean, usuario: string): Promise<boolean> => {
   try {
-    let URL = '';
-
-    if (servidor) {
-      URL = `https://${(await AsyncStorage.getItem('url_remoto')) ?? ''}`;
-    } else {
-      URL = `http://${await getUrl()}`;
-    }
-
-    const { data } = await axios.post(
-      `${URL}/caja/cierre`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${usuario}`,
-        },
-      }
-    );
+    const { data } = await apiRequest(servidor, {
+      url: '/caja/cierre',
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${usuario}`,
+      },
+    });
     if (data.ok) {
       return true;
     }

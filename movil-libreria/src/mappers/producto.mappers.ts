@@ -14,19 +14,32 @@ interface ProductoBackend {
 }
 
 export const mapProducto = (item: ProductoBackend): Producto => {
-  const rubroParsed = typeof item.rubro === 'string' ? JSON.parse(item.rubro) : item.rubro;
-
-  return {
-    id: item.id_articulo,
-    codigo: item.codigo ?? '',
-    descripcion: item.descripcion ?? '',
-    precio: item.precio ?? 0,
-    stock: item.cantidad ?? 0,
-    marca: item.marca ?? 'Sin Marca',
-    id_rubro: item.id_rubro ?? 0,
-    categoria: rubroParsed?.sub_rubro?.nom_rubro ?? rubroParsed?.rubro_g?.nom_rubro_g ?? 'Sin Categoria',
-    imagen: item.imagen ?? '',
-  };
+  try {
+    const rubroParsed = typeof item.rubro === 'string' ? JSON.parse(item.rubro) : item.rubro;
+    return {
+      id: item.id_articulo,
+      codigo: item.codigo ?? '',
+      descripcion: item.descripcion ?? '',
+      precio: item.precio ?? 0,
+      stock: item.cantidad ?? 0,
+      marca: item.marca ?? 'Sin Marca',
+      id_rubro: item.id_rubro ?? 0,
+      categoria: rubroParsed?.sub_rubro?.nom_rubro ?? rubroParsed?.rubro_g?.nom_rubro_g ?? 'Sin Categoria',
+      imagen: item.imagen ?? '',
+    };
+  } catch (error) {
+    return {
+      id: item.id_articulo,
+      codigo: item.codigo ?? '',
+      descripcion: item.descripcion ?? '',
+      precio: item.precio ?? 0,
+      stock: item.cantidad ?? 0,
+      marca: item.marca ?? 'Sin Marca',
+      id_rubro: item.id_rubro ?? 0,
+      categoria: 'Error al cargar categoria',
+      imagen: item.imagen ?? '',
+    };
+  }
 };
 
 export const mapProductoBackend = (producto: Partial<Producto>): Partial<ProductoBackend> => {

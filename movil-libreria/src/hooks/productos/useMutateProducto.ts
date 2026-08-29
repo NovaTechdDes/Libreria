@@ -7,13 +7,7 @@ export const useMutateProducto = () => {
 
   const modificarProducto = useMutation({
     mutationFn: ({ producto, servidor, usuario }: { producto: Partial<Producto>; servidor: boolean; usuario: string }) => putProducto(producto, servidor, usuario),
-    onSuccess: (nuevoProducto) => {
-      if (nuevoProducto) {
-        queryClient.setQueriesData({ queryKey: ['productos'] }, (oldData: Producto[] | undefined) => {
-          if (!oldData) return oldData;
-          return oldData.map((p) => (p.id === nuevoProducto.id ? nuevoProducto : p));
-        });
-      }
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['productos'] });
     },
   });

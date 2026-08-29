@@ -1,2 +1,3 @@
-export * from './productoStote';
+export * from './productoStore';
 export * from './usuarioStore';
+

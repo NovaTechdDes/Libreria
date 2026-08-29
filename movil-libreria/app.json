@@ -7,7 +7,7 @@
     "icon": "./assets/icons/adaptive-icon.png",
     "scheme": "movillibreria",
     "userInterfaceStyle": "automatic",
-    "runtimeVersion": "2",
+    "runtimeVersion": "3",
     "updates": {
       "url": "https://u.expo.dev/7398a946-b497-4ac4-9efb-e77ff1a96ec3",
       "fallbackToCacheTimeout": 0,

@@ -1,18 +1,15 @@
-import Conexion from "@/components/configuracion/Conexion";
-import Sincronizacion from "@/components/configuracion/Sincronizacion";
-import Version from "@/components/configuracion/Version";
-import React from "react";
-import { ScrollView, Text, View } from "react-native";
+import Conexion from '@/components/configuracion/Conexion';
+import Sincronizacion from '@/components/configuracion/Sincronizacion';
+import Version from '@/components/configuracion/Version';
+import { ScrollView, Text, View } from 'react-native';
 
-export default function ConfiguracionScream() {
+export default function ConfiguracionScreen() {
   return (
     <ScrollView className="flex-1 bg-gray-50 dark:bg-slate-950 px-5 pt-6">
       {/* Header Section */}
       <View className="mb-8">
         <Text className="text-3xl font-bold text-gray-800 dark:text-slate-100">Configuración</Text>
-        <Text className="text-gray-500 dark:text-slate-400 mt-1">
-          Configura y gestiona tu aplicación
-        </Text>
+        <Text className="text-gray-500 dark:text-slate-400 mt-1">Configura y gestiona tu aplicación</Text>
       </View>
 
       {/* 1. Conexion */}

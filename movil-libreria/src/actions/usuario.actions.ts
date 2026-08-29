@@ -1,46 +1,31 @@
+import { apiRequest } from '@/api/apiClient';
 import { Usuario } from '@/interface';
 import { mapUsuario } from '@/mappers/usuario.mappers';
-import { getUrl } from '@/utils/getURL';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
+
+const usuarioVacio: Usuario = {
+  id_usuario: '0',
+  denominacion: '',
+  clave: '',
+  administrador: false,
+};
 
 export const getUsuarioByClave = async (clave: string, servidor: boolean): Promise<Usuario> => {
   try {
     if (!clave) {
-      return {
-        id_usuario: '0',
-        denominacion: '',
-        clave: '',
-        administrador: false,
-      };
-    }
-    let URL = '';
-
-    if (servidor) {
-      URL = `https://${(await AsyncStorage.getItem('url_remoto')) ?? ''}`;
-    } else {
-      URL = `http://${await getUrl()}`;
+      return usuarioVacio;
     }
 
-    const { data } = await axios.get(`${URL}/usuarios/${clave}`);
+    const data = await apiRequest(servidor, {
+      url: `/usuarios/${clave}`,
+      method: 'GET',
+      params: {
+        servidor,
+      },
+    });
 
-    if (!data) {
-      return {
-        id_usuario: '0',
-        denominacion: '',
-        clave: '',
-        administrador: false,
-      };
-    }
-
-    return mapUsuario(data.data);
+    return data?.data ? mapUsuario(data.data) : usuarioVacio;
   } catch (error) {
     console.error(error);
-    return {
-      id_usuario: '0',
-      denominacion: '',
-      clave: '',
-      administrador: false,
-    };
+    return usuarioVacio;
   }
 };

@@ -1,45 +1,33 @@
+import { apiRequest } from '@/api/apiClient';
 import { Producto } from '@/interface';
 import { mapProducto, mapProductoBackend } from '@/mappers/producto.mappers';
-import { getUrl } from '@/utils/getURL';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 
-export const getProductos = async (search: string, servidor: boolean, id_rubro: number | null, id_subrubro: number | null): Promise<Producto[]> => {
-  let URL = '';
-
-  if (servidor) {
-    URL = `https://${(await AsyncStorage.getItem('url_remoto')) ?? ''}`;
-  } else {
-    URL = `http://${await getUrl()}`;
-  }
-
+export const getProductos = async (search: string, servidor: boolean, id_rubro: number | null, id_subrubro: number | null, limit: number = 50): Promise<Producto[]> => {
   try {
-    const { data } = await axios.get(`${URL}/productos/`, {
+    const { data } = await apiRequest(servidor, {
+      url: '/productos',
+      method: 'GET',
       params: {
         search: search || undefined,
-        limit: 100,
+        limit,
         servidor,
         id_rubro: id_rubro || 0,
         id_subrubro: id_subrubro || 0,
       },
     });
-    return data.data.map(mapProducto);
+    return data?.map(mapProducto);
   } catch (error) {
     console.error(error);
     return [];
   }
 };
 
-export const putProducto = async (producto: Partial<Producto>, servidor: boolean, usuario: string): Promise<Producto | null> => {
-  let URL = '';
-
-  if (servidor) {
-    URL = `https://${(await AsyncStorage.getItem('url_remoto')) ?? ''}`;
-  } else {
-    URL = `http://${await getUrl()}`;
-  }
+export const putProducto = async (producto: Partial<Producto>, servidor: boolean, usuario: string): Promise<{ ok: boolean } | null> => {
   try {
-    const { data } = await axios.put(`${URL}/productos/${producto.id}`, mapProductoBackend(producto), {
+    const data = await apiRequest(servidor, {
+      url: `/productos/${producto.id}`,
+      method: 'PUT',
+      data: mapProductoBackend(producto),
       timeout: 4000,
       headers: {
         Authorization: `Bearer ${usuario}`,
@@ -47,7 +35,9 @@ export const putProducto = async (producto: Partial<Producto>, servidor: boolean
     });
 
     if (data.ok) {
-      return mapProducto(data.data);
+      return {
+        ok: true,
+      };
     }
     return null;
   } catch (error) {

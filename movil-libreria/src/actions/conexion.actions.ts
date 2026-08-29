@@ -1,13 +1,12 @@
-import { getUrl } from '@/utils/getURL';
-import axios from 'axios';
+import { apiRequest } from '@/api/apiClient';
 
-export const probarConexion = async (): Promise<boolean> => {
-  const URL = `http://${await getUrl()}/test`;
+export const probarConexion = async (servidor: boolean): Promise<boolean> => {
   try {
-    const { data } = await axios.get(URL, {
-      timeout: 2000,
+    const data = await apiRequest(servidor, {
+      url: '/test',
+      method: 'GET',
     });
-    return data;
+    return Boolean(data);
   } catch (error) {
     return false;
   }

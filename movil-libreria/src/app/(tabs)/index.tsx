@@ -9,14 +9,14 @@ import SelectModal from '@/components/ui/SelectedModal';
 import ModalGetUsuario from '@/components/usuarios/ModalGetUsuario';
 import { useRubros } from '@/hooks';
 import { useProductos } from '@/hooks/productos/useProductos';
-import { Rubro, SubRubro } from '@/interface';
+import { Producto, Rubro, SubRubro } from '@/interface';
 import { useProductoStore } from '@/store';
 import { useGlobalStore } from '@/store/globalStore';
 import { mensaje } from '@/utils/mensaje';
 import { Ionicons } from '@expo/vector-icons';
 import { useCameraPermissions } from 'expo-camera';
-import { useMemo, useState } from 'react';
-import { Alert, FlatList, KeyboardAvoidingView, Linking, Platform, RefreshControl, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
+import { ActivityIndicator, Alert, FlatList, KeyboardAvoidingView, Linking, Platform, RefreshControl, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
@@ -24,7 +24,7 @@ export default function HomeScreen() {
   const { servidor, setServidor, setUsuario } = useGlobalStore();
   const { modal, buscador, abrirModal, rubroSeleccionado, seleccionarRubro, subRubroSeleccionado, seleccionarSubRubro } = useProductoStore();
 
-  const { data: productos, isLoading, refetch } = useProductos(buscador, servidor, rubroSeleccionado, subRubroSeleccionado);
+  const { data: productosData, isLoading, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } = useProductos(buscador, servidor, rubroSeleccionado, subRubroSeleccionado);
   const { data, isLoading: isLoadingRubros, refetch: refetchRubros } = useRubros(servidor);
 
   const [refreshing, setRefreshing] = useState(false);
@@ -35,6 +35,16 @@ export default function HomeScreen() {
   const [visibleSubRubro, setVisibleSubRubro] = useState(false);
 
   const [permission, requestPermission] = useCameraPermissions();
+
+  const productos = useMemo(() => {
+    return productosData?.pages.flatMap((page) => page) ?? [];
+  }, [productosData]);
+
+  const handleLoadMore = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
 
   const handleScan = () => {
     if (!permission?.granted && permission?.canAskAgain) {
@@ -98,6 +108,8 @@ export default function HomeScreen() {
     return <CameraScan onClose={() => setIsScanning(false)} />;
   }
 
+  const renderItem = useCallback(({ item }: { item: Producto }) => <ProductItem setIsUserModalVisible={setIsUserModalVisible} item={item} />, []);
+
   return (
     <KeyboardAvoidingView keyboardVerticalOffset={100} style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 bg-gray-100 dark:bg-slate-950 p-4">
       <View className="flex-row justify-between items-center mb-4">
@@ -145,11 +157,20 @@ export default function HomeScreen() {
         data={productos}
         className={showRubros ? 'mt-2' : 'mt-0'}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ProductItem setIsUserModalVisible={setIsUserModalVisible} item={item} />}
+        renderItem={renderItem}
         ListHeaderComponent={<BuscadorProductos handleScan={handleScan} />}
         ItemSeparatorComponent={() => <View className="h-4" />}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         ListEmptyComponent={isLoading ? <Loading /> : null}
+        ListFooterComponent={
+          isFetchingNextPage ? (
+            <View className="py-4 items-center">
+              <ActivityIndicator size="small" color={isDarkMode ? '#3b82f6' : '#0ea5e9'} />
+            </View>
+          ) : null
+        }
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.4}
         contentContainerStyle={{ paddingBottom: 250 }}
         keyboardShouldPersistTaps="handled"
       />

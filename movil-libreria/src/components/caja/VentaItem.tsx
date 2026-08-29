@@ -2,14 +2,14 @@ import { useAppTheme } from '@/hooks/useAppTheme';
 import { Caja } from '@/interface';
 import { obtenerFecha } from '@/utils/ObtenerHora';
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import { memo } from 'react';
 import { Text, View } from 'react-native';
 
 interface Props {
   caja: Caja;
 }
 
-export default function VentaItem({ caja }: Props) {
+function VentaItem({ caja }: Props) {
   const { isDark } = useAppTheme();
 
   const getTipoStyles = (tipo: string) => {
@@ -44,32 +44,54 @@ export default function VentaItem({ caja }: Props) {
   const styles = getTipoStyles(caja?.tipo_importe || 'Efectivo');
 
   return (
-    <View className="flex-row items-center bg-white dark:bg-slate-900 py-4 px-1">
-      {/* Time and Icon Column */}
-      <View className="items-center mr-4">
-        <Text className="text-gray-400 dark:text-slate-500 text-xs font-bold uppercase mb-1">{obtenerFecha(caja.fecha)}</Text>
-        <View className={`${styles.container} p-2 rounded-xl border`}>
-          <Ionicons name="receipt-outline" size={20} color={styles.icon} />
+    <View className="mx-4 bg-white dark:bg-slate-900 px-4 py-3.5 rounded-2xl border border-slate-100 dark:border-slate-800/80 shadow-sm flex-row items-center justify-between">
+      {/* Left icon & details */}
+      <View className="flex-row items-center flex-1 mr-3">
+        <View className={`${styles.container} p-2.5 rounded-xl border mr-3 items-center justify-center`}>
+          <Ionicons
+            name={caja.tipo_mov === 'Ingreso' ? 'arrow-down' : 'arrow-up'}
+            size={18}
+            color={styles.icon}
+          />
         </View>
-      </View>
 
-      {/* Main Info Column */}
-      <View className="flex-1 justify-center">
-        <View className="flex-row items-center mb-1">
-          <Text className={`font-bold text-base mr-2 ${caja.tipo_mov === 'Ingreso' ? 'text-emerald-500' : 'text-red-500'}`} numberOfLines={1}>
-            {caja.tipo_mov || 'Egreso'}
+        <View className="flex-1">
+          <View className="flex-row items-center gap-1.5 mb-0.5">
+            <Text
+              className={`text-sm font-bold ${caja.tipo_mov === 'Ingreso' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}
+              numberOfLines={1}
+            >
+              {caja.tipo_mov || 'Movimiento'}
+            </Text>
+            <Text className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+              • {obtenerFecha(caja.fecha)}
+            </Text>
+          </View>
+          <Text className="text-xs font-medium text-slate-600 dark:text-slate-400" numberOfLines={1}>
+            {caja?.concepto || 'Sin concepto'}
           </Text>
         </View>
-        <Text className="text-gray-400 dark:text-slate-500 text-xs font-medium uppercase tracking-tighter">{caja?.concepto}</Text>
       </View>
 
-      {/* Amount and Tag Column */}
+      {/* Right amount and payment type badge */}
       <View className="items-end">
-        <Text className="text-gray-900 dark:text-slate-100 font-black text-lg mb-1">${caja.tipo_mov !== 'Ingreso' ? caja.debe?.toFixed(2) : caja.haber?.toFixed(2)}</Text>
-        <View className={`${styles.container} px-2 py-0.5 rounded-full border`}>
-          <Text className={`${styles.text} text-[10px] font-bold uppercase`}>{caja.tipo_importe}</Text>
+        <Text
+          className={`text-base font-black tracking-tight ${
+            caja.tipo_mov === 'Ingreso'
+              ? 'text-slate-900 dark:text-slate-100'
+              : 'text-rose-600 dark:text-rose-400'
+          }`}
+        >
+          {caja.tipo_mov === 'Ingreso' ? '+' : '-'}${caja.tipo_mov !== 'Ingreso' ? (caja.debe || 0).toFixed(2) : (caja.haber || 0).toFixed(2)}
+        </Text>
+        <View className={`${styles.container} px-2 py-0.5 mt-1 rounded-full border`}>
+          <Text className={`${styles.text} text-[9px] font-bold uppercase tracking-wider`}>
+            {caja.tipo_importe || 'Efectivo'}
+          </Text>
         </View>
       </View>
     </View>
   );
 }
+
+export default memo(VentaItem);

@@ -3,6 +3,7 @@ import { Producto } from '@/interface';
 import { useProductoStore } from '@/store';
 import { useGlobalStore } from '@/store/globalStore';
 import { Image } from 'expo-image';
+import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 interface Props {
@@ -10,7 +11,7 @@ interface Props {
   setIsUserModalVisible: (visible: boolean) => void;
 }
 
-export default function ProductItem({ item, setIsUserModalVisible }: Props) {
+function ProductItem({ item, setIsUserModalVisible }: Props) {
   const { servidor } = useGlobalStore();
   const { data } = useRubros(servidor);
 
@@ -80,3 +81,5 @@ export default function ProductItem({ item, setIsUserModalVisible }: Props) {
     </View>
   );
 }
+
+export default memo(ProductItem);

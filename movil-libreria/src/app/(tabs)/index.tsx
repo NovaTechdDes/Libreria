@@ -40,6 +40,8 @@ export default function HomeScreen() {
     return productosData?.pages.flatMap((page) => page) ?? [];
   }, [productosData]);
 
+  const renderItem = useCallback(({ item }: { item: Producto }) => <ProductItem setIsUserModalVisible={setIsUserModalVisible} item={item} />, []);
+
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -107,8 +109,6 @@ export default function HomeScreen() {
   if (isScanning) {
     return <CameraScan onClose={() => setIsScanning(false)} />;
   }
-
-  const renderItem = useCallback(({ item }: { item: Producto }) => <ProductItem setIsUserModalVisible={setIsUserModalVisible} item={item} />, []);
 
   return (
     <KeyboardAvoidingView keyboardVerticalOffset={100} style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 bg-gray-100 dark:bg-slate-950 p-4">

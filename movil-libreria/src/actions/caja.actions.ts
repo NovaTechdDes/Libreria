@@ -3,7 +3,7 @@ import { mapCaja } from '@/mappers/caja.mappers';
 
 export const getMovCajas = async (servidor: boolean) => {
   try {
-    const { data } = await apiRequest(servidor, {
+    const res = await apiRequest(servidor, {
       url: '/caja',
       method: 'GET',
       params: {
@@ -11,10 +11,7 @@ export const getMovCajas = async (servidor: boolean) => {
       },
     });
 
-    if (data) {
-      return data.map(mapCaja);
-    }
-    return [];
+    return res?.data ? res.data.map(mapCaja) : [];
   } catch (error) {
     console.error(error);
     return [];
@@ -23,7 +20,7 @@ export const getMovCajas = async (servidor: boolean) => {
 
 export const getVales = async (servidor: boolean, usuario: string) => {
   try {
-    const { data } = await apiRequest(servidor, {
+    const res = await apiRequest(servidor, {
       url: '/caja/vales',
       method: 'GET',
       params: {
@@ -31,10 +28,7 @@ export const getVales = async (servidor: boolean, usuario: string) => {
       },
     });
 
-    if (data) {
-      return data;
-    }
-    return [];
+    return res?.data ?? [];
   } catch (error) {
     console.error(error);
     return [];
@@ -43,17 +37,15 @@ export const getVales = async (servidor: boolean, usuario: string) => {
 
 export const startCierreCaja = async (servidor: boolean, usuario: string): Promise<boolean> => {
   try {
-    const { data } = await apiRequest(servidor, {
+    const res = await apiRequest(servidor, {
       url: '/caja/cierre',
       method: 'POST',
       headers: {
         Authorization: `Bearer ${usuario}`,
       },
     });
-    if (data.ok) {
-      return true;
-    }
-    return false;
+
+    return res?.ok ?? false;
   } catch (error) {
     console.error(error);
     return false;

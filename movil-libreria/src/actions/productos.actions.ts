@@ -4,7 +4,7 @@ import { mapProducto, mapProductoBackend } from '@/mappers/producto.mappers';
 
 export const getProductos = async (search: string, servidor: boolean, id_rubro: number | null, id_subrubro: number | null, limit: number = 50): Promise<Producto[]> => {
   try {
-    const { data } = await apiRequest(servidor, {
+    const res = await apiRequest(servidor, {
       url: '/productos',
       method: 'GET',
       params: {
@@ -15,7 +15,7 @@ export const getProductos = async (search: string, servidor: boolean, id_rubro: 
         id_subrubro: id_subrubro || 0,
       },
     });
-    return data?.map(mapProducto);
+    return res?.data?.map(mapProducto) ?? [];
   } catch (error) {
     console.error(error);
     return [];
@@ -24,7 +24,7 @@ export const getProductos = async (search: string, servidor: boolean, id_rubro: 
 
 export const putProducto = async (producto: Partial<Producto>, servidor: boolean, usuario: string): Promise<{ ok: boolean } | null> => {
   try {
-    const data = await apiRequest(servidor, {
+    const res = await apiRequest(servidor, {
       url: `/productos/${producto.id}`,
       method: 'PUT',
       data: mapProductoBackend(producto),
@@ -34,7 +34,7 @@ export const putProducto = async (producto: Partial<Producto>, servidor: boolean
       },
     });
 
-    if (data.ok) {
+    if (res?.ok) {
       return {
         ok: true,
       };

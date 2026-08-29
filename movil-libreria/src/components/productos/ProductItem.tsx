@@ -2,6 +2,7 @@ import { useRubros } from '@/hooks';
 import { Producto } from '@/interface';
 import { useProductoStore } from '@/store';
 import { useGlobalStore } from '@/store/globalStore';
+import { formatCurrency } from '@/utils/formatCurrency';
 import { Image } from 'expo-image';
 import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
@@ -62,7 +63,7 @@ function ProductItem({ item, setIsUserModalVisible }: Props) {
           <View className="flex-row justify-between items-end mt-2">
             <View>
               <Text className="text-xs text-slate-400 dark:text-slate-500 font-medium">Precio</Text>
-              <Text className="text-lg font-bold text-slate-900 dark:text-blue-400">${item.precio.toFixed(2)}</Text>
+              <Text className="text-lg font-bold text-slate-900 dark:text-blue-400">{formatCurrency(item.precio)}</Text>
             </View>
 
             <View className="items-end">

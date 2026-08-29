@@ -1,6 +1,6 @@
 import { apiRequest } from '@/api/apiClient';
 
-export const probarConexion = async (servidor: boolean): Promise<boolean> => {
+export const probarConexion = async (servidor: boolean = false): Promise<boolean> => {
   try {
     const data = await apiRequest(servidor, {
       url: '/test',

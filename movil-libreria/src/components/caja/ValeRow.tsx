@@ -1,5 +1,6 @@
 import { useAppTheme } from '@/hooks/useAppTheme';
 import { Vale } from '@/interface/Vale';
+import { formatCurrency } from '@/utils/formatCurrency';
 import { Ionicons } from '@expo/vector-icons';
 import { Text, View } from 'react-native';
 
@@ -52,9 +53,7 @@ export default function ValeRow({ vale, mostrar }: Props) {
         <Text className="text-slate-700 dark:text-slate-300 font-semibold text-sm">{vale.tipo_importe}</Text>
       </View>
 
-      <Text className="text-slate-900 dark:text-slate-100 font-bold text-base">
-        {mostrar ? `$${(vale.saldo || 0).toFixed(2)}` : '••••'}
-      </Text>
+      <Text className="text-slate-900 dark:text-slate-100 font-bold text-base">{mostrar ? formatCurrency(vale.saldo || 0) : '••••'}</Text>
     </View>
   );
 }

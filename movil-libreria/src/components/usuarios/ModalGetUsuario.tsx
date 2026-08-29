@@ -1,7 +1,7 @@
 import { useAppTheme } from '@/hooks/useAppTheme';
 import { useGlobalStore } from '@/store/globalStore';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, Text, TextInput, View } from 'react-native';
 
 interface ModalGetUsuarioProps {
@@ -73,7 +73,7 @@ export default function ModalGetUsuario({ visible, onClose, onConfirm, isLoading
                   disabled={!clave}
                   className={`flex-[1.5] py-4 rounded-2xl active:opacity-90 shadow-md ${clave ? 'bg-blue-600 dark:bg-blue-700 shadow-blue-500/30' : 'bg-slate-200 dark:bg-slate-700 opacity-50'}`}
                 >
-                  <Text className="text-black dark:text-white font-bold text-center">{isLoadingUsuario ? 'Cargando...' : 'Ingresar'}</Text>
+                  <Text className="text-white dark:text-white font-bold text-center">{isLoadingUsuario ? 'Cargando...' : 'Ingresar'}</Text>
                 </Pressable>
               </View>
             </View>

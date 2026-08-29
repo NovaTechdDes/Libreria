@@ -1,7 +1,7 @@
 import { Rubro, SubRubro } from '@/interface';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
-import { FlatList, KeyboardAvoidingView, Modal, Platform, Pressable, Text, TextInput, TouchableOpacity, useColorScheme, View } from 'react-native';
+import { useState } from 'react';
+import { FlatList, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, Text, TextInput, TouchableOpacity, useColorScheme, View } from 'react-native';
 
 interface Props {
   visible: boolean;
@@ -22,7 +22,14 @@ export default function SelectModal({ visible, data, onSelect, onClose, title = 
   };
 
   const handleSelect = (item: Rubro | SubRubro) => {
+    Keyboard.dismiss();
     onSelect(item);
+    setSearch('');
+    onClose();
+  };
+
+  const handleClose = () => {
+    Keyboard.dismiss();
     setSearch('');
     onClose();
   };
@@ -30,9 +37,9 @@ export default function SelectModal({ visible, data, onSelect, onClose, title = 
   const filtered = filterData(data);
 
   return (
-    <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={onClose}>
+    <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={handleClose}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="flex-1">
-        <Pressable className="flex-1 bg-black/50" onPress={onClose} />
+        <Pressable className="flex-1 bg-black/50" onPress={handleClose} />
 
         <View className="bg-white dark:bg-neutral-900 rounded-t-[32px] p-6 h-[75%] shadow-2xl">
           {/* Handle indicator */}
@@ -43,7 +50,7 @@ export default function SelectModal({ visible, data, onSelect, onClose, title = 
           {/* Header */}
           <View className="flex-row justify-between items-center mb-6">
             <Text className="text-2xl font-bold text-neutral-900 dark:text-white">{title}</Text>
-            <TouchableOpacity onPress={onClose} className="p-2 bg-neutral-100 dark:bg-neutral-800 rounded-full">
+            <TouchableOpacity onPress={handleClose} className="p-2 bg-neutral-100 dark:bg-neutral-800 rounded-full">
               <Ionicons name="close" size={24} color={isDark ? '#A3A3A3' : '#A3A3A3'} className="text-neutral-600 dark:text-neutral-400" />
             </TouchableOpacity>
           </View>
@@ -64,6 +71,7 @@ export default function SelectModal({ visible, data, onSelect, onClose, title = 
             data={filtered}
             keyExtractor={(item, index) => `${item.nombre_rubro}-${index}`}
             showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
             ListEmptyComponent={() => (
               <View className="items-center py-10">
                 <Ionicons name="search-outline" size={48} className="text-neutral-300 dark:text-neutral-700 mb-2" />

@@ -1,54 +1,54 @@
-import React, { useState } from "react";
-import logo from "../../assets/logo.png";
-import { useUserStore } from "../../store";
+import React, { useState, useEffect } from "react";
+import logo from "../assets/logo.png";
+import { getServerUrl, setServerUrl } from "../service/store.service";
 import {
-  User,
-  Lock,
-  Eye,
-  EyeOff,
+  Server,
+  Network,
   ArrowRight,
   Loader2,
   BookOpen,
   AlertCircle,
 } from "lucide-react";
-import { getUsuario } from "../../service";
 
-export const Login = () => {
-  const { setUsuario } = useUserStore();
-  const [denominacion, setDenominacion] = useState("");
-  const [clave, setClave] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+export const ServerSetup = ({ onConfigured }: { onConfigured: () => void }) => {
+  const [url, setUrl] = useState("");
+  const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  useEffect(() => {
+    const current = getServerUrl();
+    if (current) {
+      setUrl(current);
+    }
+  }, []);
+
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
 
-    if (!denominacion.trim()) {
-      setErrorMessage("Por favor ingrese su nombre de usuario.");
-      return;
-    }
-    if (!clave.trim()) {
-      setErrorMessage("Por favor ingrese su contraseña.");
+    const cleanUrl = url.trim();
+    if (!cleanUrl) {
+      setErrorMessage("Por favor ingrese la URL o IP del servidor.");
       return;
     }
 
-    setIsLoading(true);
+    if (!cleanUrl.startsWith("http://") && !cleanUrl.startsWith("https://")) {
+      setErrorMessage("La URL debe comenzar con http:// o https://");
+      return;
+    }
 
+    setSaving(true);
     try {
-      const res = await getUsuario(denominacion, clave);
-      console.log("Usuario logueado:", res);
-      setUsuario(res);
-    } catch (error: any) {
-      console.error("Error al iniciar sesión:", error);
+      // Guardar en el archivo de configuración del PC
+      await setServerUrl(cleanUrl);
+      onConfigured();
+    } catch (err: any) {
+      console.error("Error guardando servidor:", err);
       setErrorMessage(
-        typeof error === "string"
-          ? error
-          : "Error al conectar con la base de datos",
+        typeof err === "string" ? err : "Error al guardar la configuración."
       );
     } finally {
-      setIsLoading(false);
+      setSaving(false);
     }
   };
 
@@ -83,12 +83,12 @@ export const Login = () => {
               Lachi Librería
             </h1>
             <p className="text-xs sm:text-sm text-slate-400 mt-1">
-              Ingrese sus credenciales para acceder al sistema
+              Configuración de conexión con el servidor
             </p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSave} className="space-y-5">
             {/* Error message */}
             {errorMessage && (
               <div className="flex items-center gap-2.5 p-3.5 rounded-xl bg-red-950/40 border border-red-500/30 text-red-300 text-xs font-medium animate-in fade-in slide-in-from-top-1 duration-200">
@@ -97,87 +97,54 @@ export const Login = () => {
               </div>
             )}
 
-            {/* Usuario input */}
-            <div className="space-y-1.5">
-              <label
-                htmlFor="usuario"
-                className="block text-xs font-semibold tracking-wider text-slate-300 uppercase"
-              >
-                Usuario
-              </label>
-              <div className="relative flex items-center">
-                <div className="absolute left-3.5 text-slate-400 pointer-events-none">
-                  <User className="w-4 h-4" />
-                </div>
-                <input
-                  type="text"
-                  name="usuario"
-                  id="usuario"
-                  value={denominacion}
-                  onChange={(e) => setDenominacion(e.target.value)}
-                  placeholder="Ej. admin"
-                  autoComplete="username"
-                  className="w-full bg-slate-950/70 border border-slate-800 focus:border-amber-500/60 text-slate-100 placeholder-slate-500 text-sm rounded-xl pl-10 pr-4 py-3 outline-none transition-all duration-200 focus:ring-2 focus:ring-amber-500/20 shadow-sm"
-                />
-              </div>
-            </div>
-
-            {/* Contrasena input */}
+            {/* Server URL input */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <label
-                  htmlFor="contrasena"
+                  htmlFor="server-url"
                   className="block text-xs font-semibold tracking-wider text-slate-300 uppercase"
                 >
-                  Contraseña
+                  Dirección del Servidor (API)
                 </label>
+                <span className="text-[10px] text-slate-500 flex items-center gap-1">
+                  <Network className="w-3 h-3 text-amber-400/80" /> IP / Host
+                </span>
               </div>
               <div className="relative flex items-center">
                 <div className="absolute left-3.5 text-slate-400 pointer-events-none">
-                  <Lock className="w-4 h-4" />
+                  <Server className="w-4 h-4" />
                 </div>
                 <input
-                  type={showPassword ? "text" : "password"}
-                  name="contrasena"
-                  id="contrasena"
-                  value={clave}
-                  onChange={(e) => setClave(e.target.value)}
-                  placeholder="••••••••"
-                  autoComplete="current-password"
-                  className="w-full bg-slate-950/70 border border-slate-800 focus:border-amber-500/60 text-slate-100 placeholder-slate-500 text-sm rounded-xl pl-10 pr-11 py-3 outline-none transition-all duration-200 focus:ring-2 focus:ring-amber-500/20 shadow-sm"
+                  type="text"
+                  name="server-url"
+                  id="server-url"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="Ej: http://192.168.1.100:3000"
+                  autoComplete="off"
+                  disabled={saving}
+                  className="w-full bg-slate-950/70 border border-slate-800 focus:border-amber-500/60 text-slate-100 placeholder-slate-500 text-sm rounded-xl pl-10 pr-4 py-3 outline-none transition-all duration-200 focus:ring-2 focus:ring-amber-500/20 shadow-sm disabled:opacity-50"
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  tabIndex={-1}
-                  className="absolute right-3.5 text-slate-400 hover:text-slate-200 transition-colors p-1"
-                  aria-label={
-                    showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
-                  }
-                >
-                  {showPassword ? (
-                    <EyeOff className="w-4 h-4" />
-                  ) : (
-                    <Eye className="w-4 h-4" />
-                  )}
-                </button>
               </div>
+              <p className="text-[11px] text-slate-500 pt-0.5">
+                Ingrese la IP o dominio donde se encuentra ejecutándose el backend.
+              </p>
             </div>
 
             {/* Submit button */}
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={saving}
               className="w-full relative group overflow-hidden rounded-xl bg-linear-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-semibold text-sm py-3.5 px-4 shadow-lg shadow-amber-500/20 active:scale-[0.98] transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer mt-2"
             >
-              {isLoading ? (
+              {saving ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
-                  <span>Verificando...</span>
+                  <span>Guardando configuración...</span>
                 </>
               ) : (
                 <>
-                  <span>Iniciar Sesión</span>
+                  <span>Conectar y Continuar</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </>
               )}
@@ -195,3 +162,4 @@ export const Login = () => {
     </div>
   );
 };
+export default ServerSetup;

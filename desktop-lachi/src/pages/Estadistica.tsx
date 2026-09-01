@@ -4,6 +4,7 @@ import { ChangeEvent, useMemo, useState } from 'react';
 import { EstadisticaItem, Loading } from '../components';
 import { useDetalleVenta } from '../hooks/useDetalleVenta';
 import { DetalleVenta } from '../interface';
+import { exportarEstadisticasPDF } from '../utils/generarPdf';
 
 export const Estadistica = () => {
   const { data: rubros, isLoading: isLoadingRubros } = useRubros();
@@ -55,6 +56,8 @@ export const Estadistica = () => {
 
         <div className="flex items-center gap-2.5">
           <button
+            onClick={() => exportarEstadisticasPDF({ detalles, desde: desdeFiltro, hasta: hastaFiltro })}
+            disabled={!detalles || detalles.length === 0}
             type="button"
             className="flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl bg-white dark:bg-zinc-900 text-slate-700 dark:text-zinc-200 border border-slate-200/90 dark:border-zinc-800 hover:bg-red-50/50 hover:text-red-600 hover:border-red-200 dark:hover:bg-red-950/20 dark:hover:text-red-400 dark:hover:border-red-900/40 shadow-2xs transition-all cursor-pointer active:scale-95"
           >
@@ -188,9 +191,7 @@ export const Estadistica = () => {
 
               <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/60 text-xs sm:text-sm">
                 {detalles && detalles.length > 0 ? (
-                  detalles.map((item: DetalleVenta) => (
-                    <EstadisticaItem key={item.codigo_articulo || item.id_venta} item={item} />
-                  ))
+                  detalles.map((item: DetalleVenta) => <EstadisticaItem key={item.codigo_articulo || item.id_venta} item={item} />)
                 ) : (
                   <tr>
                     <td colSpan={6} className="text-center py-12 text-slate-400 dark:text-zinc-500 font-medium">

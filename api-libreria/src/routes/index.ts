@@ -3,3 +3,4 @@ export { default as usuariosRoutes } from "./usuarios.route";
 export { default as ventasRoutes } from "./ventas.route";
 export { default as cajaRoutes } from "./caja.route";
 export { default as rubroRoutes } from "./rubro.route";
+export { default as detallesVentasRoutes } from "./detallesVentasRoutes.route";

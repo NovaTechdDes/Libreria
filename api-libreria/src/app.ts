@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import {
   cajaRoutes,
+  detallesVentasRoutes,
   productosRoutes,
   rubroRoutes,
   usuariosRoutes,
@@ -30,6 +31,7 @@ app.use("/usuarios", usuariosRoutes);
 app.use("/ventas", ventasRoutes);
 app.use("/caja", cajaRoutes);
 app.use("/rubro", rubroRoutes);
+app.use('/detallesVentas', detallesVentasRoutes)
 
 // //sincronizar imagenes una vez al dia
 // //  setTimeout(() => syncImages(), 1000 * 60 * 2); // 2 minutos

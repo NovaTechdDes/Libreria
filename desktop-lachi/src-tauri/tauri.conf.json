@@ -12,8 +12,9 @@
   "app": {
     "windows": [
       {
-        "title": "desktop-lachi",
+        "title": "Lachi Librería",
         "width": 800,
+        "maximized": true,
         "height": 600
       }
     ],

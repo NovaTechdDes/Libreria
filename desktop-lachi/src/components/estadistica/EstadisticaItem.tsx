@@ -11,7 +11,9 @@ export const EstadisticaItem = ({ item }: Props) => {
       <td className="px-4 py-3.5 font-medium text-slate-800 dark:text-zinc-200">{item.producto}</td>
       <td className="px-4 py-3.5 text-right font-mono text-slate-700 dark:text-zinc-300">{item.cantidad_art.toFixed(2)}</td>
       <td className="px-4 py-3.5 text-right font-mono text-slate-700 dark:text-zinc-300">{item.stock.toFixed(2)}</td>
-      <td className="px-4 py-3.5 text-right font-mono font-semibold text-slate-600 dark:text-zinc-400">{(item.cantidad_art - item.stock).toFixed(2)}</td>
+      <td className={`px-4 py-3.5 text-right font-mono font-semibold ${item.stock - item.cantidad_art > 0 ? 'text-green-600 dark:text-green-600' : 'text-red-600 dark:text-red-600'}`}>
+        {(item.stock - item.cantidad_art).toFixed(2)}
+      </td>
       <td className="px-4 py-3.5 text-right font-mono font-medium text-slate-900 dark:text-zinc-100">
         {item.precio.toLocaleString('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 2 })}
       </td>

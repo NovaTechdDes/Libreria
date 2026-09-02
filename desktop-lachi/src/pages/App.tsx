@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import logo from "../assets/logo.png";
 import { getServerUrl, setServerUrl } from "../service/store.service";
+import { useThemeStore } from "../store";
 import {
   Server,
   Network,
@@ -8,9 +9,13 @@ import {
   Loader2,
   BookOpen,
   AlertCircle,
+  Sun,
+  Moon,
+  Laptop,
 } from "lucide-react";
 
 export const ServerSetup = ({ onConfigured }: { onConfigured: () => void }) => {
+  const { theme, cycleTheme } = useThemeStore();
   const [url, setUrl] = useState("");
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -53,36 +58,63 @@ export const ServerSetup = ({ onConfigured }: { onConfigured: () => void }) => {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center bg-[#0b0f17] text-slate-100 overflow-hidden font-sans selection:bg-amber-500/30 selection:text-amber-200">
+    <div className="relative min-h-screen w-full flex items-center justify-center bg-slate-100 dark:bg-[#0b0f17] text-slate-800 dark:text-slate-100 overflow-hidden font-sans selection:bg-amber-500/30 selection:text-amber-700 dark:selection:text-amber-200 transition-colors duration-300">
+      {/* Botón selector de tema en la esquina superior */}
+      <div className="absolute top-4 right-4 z-20">
+        <button
+          type="button"
+          onClick={cycleTheme}
+          title={`Tema: ${theme === 'system' ? 'Sistema (automático)' : theme === 'dark' ? 'Modo Oscuro' : 'Modo Claro'} - Clic para alternar`}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/90 dark:border-slate-800/80 backdrop-blur-md shadow-xs text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 transition-all cursor-pointer active:scale-95"
+        >
+          {theme === 'system' ? (
+            <>
+              <Laptop className="w-3.5 h-3.5 text-amber-500" />
+              <span className="hidden sm:inline">Sistema</span>
+            </>
+          ) : theme === 'dark' ? (
+            <>
+              <Moon className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden sm:inline">Oscuro</span>
+            </>
+          ) : (
+            <>
+              <Sun className="w-3.5 h-3.5 text-amber-500" />
+              <span className="hidden sm:inline">Claro</span>
+            </>
+          )}
+        </button>
+      </div>
+
       {/* Ambient background glowing elements */}
       <div className="absolute top-1/4 -left-20 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 -right-20 w-120 h-120 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] background-size[24px_24px] opacity-25 pointer-events-none" />
+      <div className="absolute bottom-1/4 -right-20 w-120 h-120 bg-indigo-500/10 dark:bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px] opacity-40 dark:opacity-25 pointer-events-none" />
 
       {/* Main card panel */}
       <div className="relative w-full max-w-md mx-4 sm:mx-0 z-10">
-        <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-8 sm:p-10 shadow-2xl shadow-black/60 transition-all duration-300">
+        <div className="bg-white/85 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800/80 rounded-2xl p-8 sm:p-10 shadow-xl shadow-slate-300/40 dark:shadow-2xl dark:shadow-black/60 transition-all duration-300">
           {/* Header & Logo */}
           <div className="flex flex-col items-center text-center mb-8">
             <div className="relative mb-4 group">
-              <div className="absolute -inset-1 rounded-2xl bg-linear-to-r from-amber-500/40 to-indigo-500/40 blur-md opacity-70 group-hover:opacity-100 transition duration-300" />
-              <div className="relative flex items-center justify-center w-20 h-20 bg-slate-950/90 border border-slate-700/60 rounded-2xl p-3 shadow-inner">
+              <div className="absolute -inset-1 rounded-3xl bg-linear-to-r from-teal-400/30 to-amber-500/30 dark:from-teal-500/40 dark:to-amber-500/40 blur-md opacity-70 group-hover:opacity-100 transition duration-300" />
+              <div className="relative flex items-center justify-center w-24 h-24 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700/60 rounded-3xl p-1.5 shadow-sm dark:shadow-inner overflow-hidden">
                 {logo ? (
                   <img
                     src={logo}
-                    alt="Lachi Libreria Logo"
-                    className="max-h-full max-w-full object-contain"
+                    alt="Lachi Librería"
+                    className="w-full h-full object-contain rounded-2xl"
                   />
                 ) : (
-                  <BookOpen className="w-10 h-10 text-amber-400" />
+                  <BookOpen className="w-10 h-10 text-amber-500" />
                 )}
               </div>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white font-['Outfit']">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white font-['Outfit']">
               Lachi Librería
             </h1>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
               Configuración de conexión con el servidor
             </p>
           </div>
@@ -91,8 +123,8 @@ export const ServerSetup = ({ onConfigured }: { onConfigured: () => void }) => {
           <form onSubmit={handleSave} className="space-y-5">
             {/* Error message */}
             {errorMessage && (
-              <div className="flex items-center gap-2.5 p-3.5 rounded-xl bg-red-950/40 border border-red-500/30 text-red-300 text-xs font-medium animate-in fade-in slide-in-from-top-1 duration-200">
-                <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+              <div className="flex items-center gap-2.5 p-3.5 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300 text-xs font-medium animate-in fade-in slide-in-from-top-1 duration-200">
+                <AlertCircle className="w-4 h-4 text-red-500 dark:text-red-400 shrink-0" />
                 <span>{errorMessage}</span>
               </div>
             )}
@@ -102,12 +134,12 @@ export const ServerSetup = ({ onConfigured }: { onConfigured: () => void }) => {
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="server-url"
-                  className="block text-xs font-semibold tracking-wider text-slate-300 uppercase"
+                  className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-300 uppercase"
                 >
                   Dirección del Servidor (API)
                 </label>
                 <span className="text-[10px] text-slate-500 flex items-center gap-1">
-                  <Network className="w-3 h-3 text-amber-400/80" /> IP / Host
+                  <Network className="w-3 h-3 text-amber-500/80" /> IP / Host
                 </span>
               </div>
               <div className="relative flex items-center">
@@ -123,10 +155,10 @@ export const ServerSetup = ({ onConfigured }: { onConfigured: () => void }) => {
                   placeholder="Ej: http://192.168.1.100:3000"
                   autoComplete="off"
                   disabled={saving}
-                  className="w-full bg-slate-950/70 border border-slate-800 focus:border-amber-500/60 text-slate-100 placeholder-slate-500 text-sm rounded-xl pl-10 pr-4 py-3 outline-none transition-all duration-200 focus:ring-2 focus:ring-amber-500/20 shadow-sm disabled:opacity-50"
+                  className="w-full bg-slate-50/80 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-950 focus:border-amber-500/80 dark:focus:border-amber-500/60 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 text-sm rounded-xl pl-10 pr-4 py-3 outline-none transition-all duration-200 focus:ring-2 focus:ring-amber-500/20 shadow-xs dark:shadow-sm disabled:opacity-50"
                 />
               </div>
-              <p className="text-[11px] text-slate-500 pt-0.5">
+              <p className="text-[11px] text-slate-400 dark:text-slate-500 pt-0.5">
                 Ingrese la IP o dominio donde se encuentra ejecutándose el backend.
               </p>
             </div>
@@ -152,8 +184,8 @@ export const ServerSetup = ({ onConfigured }: { onConfigured: () => void }) => {
           </form>
 
           {/* Footer note */}
-          <div className="mt-8 pt-6 border-t border-slate-800/60 text-center">
-            <p className="text-[11px] text-slate-500 tracking-wide">
+          <div className="mt-8 pt-6 border-t border-slate-200/80 dark:border-slate-800/60 text-center">
+            <p className="text-[11px] text-slate-400 dark:text-slate-500 tracking-wide">
               Sistema de Escritorio NovaTech &bull; Librería Lachi v0.1.0
             </p>
           </div>

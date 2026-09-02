@@ -1,6 +1,8 @@
 import { DetalleVenta } from "../interface";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { save } from '@tauri-apps/plugin-dialog';
+import { writeFile } from '@tauri-apps/plugin-fs';
 
 interface PdfOptions {
     detalles: DetalleVenta[],
@@ -9,6 +11,18 @@ interface PdfOptions {
 };
 
 export const exportarEstadisticasPDF = async ({detalles, desde, hasta}: PdfOptions) => {
+    const rutaSeleccionada = await save({
+        defaultPath: `Reporte-ventas_${desde}_a_${hasta}.pdf`,
+        filters: [
+            {
+                name: 'PDF',
+                extensions: ['pdf']
+            }
+        ]
+    })
+
+    if (!rutaSeleccionada) return;
+
     // 1. Instanciamos jsPDF
     const doc = new jsPDF({
         orientation: 'portrait',
@@ -35,7 +49,7 @@ export const exportarEstadisticasPDF = async ({detalles, desde, hasta}: PdfOptio
     item.producto,
     item.cantidad_art.toFixed(2),
     item.stock.toFixed(2),
-    (item.cantidad_art - item.stock).toFixed(2),
+    (item.stock - item.cantidad_art).toFixed(2),
     item.precio.toLocaleString('es-AR', {
         style: 'currency',
         currency: 'ARS',
@@ -72,10 +86,10 @@ export const exportarEstadisticasPDF = async ({detalles, desde, hasta}: PdfOptio
       );
     },
 });
-
-console.log("a")
-    // 5. Opciones finales
-    doc.save(`reporte-ventas_${desde}_a_${hasta}.pdf`);
+    
+    // 5. Guardar el archivo PDF
+    const pdfBytes = doc.output('arraybuffer');
+    await writeFile(rutaSeleccionada, new Uint8Array(pdfBytes));
 
     return true;
 };

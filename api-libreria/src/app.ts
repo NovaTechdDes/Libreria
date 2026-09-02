@@ -33,14 +33,14 @@ app.use("/caja", cajaRoutes);
 app.use("/rubro", rubroRoutes);
 app.use('/detallesVentas', detallesVentasRoutes)
 
-// //sincronizar imagenes una vez al dia
-// //  setTimeout(() => syncImages(), 1000 * 60 * 2); // 2 minutos
+// sincronizar imagenes una vez al dia
+setTimeout(() => syncImages(), 1000 * 60 * 2); // 2 minutos
 
 
-// //Sincronizar productos con Azure
-// setInterval(() => {
-//    //syncProducts();
-// }, 1000 * 60 * 60);
+// Sincronizar productos con Azure
+ setInterval(() => {
+    syncProducts();
+ }, 1000 * 60 * 60);
   
 export default app;
 

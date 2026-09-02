@@ -55,7 +55,7 @@ export async function getProductos(
     FROM api_articuloss a
     ${joinClause}
     ${query}
-    ORDER BY a.descripcion DESC
+    ORDER BY a.descripcion ASC
     `);
 
   const productosConImagen = await Promise.all(

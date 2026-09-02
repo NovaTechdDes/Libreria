@@ -1,22 +1,12 @@
-import React, { useState, useEffect } from "react";
-import logo from "../assets/logo.png";
-import { getServerUrl, setServerUrl } from "../service/store.service";
-import { useThemeStore } from "../store";
-import {
-  Server,
-  Network,
-  ArrowRight,
-  Loader2,
-  BookOpen,
-  AlertCircle,
-  Sun,
-  Moon,
-  Laptop,
-} from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import logo from '../assets/logo.png';
+import { getServerUrl, setServerUrl } from '../service/store.service';
+import { useThemeStore } from '../store';
+import { Server, Network, ArrowRight, Loader2, BookOpen, AlertCircle, Sun, Moon, Laptop } from 'lucide-react';
 
 export const ServerSetup = ({ onConfigured }: { onConfigured: () => void }) => {
   const { theme, cycleTheme } = useThemeStore();
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState('');
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -33,12 +23,12 @@ export const ServerSetup = ({ onConfigured }: { onConfigured: () => void }) => {
 
     const cleanUrl = url.trim();
     if (!cleanUrl) {
-      setErrorMessage("Por favor ingrese la URL o IP del servidor.");
+      setErrorMessage('Por favor ingrese la URL o IP del servidor.');
       return;
     }
 
-    if (!cleanUrl.startsWith("http://") && !cleanUrl.startsWith("https://")) {
-      setErrorMessage("La URL debe comenzar con http:// o https://");
+    if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
+      setErrorMessage('La URL debe comenzar con http:// o https://');
       return;
     }
 
@@ -48,10 +38,8 @@ export const ServerSetup = ({ onConfigured }: { onConfigured: () => void }) => {
       await setServerUrl(cleanUrl);
       onConfigured();
     } catch (err: any) {
-      console.error("Error guardando servidor:", err);
-      setErrorMessage(
-        typeof err === "string" ? err : "Error al guardar la configuración."
-      );
+      console.error('Error guardando servidor:', err);
+      setErrorMessage(typeof err === 'string' ? err : 'Error al guardar la configuración.');
     } finally {
       setSaving(false);
     }
@@ -89,7 +77,7 @@ export const ServerSetup = ({ onConfigured }: { onConfigured: () => void }) => {
       {/* Ambient background glowing elements */}
       <div className="absolute top-1/4 -left-20 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 -right-20 w-120 h-120 bg-indigo-500/10 dark:bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px] opacity-40 dark:opacity-25 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] background-size-[24px_24px] opacity-40 dark:opacity-25 pointer-events-none" />
 
       {/* Main card panel */}
       <div className="relative w-full max-w-md mx-4 sm:mx-0 z-10">
@@ -99,24 +87,12 @@ export const ServerSetup = ({ onConfigured }: { onConfigured: () => void }) => {
             <div className="relative mb-4 group">
               <div className="absolute -inset-1 rounded-3xl bg-linear-to-r from-teal-400/30 to-amber-500/30 dark:from-teal-500/40 dark:to-amber-500/40 blur-md opacity-70 group-hover:opacity-100 transition duration-300" />
               <div className="relative flex items-center justify-center w-24 h-24 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700/60 rounded-3xl p-1.5 shadow-sm dark:shadow-inner overflow-hidden">
-                {logo ? (
-                  <img
-                    src={logo}
-                    alt="Lachi Librería"
-                    className="w-full h-full object-contain rounded-2xl"
-                  />
-                ) : (
-                  <BookOpen className="w-10 h-10 text-amber-500" />
-                )}
+                {logo ? <img src={logo} alt="Lachi Librería" className="w-full h-full object-contain rounded-2xl" /> : <BookOpen className="w-10 h-10 text-amber-500" />}
               </div>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white font-['Outfit']">
-              Lachi Librería
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Configuración de conexión con el servidor
-            </p>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white font-['Outfit']">Lachi Librería</h1>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">Configuración de conexión con el servidor</p>
           </div>
 
           {/* Form */}
@@ -132,10 +108,7 @@ export const ServerSetup = ({ onConfigured }: { onConfigured: () => void }) => {
             {/* Server URL input */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label
-                  htmlFor="server-url"
-                  className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-300 uppercase"
-                >
+                <label htmlFor="server-url" className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-300 uppercase">
                   Dirección del Servidor (API)
                 </label>
                 <span className="text-[10px] text-slate-500 flex items-center gap-1">
@@ -158,9 +131,7 @@ export const ServerSetup = ({ onConfigured }: { onConfigured: () => void }) => {
                   className="w-full bg-slate-50/80 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-950 focus:border-amber-500/80 dark:focus:border-amber-500/60 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 text-sm rounded-xl pl-10 pr-4 py-3 outline-none transition-all duration-200 focus:ring-2 focus:ring-amber-500/20 shadow-xs dark:shadow-sm disabled:opacity-50"
                 />
               </div>
-              <p className="text-[11px] text-slate-400 dark:text-slate-500 pt-0.5">
-                Ingrese la IP o dominio donde se encuentra ejecutándose el backend.
-              </p>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500 pt-0.5">Ingrese la IP o dominio donde se encuentra ejecutándose el backend.</p>
             </div>
 
             {/* Submit button */}
@@ -185,9 +156,7 @@ export const ServerSetup = ({ onConfigured }: { onConfigured: () => void }) => {
 
           {/* Footer note */}
           <div className="mt-8 pt-6 border-t border-slate-200/80 dark:border-slate-800/60 text-center">
-            <p className="text-[11px] text-slate-400 dark:text-slate-500 tracking-wide">
-              Sistema de Escritorio NovaTech &bull; Librería Lachi v0.1.0
-            </p>
+            <p className="text-[11px] text-slate-400 dark:text-slate-500 tracking-wide">Sistema de Escritorio NovaTech &bull; Librería Lachi v0.1.0</p>
           </div>
         </div>
       </div>

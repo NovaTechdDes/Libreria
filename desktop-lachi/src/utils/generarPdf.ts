@@ -41,21 +41,31 @@ export const exportarEstadisticasPDF = async ({detalles, desde, hasta}: PdfOptio
     doc.text(`Período: ${desde} hasta ${hasta}`, 14, 22);
     doc.text(`Fecha de emisión: ${new Date().toLocaleDateString("es-AR")}`, 14, 27);
 
-   // 3. Formatear la data para la tabla
-   const headers = [['Cod. Interno', 'Descripcion', 'Cant. Vendid', 'Scotck Actual', 'Diferencia', 'Precio Unit.']]
+    // 3. Encabezados corregidos
+    const headers = [
+       [ 'Cod. Interno',
+        'Descripcion',
+        'Cant. Vendida',
+        'Stock Actual',
+        'Diferencia',
+        'Precio Unit']
+    ];
 
-   const rows = detalles.map((item) => [
+
+
+     // 4. Filas formateadas
+  const rows = detalles.map((item) => [
     item.codigo_articulo,
     item.producto,
-    item.cantidad_art.toFixed(2),
-    item.stock.toFixed(2),
-    (item.stock - item.cantidad_art).toFixed(2),
-    item.precio.toLocaleString('es-AR', {
-        style: 'currency',
-        currency: 'ARS',
-        minimumFractionDigits: 2
-    })
-   ])
+    Number(item.cantidad_art).toFixed(2),
+    Number(item.stock).toFixed(2),
+    (Number(item.stock) - Number(item.cantidad_art)).toFixed(2),
+    item.precio.toLocaleString("es-AR", {
+      style: "currency",
+      currency: "ARS",
+      minimumFractionDigits: 2,
+    }),
+  ]);
 
    // 4. Generar la tabla con autoTable
     autoTable(doc, {startY: 32, head: headers, body: rows, theme: "striped", headStyles: {
@@ -67,24 +77,17 @@ export const exportarEstadisticasPDF = async ({detalles, desde, hasta}: PdfOptio
     bodyStyles: {
         fontSize: 8
     },
-    columnStyles: {
-         0: { cellWidth: 25 },
-         1: { cellWidth: "auto" },
-         2: { halign: "right", cellWidth: 25 },
-         3: { halign: "right", cellWidth: 25 },
-         4: { halign: "right", cellWidth: 25 },
-         5: { halign: "right", cellWidth: 28 }
+     columnStyles: {
+      0: { cellWidth: 25, halign: "left" },
+      1: { halign: "left" },
+      2: { cellWidth: 25, halign: "right" },
+      3: { cellWidth: 25, halign: "right" },
+      4: { cellWidth: 25, halign: "right" },
+      5: { cellWidth: 30, halign: "right" },
     },
-    didDrawPage: (data) => {
-      const pageCount = doc.getNumberOfPages();
-      doc.setFontSize(8);
-      doc.setTextColor(150);
-      doc.text(
-        `Página ${data.pageNumber} de ${pageCount}`,
-        doc.internal.pageSize.getWidth() - 30,
-        doc.internal.pageSize.getHeight() - 10
-      );
-    },
+    styles: {
+      overflow: "linebreak",
+    }
 });
     
     // 5. Guardar el archivo PDF

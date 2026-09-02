@@ -32,15 +32,24 @@ export const exportarEstadisticasExcel = async({detalles, desde, hasta}: ExcelOp
         ...detalles.map((item) => [
             item.codigo_articulo,
             item.producto,
-            item.cantidad_art,
-            item.stock,
-            item.stock - item.cantidad_art,
-            item.precio
+            Number(item.cantidad_art),
+      Number(item.stock),
+      Number(item.stock) - Number(item.cantidad_art),
+      Number(item.precio),
         ])
     ];
 
     //2. Crear la hoja a partir de la matriz de datos
     const worksheet = XLSX.utils.aoa_to_sheet(rows);
+
+    worksheet["!cols"] = [
+    { wch: 15 }, // Cód
+    { wch: 45 }, // Descripción
+    { wch: 15 }, // Cant Vendida
+    { wch: 15 }, // Stock
+    { wch: 15 }, // Diferencia
+    { wch: 15 }, // Precio
+  ];
 
     //3. Crear el libro y agregar la hoja
   const workbook = XLSX.utils.book_new();

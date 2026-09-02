@@ -1,9 +1,10 @@
-import { useState } from "react";
-import { Login } from "../components/ui/Login";
-import { useUserStore } from "../store";
-import { ServerSetup } from "../pages";
-import { Outlet } from "react-router-dom";
-import AsideBar from "../components/ui/AsideBar";
+import { useEffect, useState } from 'react';
+import { Login } from '../components/ui/Login';
+import { useUserStore } from '../store';
+import { ServerSetup } from '../pages';
+import { Outlet } from 'react-router-dom';
+import AsideBar from '../components/ui/AsideBar';
+import { getServerUrl, initAppStore, setServerUrl } from '../service';
 
 const RootLayout = () => {
   const { usuario } = useUserStore();
@@ -11,32 +12,39 @@ const RootLayout = () => {
   const [loadingConfig, setLoadingConfig] = useState(true);
   const [hasServerURL, setHasServerURL] = useState(false);
 
-  useState(() => {
-    import("../service/store.service").then(
-      async ({ initAppStore, getServerUrl }) => {
+  useEffect(() => {
+    let isMounted = true;
+
+    const checkConfiguration = async () => {
+      try {
         await initAppStore();
         const url = getServerUrl();
 
-        if (url && url !== "http://localhost:3000" && url.trim() !== "") {
-          setHasServerURL(true);
+        if (url && url !== 'http://localhost:3000' && url.trim() !== '') {
+          if (isMounted) setHasServerURL(true);
         } else {
-          const saved = localStorage.getItem("server_url");
-          if (
-            saved &&
-            saved !== "http://localhost:3000" &&
-            saved.trim() !== ""
-          ) {
-            const { setServerUrl } = await import("../service/store.service");
-            setServerUrl(saved);
-            setHasServerURL(true);
+          const saved = localStorage.getItem('server_url');
+          if (saved && saved !== 'http://localhost:3000' && saved.trim() !== '') {
+            await setServerUrl(saved);
+            if (isMounted) setHasServerURL(true);
           } else {
-            setHasServerURL(false);
+            if (isMounted) setHasServerURL(false);
           }
         }
-        setLoadingConfig(false);
-      },
-    );
-  });
+      } catch (error) {
+        console.error('Error inicializando la configuración:', error);
+        if (isMounted) setHasServerURL(false);
+      } finally {
+        if (isMounted) setLoadingConfig(false);
+      }
+    };
+
+    checkConfiguration();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   if (loadingConfig) {
     return (

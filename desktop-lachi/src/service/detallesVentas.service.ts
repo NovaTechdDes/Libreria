@@ -16,10 +16,7 @@ export const getDetallesVentas = async (desde: string, hasta: string, subRubro: 
         }
         return []
     } catch (error) {
-        console.error(error);
-        return {
-            ok: false,
-            msg: 'No se pudo obtener los detalles de ventas'
-        }
+        console.error("Error al obtener los detalles de ventas:", error);
+        throw new Error("No se pudo obtener los detalles de ventas del servidor");
     }
 }

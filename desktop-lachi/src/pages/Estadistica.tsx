@@ -56,9 +56,6 @@ export const Estadistica = () => {
     setSubRubroId('');
   };
 
-  const totalElementos = detallesFiltrados?.length || 0;
-  const totalPaginas = Math.ceil(totalElementos / elementosPorPagina) | 1;
-
   const indiceInicio = (paginaActual - 1) * elementosPorPagina;
   const indiceFin = indiceInicio + elementosPorPagina;
 
@@ -67,11 +64,17 @@ export const Estadistica = () => {
     return detallesFiltrados.slice(indiceInicio, indiceFin);
   }, [detallesFiltrados, indiceInicio, indiceFin]);
 
+  const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+    setPaginaActual(1);
+  };
+
   const handleSearch = () => {
     setDesdeFiltro(desde);
     setHastaFiltro(hasta);
     setRubroFiltro(rubroId);
     setSubRubroFiltro(subRubroId);
+    setPaginaActual(1);
   };
 
   const handleNextPage = () => {
@@ -81,6 +84,9 @@ export const Estadistica = () => {
   const handlePrevPage = () => {
     setPaginaActual((prev) => Math.max(prev - 1, 1));
   };
+
+  const totalElementos = detallesFiltrados?.length || 0;
+  const totalPaginas = Math.max(1, Math.ceil(totalElementos / elementosPorPagina));
 
   return (
     <>
@@ -101,7 +107,7 @@ export const Estadistica = () => {
               type="text"
               name="buscador"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={handleSearchInputChange}
               id="buscador"
               placeholder="Buscar por nombre o código..."
               className="w-full bg-slate-50/80 dark:bg-zinc-950/70 border border-slate-200 dark:border-zinc-800 text-slate-800 dark:text-zinc-200 text-xs sm:text-sm rounded-xl pl-9 pr-3.5 py-2 outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/80 placeholder:text-slate-400 dark:placeholder:text-zinc-600 transition-all"

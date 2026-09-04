@@ -1,77 +1,74 @@
 import { create } from 'zustand';
 
-export type Theme = 'light' | 'dark' | 'system';
+export type Theme = 'light' | 'dark';
 
 interface ThemeState {
   theme: Theme;
-  resolvedTheme: 'light' | 'dark';
+  resolvedTheme: Theme;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
   cycleTheme: () => void;
 }
 
-const getSystemTheme = (): 'light' | 'dark' => {
+const getSystemTheme = (): Theme => {
   if (typeof window === 'undefined') return 'light';
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 };
 
-const getSavedTheme = (): Theme => {
-  if (typeof window === 'undefined') return 'system';
+const getSavedTheme = (): Theme | null => {
+  if (typeof window === 'undefined') return null;
   const saved = localStorage.getItem('theme');
-  if (saved === 'light' || saved === 'dark' || saved === 'system') {
+  if (saved === 'light' || saved === 'dark') {
     return saved;
   }
-  return 'system';
+  return null;
 };
 
-export const applyThemeToDOM = (theme: Theme): 'light' | 'dark' => {
+export const applyThemeToDOM = (theme: Theme): Theme => {
   if (typeof document === 'undefined') return 'light';
-  
-  const resolved = theme === 'system' ? getSystemTheme() : theme;
-  
-  if (resolved === 'dark') {
+
+  if (theme === 'dark') {
     document.documentElement.classList.add('dark');
   } else {
     document.documentElement.classList.remove('dark');
   }
-  
-  return resolved;
+
+  return theme;
 };
 
-const initialTheme = getSavedTheme();
-const initialResolved = applyThemeToDOM(initialTheme);
+// Si el usuario ya guardó preferencia manual la usamos, sino detectamos el de la computadora
+const savedTheme = getSavedTheme();
+const initialTheme: Theme = savedTheme ?? getSystemTheme();
+applyThemeToDOM(initialTheme);
 
 export const useThemeStore = create<ThemeState>((set, get) => ({
   theme: initialTheme,
-  resolvedTheme: initialResolved,
+  resolvedTheme: initialTheme,
   setTheme: (theme: Theme) => {
     localStorage.setItem('theme', theme);
-    const resolved = applyThemeToDOM(theme);
-    set({ theme, resolvedTheme: resolved });
+    applyThemeToDOM(theme);
+    set({ theme, resolvedTheme: theme });
   },
   toggleTheme: () => {
-    const currentResolved = get().resolvedTheme;
-    const nextTheme: Theme = currentResolved === 'dark' ? 'light' : 'dark';
+    const current = get().theme;
+    const nextTheme: Theme = current === 'dark' ? 'light' : 'dark';
     get().setTheme(nextTheme);
   },
   cycleTheme: () => {
-    const current = get().theme;
-    let next: Theme;
-    if (current === 'system') next = 'light';
-    else if (current === 'light') next = 'dark';
-    else next = 'system';
-    get().setTheme(next);
+    get().toggleTheme();
   },
 }));
 
 // Escuchador de cambios en el sistema operativo
 if (typeof window !== 'undefined') {
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-  const handleMediaChange = () => {
-    const currentTheme = useThemeStore.getState().theme;
-    if (currentTheme === 'system') {
-      const resolved = applyThemeToDOM('system');
-      useThemeStore.setState({ resolvedTheme: resolved });
+  const handleMediaChange = (e: MediaQueryListEvent) => {
+    // Si el usuario no tiene una preferencia guardada explícitamente, se adapta automáticamente a la compu
+    const userPreference = getSavedTheme();
+    if (!userPreference) {
+      const newTheme: Theme = e.matches ? 'dark' : 'light';
+      applyThemeToDOM(newTheme);
+      useThemeStore.setState({ theme: newTheme, resolvedTheme: newTheme });
     }
   };
 
@@ -80,9 +77,9 @@ if (typeof window !== 'undefined') {
   // Sincronización entre pestañas/ventanas
   window.addEventListener('storage', (e) => {
     if (e.key === 'theme') {
-      const newTheme = getSavedTheme();
-      const resolved = applyThemeToDOM(newTheme);
-      useThemeStore.setState({ theme: newTheme, resolvedTheme: resolved });
+      const newTheme = getSavedTheme() ?? getSystemTheme();
+      applyThemeToDOM(newTheme);
+      useThemeStore.setState({ theme: newTheme, resolvedTheme: newTheme });
     }
   });
 }

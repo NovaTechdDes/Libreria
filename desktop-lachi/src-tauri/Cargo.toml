@@ -1,6 +1,6 @@
 [package]
-name = "desktop-lachi"
-version = "0.1.0"
+name = "Reportes-Lachi"
+version = "0.1.1"
 description = "A Tauri App"
 authors = ["you"]
 edition = "2021"

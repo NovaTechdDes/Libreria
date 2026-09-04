@@ -91,7 +91,7 @@ export const Estadistica = () => {
   return (
     <>
       {/* Encabezado */}
-      <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 mb-6 border-b border-slate-200/80 dark:border-zinc-800/80 transition-colors">
+      <header className="flex mt-10 flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 mb-2 border-b border-slate-200/80 dark:border-zinc-800/80 transition-colors">
         {/* Título y Subtítulo */}
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-zinc-100">Reporte de Artículos Vendidos</h1>
@@ -142,13 +142,13 @@ export const Estadistica = () => {
       </header>
 
       {/* Filtros */}
-      <section className="bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800/80 rounded-2xl p-4 sm:p-5 shadow-xs mb-6 transition-colors">
+      <section className="bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800/80 rounded-2xl p-4 sm:p-5 shadow-xs mb-2 transition-colors">
         {isLoadingRubros ? (
           <Loading showText={false} size="xs" />
         ) : (
-          <div className="flex flex-wrap items-end justify-between gap-4">
+          <div className="flex flex-wrap items-end gap-3 sm:gap-4 w-full">
             {/* Bloque: Período */}
-            <div className="flex flex-col gap-1.5 flex-1 min-w-65">
+            <div className="flex flex-col gap-1.5 flex-1 min-w-67.5">
               <label className="text-[11px] font-bold tracking-wider text-slate-400 dark:text-zinc-500 uppercase flex items-center gap-1.5">
                 <Calendar className="w-3.5 h-3.5 text-amber-500" />
                 Período
@@ -161,74 +161,73 @@ export const Estadistica = () => {
                   id="desde"
                   value={desde.toString()}
                   onChange={(e) => setDesde(e.target.value)}
-                  className="w-full bg-slate-50/80 dark:bg-zinc-950/70 border border-slate-200 dark:border-zinc-800 text-slate-800 dark:text-zinc-200 text-xs sm:text-sm rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/80 transition-all"
+                  className="flex-1 min-w-0 w-full bg-slate-50/80 dark:bg-zinc-950/70 border border-slate-200 dark:border-zinc-800 text-slate-800 dark:text-zinc-200 text-xs sm:text-sm rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/80 transition-all"
                 />
-                <span className="text-slate-400 dark:text-zinc-600 font-medium text-xs sm:text-sm">-</span>
+                <span className="text-slate-400 dark:text-zinc-600 font-medium text-xs sm:text-sm shrink-0">-</span>
                 <input
                   type="date"
                   name="hasta"
                   id="hasta"
                   value={hasta.toString()}
                   onChange={(e) => setHasta(e.target.value)}
-                  className="w-full bg-slate-50/80 dark:bg-zinc-950/70 border border-slate-200 dark:border-zinc-800 text-slate-800 dark:text-zinc-200 text-xs sm:text-sm rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/80 transition-all"
+                  className="flex-1 min-w-0 w-full bg-slate-50/80 dark:bg-zinc-950/70 border border-slate-200 dark:border-zinc-800 text-slate-800 dark:text-zinc-200 text-xs sm:text-sm rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/80 transition-all"
                 />
               </div>
             </div>
 
-            {/* Bloque: Categorización (Rubros y Sub Rubros) */}
-            <div className="flex flex-wrap sm:flex-nowrap items-end gap-3 flex-2 min-w-75">
-              <div className="flex flex-col gap-1.5 flex-1 min-w-35">
-                <label htmlFor="rubro" className="text-[11px] font-bold tracking-wider text-slate-400 dark:text-zinc-500 uppercase flex items-center gap-1.5">
-                  <Filter className="w-3.5 h-3.5 text-amber-500" />
-                  Rubros
-                </label>
-                <select
-                  name="rubro"
-                  id="rubro"
-                  value={rubroId}
-                  onChange={handleRubroChange}
-                  className="w-full bg-slate-50/80 dark:bg-zinc-950/70 border border-slate-200 dark:border-zinc-800 text-slate-800 dark:text-zinc-200 text-xs sm:text-sm rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/80 transition-all cursor-pointer"
-                >
-                  <option value="">Rubro (Todos)</option>
-                  {rubros?.rubro.map((rubro) => (
-                    <option key={rubro.id_rubro_g} value={rubro.id_rubro_g}>
-                      {rubro.nom_rubro_g}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            {/* Bloque: Rubro */}
+            <div className="flex flex-col gap-1.5 flex-1 min-w-40">
+              <label htmlFor="rubro" className="text-[11px] font-bold tracking-wider text-slate-400 dark:text-zinc-500 uppercase flex items-center gap-1.5">
+                <Filter className="w-3.5 h-3.5 text-amber-500" />
+                Rubros
+              </label>
+              <select
+                name="rubro"
+                id="rubro"
+                value={rubroId}
+                onChange={handleRubroChange}
+                className="w-full min-w-0 bg-slate-50/80 dark:bg-zinc-950/70 border border-slate-200 dark:border-zinc-800 text-slate-800 dark:text-zinc-200 text-xs sm:text-sm rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/80 transition-all cursor-pointer truncate"
+              >
+                <option value="">Rubro (Todos)</option>
+                {rubros?.rubro.map((rubro) => (
+                  <option key={rubro.id_rubro_g} value={rubro.id_rubro_g}>
+                    {rubro.nom_rubro_g}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-              <div className="flex flex-col gap-1.5 flex-1 min-w-35">
-                <label htmlFor="subrubro" className="text-[11px] font-bold tracking-wider text-slate-400 dark:text-zinc-500 uppercase">
-                  Sub Rubros
-                </label>
-                <select
-                  name="subrubro"
-                  id="subrubro"
-                  value={subRubroId}
-                  onChange={(e) => setSubRubroId(e.target.value)}
-                  disabled={!rubroId}
-                  className="w-full bg-slate-50/80 dark:bg-zinc-950/70 border border-slate-200 dark:border-zinc-800 text-slate-800 dark:text-zinc-200 text-xs sm:text-sm rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/80 transition-all cursor-pointer"
-                >
-                  <option value="">Sub-Rubro (Todos)</option>
-                  {subrubrosFiltrados?.map((sub) => (
-                    <option key={sub.id_rubro} value={sub.id_rubro}>
-                      {sub.nom_rubro}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            {/* Bloque: Sub Rubro */}
+            <div className="flex flex-col gap-1.5 flex-1 min-w-40">
+              <label htmlFor="subrubro" className="text-[11px] font-bold tracking-wider text-slate-400 dark:text-zinc-500 uppercase">
+                Sub Rubros
+              </label>
+              <select
+                name="subrubro"
+                id="subrubro"
+                value={subRubroId}
+                onChange={(e) => setSubRubroId(e.target.value)}
+                disabled={!rubroId}
+                className="w-full min-w-0 bg-slate-50/80 dark:bg-zinc-950/70 border border-slate-200 dark:border-zinc-800 text-slate-800 dark:text-zinc-200 text-xs sm:text-sm rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/80 transition-all cursor-pointer truncate disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <option value="">Sub-Rubro (Todos)</option>
+                {subrubrosFiltrados?.map((sub) => (
+                  <option key={sub.id_rubro} value={sub.id_rubro}>
+                    {sub.nom_rubro}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Botón Buscar */}
-            <div className="flex items-end">
+            <div className="flex items-end shrink-0">
               <button
                 onClick={handleSearch}
                 type="button"
-                className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 dark:bg-amber-500 dark:hover:bg-amber-400 text-slate-950 font-semibold text-xs sm:text-sm px-5 py-2 rounded-xl shadow-md shadow-amber-500/15 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 border border-amber-400/30"
+                className="h-9.5 px-4 bg-amber-500 hover:bg-amber-600 dark:bg-amber-500 dark:hover:bg-amber-400 text-slate-950 font-semibold text-xs sm:text-sm rounded-xl shadow-md shadow-amber-500/15 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 border border-amber-400/30"
+                title="Buscar estadísticas"
               >
                 <Search className="w-4 h-4 stroke-[2.5]" />
-                <span>Buscar</span>
               </button>
             </div>
           </div>
@@ -236,7 +235,7 @@ export const Estadistica = () => {
       </section>
 
       {/* Tabla */}
-      <main className="bg-white dark:bg-zinc-900 h-[60vh] border border-slate-200/80 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs mb-6 transition-colors">
+      <main className="bg-white dark:bg-zinc-900 h-[60vh] border border-slate-200/80 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs mb-2 transition-colors">
         {isLoadingDetalles ? (
           <div className="w-full h-full flex items-center justify-center">
             <Loading text="Cargando detalles de ventas..." size="md" />

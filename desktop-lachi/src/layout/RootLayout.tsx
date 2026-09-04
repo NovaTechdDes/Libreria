@@ -4,7 +4,7 @@ import { useUserStore } from '../store';
 import { ServerSetup } from '../pages';
 import { Outlet } from 'react-router-dom';
 import AsideBar from '../components/ui/AsideBar';
-import { getServerUrl, initAppStore, setServerUrl } from '../service';
+import { getServerUrl, initAppStore } from '../service';
 
 const RootLayout = () => {
   const { usuario } = useUserStore();
@@ -17,19 +17,13 @@ const RootLayout = () => {
 
     const checkConfiguration = async () => {
       try {
-        await initAppStore();
-        const url = getServerUrl();
+        const savedUrl = await initAppStore();
+        const url = savedUrl || getServerUrl();
 
-        if (url && url !== 'http://localhost:3000' && url.trim() !== '') {
+        if (url && url.trim() !== '') {
           if (isMounted) setHasServerURL(true);
         } else {
-          const saved = localStorage.getItem('server_url');
-          if (saved && saved !== 'http://localhost:3000' && saved.trim() !== '') {
-            await setServerUrl(saved);
-            if (isMounted) setHasServerURL(true);
-          } else {
-            if (isMounted) setHasServerURL(false);
-          }
+          if (isMounted) setHasServerURL(false);
         }
       } catch (error) {
         console.error('Error inicializando la configuración:', error);

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import logo from '../../assets/logo.png';
 import { useUserStore, useThemeStore } from '../../store';
-import { Lock, Eye, EyeOff, ArrowRight, Loader2, BookOpen, AlertCircle, Sun, Moon, Laptop } from 'lucide-react';
+import { Lock, Eye, EyeOff, ArrowRight, Loader2, BookOpen, AlertCircle, Sun, Moon } from 'lucide-react';
 import { getUsuario } from '../../service';
 
 export const Login = () => {
   const { setUsuario } = useUserStore();
-  const { theme, cycleTheme } = useThemeStore();
+  const { theme, toggleTheme } = useThemeStore();
   const [clave, setClave] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -40,16 +40,11 @@ export const Login = () => {
       <div className="absolute top-4 right-4 z-20">
         <button
           type="button"
-          onClick={cycleTheme}
-          title={`Tema: ${theme === 'system' ? 'Sistema (automático)' : theme === 'dark' ? 'Modo Oscuro' : 'Modo Claro'} - Clic para alternar`}
+          onClick={toggleTheme}
+          title={`Tema: ${theme === 'dark' ? 'Modo Oscuro' : 'Modo Claro'} - Clic para alternar`}
           className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/90 dark:border-slate-800/80 backdrop-blur-md shadow-xs text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 transition-all cursor-pointer active:scale-95"
         >
-          {theme === 'system' ? (
-            <>
-              <Laptop className="w-3.5 h-3.5 text-amber-500" />
-              <span className="hidden sm:inline">Sistema</span>
-            </>
-          ) : theme === 'dark' ? (
+          {theme === 'dark' ? (
             <>
               <Moon className="w-3.5 h-3.5 text-amber-400" />
               <span className="hidden sm:inline">Oscuro</span>

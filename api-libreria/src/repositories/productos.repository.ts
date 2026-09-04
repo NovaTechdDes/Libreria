@@ -105,7 +105,6 @@ export async function getProductosPorRubro(
 ): Promise<Producto[]> {
   await poolConnect;
 
-  console.log(rubros)
 
   if (rubros.length === 0) return [];
 

@@ -8,7 +8,6 @@ export async function obtenerProductos(
   id_subrubro?: number,
   id_rubro?: number
 ) {
-  console.log(search)
   return await repo.getProductos(
     search,
     limit,

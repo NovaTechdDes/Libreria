@@ -14,11 +14,12 @@ export async function getDetalleVentaFromDB(filters: DetalleVentaFilter){
 
     const request = pool.request();
 
+
     //Parametros de tipados obligatorios
     request.input('desde', sql.VarChar(10), filters.desde);
     request.input('hasta', sql.VarChar(10), filters.hasta);
     
-    let conditions = `WHERE v.fecha_venta BETWEEN @desde AND @hasta`;
+    let conditions = `WHERE v.fecha_venta BETWEEN @desde AND @hasta `;
 
     // Filtros condicionales validados
     if(filters.subRubro !== undefined && !isNaN(filters.subRubro)){

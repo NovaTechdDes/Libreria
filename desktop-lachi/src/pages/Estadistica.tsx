@@ -7,21 +7,29 @@ import { DetalleVenta } from '../interface';
 import { exportarEstadisticasPDF } from '../utils/generarPdf';
 import { exportarEstadisticasExcel } from '../utils/generarExcel';
 
+import dayjs, { Dayjs } from 'dayjs';
+import 'dayjs/locale/es';
+
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+dayjs.locale('es');
+
 export const Estadistica = () => {
   const { data: rubros, isLoading: isLoadingRubros } = useRubros();
 
   const [search, setSearch] = useState<string>('');
 
   //Filtros
-  const hoy = new Date().toISOString().substring(0, 10);
-  const [desde, setDesde] = useState<string>(hoy);
-  const [hasta, setHasta] = useState<string>(hoy);
+  const [desde, setDesde] = useState<Dayjs>(dayjs());
+  const [hasta, setHasta] = useState<Dayjs>(dayjs());
   const [rubroId, setRubroId] = useState('');
   const [subRubroId, setSubRubroId] = useState('');
 
   //Para servidor
-  const [desdeFiltro, setDesdeFiltro] = useState<string>(hoy);
-  const [hastaFiltro, setHastaFiltro] = useState<string>(hoy);
+  const [desdeFiltro, setDesdeFiltro] = useState<string>(dayjs().format('YYYY-MM-DD'));
+  const [hastaFiltro, setHastaFiltro] = useState<string>(dayjs().format('YYYY-MM-DD'));
   const [rubroFiltro, setRubroFiltro] = useState<string>('');
   const [subRubroFiltro, setSubRubroFiltro] = useState<string>('');
 
@@ -29,9 +37,10 @@ export const Estadistica = () => {
   const [paginaActual, setPaginaActual] = useState(1);
   const elementosPorPagina = 30;
 
-  const { data: detalles, isLoading: isLoadingDetalles } = useDetalleVenta(desdeFiltro, hastaFiltro, subRubroFiltro, rubroFiltro);
+  const { data: detalles, isLoading: isLoadingDetalles, isError } = useDetalleVenta(desdeFiltro, hastaFiltro, subRubroFiltro, rubroFiltro);
 
   const detallesFiltrados = useMemo(() => {
+    if (!detalles) return [];
     if (!search) return detalles;
 
     return detalles.filter((detalle: DetalleVenta) => {
@@ -70,8 +79,8 @@ export const Estadistica = () => {
   };
 
   const handleSearch = () => {
-    setDesdeFiltro(desde);
-    setHastaFiltro(hasta);
+    setDesdeFiltro(desde.format('YYYY-MM-DD'));
+    setHastaFiltro(hasta.format('YYYY-MM-DD'));
     setRubroFiltro(rubroId);
     setSubRubroFiltro(subRubroId);
     setPaginaActual(1);
@@ -155,23 +164,13 @@ export const Estadistica = () => {
               </label>
 
               <div className="flex items-center gap-2">
-                <input
-                  type="date"
-                  name="desde"
-                  id="desde"
-                  value={desde.toString()}
-                  onChange={(e) => setDesde(e.target.value)}
-                  className="flex-1 min-w-0 w-full bg-slate-50/80 dark:bg-zinc-950/70 border border-slate-200 dark:border-zinc-800 text-slate-800 dark:text-zinc-200 text-xs sm:text-sm rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/80 transition-all"
-                />
+                <LocalizationProvider adapterLocale="es" dateAdapter={AdapterDayjs}>
+                  <DatePicker value={desde} onChange={(nuevaFecha) => setDesde(nuevaFecha!)} views={['month', 'year', 'day']} openTo="day" className="h-10" />
+                </LocalizationProvider>
                 <span className="text-slate-400 dark:text-zinc-600 font-medium text-xs sm:text-sm shrink-0">-</span>
-                <input
-                  type="date"
-                  name="hasta"
-                  id="hasta"
-                  value={hasta.toString()}
-                  onChange={(e) => setHasta(e.target.value)}
-                  className="flex-1 min-w-0 w-full bg-slate-50/80 dark:bg-zinc-950/70 border border-slate-200 dark:border-zinc-800 text-slate-800 dark:text-zinc-200 text-xs sm:text-sm rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/80 transition-all"
-                />
+                <LocalizationProvider adapterLocale="es" dateAdapter={AdapterDayjs}>
+                  <DatePicker value={hasta} onChange={(nuevaFecha) => setHasta(nuevaFecha!)} views={['month', 'year', 'day']} openTo="day" className="h-10" />
+                </LocalizationProvider>
               </div>
             </div>
 
@@ -239,6 +238,10 @@ export const Estadistica = () => {
         {isLoadingDetalles ? (
           <div className="w-full h-full flex items-center justify-center">
             <Loading text="Cargando detalles de ventas..." size="md" />
+          </div>
+        ) : isError ? (
+          <div className="w-full h-full flex items-center justify-center">
+            <p className="text-sm font-medium text-red-600 dark:text-red-400">Error al cargar las estadísticas</p>
           </div>
         ) : (
           <div className="overflow-x-auto overflow-y-auto h-full">

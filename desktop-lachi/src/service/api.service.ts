@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { getServerUrl } from './store.service';
 
-const api = axios.create();
+const api = axios.create({
+  timeout: 10000
+});
 
 api.interceptors.request.use((config) => {
   const serverURL = getServerUrl();

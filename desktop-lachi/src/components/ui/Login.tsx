@@ -25,6 +25,9 @@ export const Login = () => {
 
     try {
       const res = await getUsuario(clave);
+      if (!res?.data) {
+        setErrorMessage('Contraseña incorrecta');
+      }
       setUsuario(res.data);
     } catch (error: any) {
       console.error('Error al iniciar sesión:', error);
@@ -71,11 +74,7 @@ export const Login = () => {
             <div className="relative mb-4 group">
               <div className="absolute -inset-1 rounded-3xl bg-linear-to-r from-teal-400/30 to-amber-500/30 dark:from-teal-500/40 dark:to-amber-500/40 blur-md opacity-70 group-hover:opacity-100 transition duration-300" />
               <div className="relative flex items-center justify-center w-24 h-24 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700/60 rounded-3xl p-1.5 shadow-sm dark:shadow-inner overflow-hidden">
-                {logo ? (
-                  <img src={logo} alt="Lachi Librería" className="w-full h-full object-contain rounded-2xl" />
-                ) : (
-                  <BookOpen className="w-10 h-10 text-amber-500" />
-                )}
+                {logo ? <img src={logo} alt="Lachi Librería" className="w-full h-full object-contain rounded-2xl" /> : <BookOpen className="w-10 h-10 text-amber-500" />}
               </div>
             </div>
 

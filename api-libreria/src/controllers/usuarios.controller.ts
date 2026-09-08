@@ -14,3 +14,15 @@ export const getUsuarioByClave = async (
     next(error);
   }
 };
+
+
+export const login = async (req: Request, res: Response, next: NextFunction,
+) => {
+  try {
+    const { clave } = req.body;
+    const usuario = await service.obtenerUsuario(clave as string);
+    res.json({ data: usuario });
+  } catch (error) {
+    next(error);
+  }
+};

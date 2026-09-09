@@ -55,7 +55,7 @@ export const Estadistica = () => {
   //2. Filtramos los subrubros que corresponad al rubro seleccionado
   const subrubrosFiltrados = useMemo(() => {
     if (!rubroId) return [];
-    return rubros?.subRubros.filter((sub) => sub.id_rubro_g.toString() === rubroId);
+    return rubros?.subRubros.filter((sub) => sub.id_rubro_g?.toString() === rubroId);
   }, [rubroId, rubros]);
 
   // 3. Manejar el cambio de Rubro

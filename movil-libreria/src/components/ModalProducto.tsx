@@ -23,6 +23,7 @@ export default function ModalProducto({ servidor }: Props) {
 
   useEffect(() => {
     if (productoSeleccionado) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPrecio(productoSeleccionado.precio.toString());
       setStock(productoSeleccionado.stock.toString());
     }

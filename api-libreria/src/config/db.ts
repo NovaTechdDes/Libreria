@@ -46,6 +46,14 @@ poolAzure.on("error", (err) => {
   console.error("Error en el pool de Azure SQL:", err);
 });
 
+// Iniciar conexiones en segundo plano al arrancar la app
+pool.connect().then(() => console.log("Conectado a SQL Server Local")).catch((err) => {
+  console.error("Error al conectar con SQL Server Local al iniciar:", err);
+});
+poolAzure.connect().then(() => console.log("Conectado a Azure SQL")).catch((err) => {
+  console.error("Error al conectar con Azure SQL al iniciar:", err);
+});
+
 async function getConnectedPool(targetPool: sql.ConnectionPool): Promise<sql.ConnectionPool> {
   if (targetPool.connected) {
     return targetPool;
@@ -62,10 +70,10 @@ async function getConnectedPool(targetPool: sql.ConnectionPool): Promise<sql.Con
   }
 }
 // Objeto "thenable" compatible 100% con tu sintaxis actual `await poolConnect;`
-export const poolConnect = {
+export const poolConnect: PromiseLike<sql.ConnectionPool> = {
   then: (resolve: any, reject: any) => getConnectedPool(pool).then(resolve, reject),
 };
-export const poolConnectAzure = {
+export const poolConnectAzure: PromiseLike<sql.ConnectionPool> = {
   then: (resolve: any, reject: any) => getConnectedPool(poolAzure).then(resolve, reject),
 };
 

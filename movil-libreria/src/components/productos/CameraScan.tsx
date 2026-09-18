@@ -1,7 +1,7 @@
 import { useProductoStore } from '@/store';
 import { Ionicons } from '@expo/vector-icons';
 import { BarcodeScanningResult, CameraView, useCameraPermissions } from 'expo-camera';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, Animated, StyleSheet, Text, TouchableOpacity, Vibration, View } from 'react-native';
 
 interface Props {
@@ -15,7 +15,7 @@ export default function CameraScan({ onClose }: Props) {
   const [permission, requestPermission] = useCameraPermissions();
 
   // Animación del láser de escaneo
-  const laserAnim = useRef(new Animated.Value(0)).current;
+  const [laserAnim] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
     const animation = Animated.loop(

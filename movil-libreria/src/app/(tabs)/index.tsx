@@ -97,9 +97,10 @@ export default function HomeScreen() {
 
   const rubrosConTodos: Rubro[] = (data?.rubros?.length ?? 0) > 0 ? [{ id_rubro: 0, nombre_rubro: 'Todos' }, ...(data?.rubros ?? [])] : [];
   const subRubrosConTodos: SubRubro[] = useMemo(() => {
-    if (!data?.subRubros?.length) return [];
+    const subRubros = data?.subRubros;
+    if (!subRubros?.length) return [];
 
-    const filtrados = data.subRubros.filter((subRubro) => subRubro.id_rubro_g === rubroSeleccionado);
+    const filtrados = subRubros.filter((subRubro) => subRubro.id_rubro_g === rubroSeleccionado);
 
     return [{ id_rubro: 0, nombre_rubro: 'Todos' }, ...filtrados];
   }, [data?.subRubros, rubroSeleccionado]);

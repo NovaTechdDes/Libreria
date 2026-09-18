@@ -6,7 +6,7 @@ import { Vale } from '@/interface/Vale';
 import { useGlobalStore } from '@/store/globalStore';
 import { mensaje } from '@/utils/mensaje';
 import { Ionicons } from '@expo/vector-icons';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
 import { Loading } from '../ui/Loading';
 import ToastConfirmacion from '../ui/ToastConfirm';
@@ -24,8 +24,8 @@ export default function Vales() {
   const [isUserModalVisible, setIsUserModalVisible] = useState(false);
   const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
 
-  const scale = useRef(new Animated.Value(1)).current;
-  const scaleCerrar = useRef(new Animated.Value(1)).current;
+  const [scale] = useState(() => new Animated.Value(1));
+  const [scaleCerrar] = useState(() => new Animated.Value(1));
 
   const handleGetUser = async (nuevaClave: string) => {
     setUsuario(nuevaClave);

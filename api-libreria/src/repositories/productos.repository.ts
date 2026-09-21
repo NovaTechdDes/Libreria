@@ -13,6 +13,8 @@ export async function getProductos(
 
 
   const safeLimit = Number(limit) || 50;
+  const searchExact = search ? search : "";
+  const searchStarts = search ? `%${search}` : "%";
   const safeSearch = search ? `%${search}%` : "%";
 
   let query = `WHERE a.activo = 1`;
@@ -35,11 +37,25 @@ export async function getProductos(
   const request = pool
     .request()
     .input("search", safeSearch)
+    .input("searchExact", searchExact)
+    .input("searchStarts", searchStarts)
     .input("id_subRubro", id_subRubro);
 
   if (id_rubro) {
     request.input("id_rubro", id_rubro);
   }
+
+  const orderByClause = search
+    ? `ORDER BY 
+        CASE 
+          WHEN CAST(a.codigo AS VARCHAR) = @searchExact THEN 1
+          WHEN CAST(a.codigo AS VARCHAR) LIKE @searchStarts THEN 2
+          WHEN CAST(a.codigo AS VARCHAR) LIKE @search THEN 3
+          ELSE 4 
+        END ASC,
+        LEN(CAST(a.codigo AS VARCHAR)) ASC,
+        a.descripcion ASC`
+    : `ORDER BY a.descripcion ASC`;
 
   const result = await request.query(`
     SELECT TOP (${safeLimit})
@@ -55,7 +71,7 @@ export async function getProductos(
     FROM api_articuloss a
     ${joinClause}
     ${query}
-    ORDER BY a.descripcion ASC
+    ${orderByClause}
     `);
 
   const productosConImagen = await Promise.all(

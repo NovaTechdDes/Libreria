@@ -35,3 +35,7 @@ yarn-error.*
 *.key
 *.mobileprovision
 *.pem
+
+desktop-lachi/
+desktop-lachi-win7/
+backend-web/

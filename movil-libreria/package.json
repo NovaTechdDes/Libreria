@@ -55,11 +55,16 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
-    "@babel/plugin-transform-react-jsx": "^8.0.1",
     "@types/react": "~19.2.18",
     "eslint": "^9.39.5",
     "eslint-config-expo": "~57.0.2",
     "typescript": "~6.0.3"
   },
-  "private": true
+  "private": true,
+  "packageManager": "pnpm@10.28.2",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "unrs-resolver"
+    ]
+  }
 }

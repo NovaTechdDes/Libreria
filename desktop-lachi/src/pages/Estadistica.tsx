@@ -165,11 +165,11 @@ export const Estadistica = () => {
 
               <div className="flex items-center gap-2">
                 <LocalizationProvider adapterLocale="es" dateAdapter={AdapterDayjs}>
-                  <DatePicker value={desde} onChange={(nuevaFecha) => setDesde(nuevaFecha!)} views={['month', 'year', 'day']} openTo="day" className="h-10" />
+                  <DatePicker value={desde} onChange={(nuevaFecha) => setDesde(nuevaFecha!)} views={['month', 'year', 'day']} openTo="day" className="h-10 dark:bg-slate-200" />
                 </LocalizationProvider>
                 <span className="text-slate-400 dark:text-zinc-600 font-medium text-xs sm:text-sm shrink-0">-</span>
                 <LocalizationProvider adapterLocale="es" dateAdapter={AdapterDayjs}>
-                  <DatePicker value={hasta} onChange={(nuevaFecha) => setHasta(nuevaFecha!)} views={['month', 'year', 'day']} openTo="day" className="h-10" />
+                  <DatePicker value={hasta} onChange={(nuevaFecha) => setHasta(nuevaFecha!)} views={['month', 'year', 'day']} openTo="day" className="h-10 dark:bg-slate-200" />
                 </LocalizationProvider>
               </div>
             </div>
